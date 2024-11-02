@@ -72,9 +72,8 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
 
         for (Stock stock : stocksList) {
             JSONObject stockInfo = new JSONObject();
-            stockInfo.put(TICKER, stock.getTicker());
-            stockInfo.put(COMPANY, stock.getCompany());
-            stockInfo.put(COST, stock.getCost());
+            stockInfo.put(TICKER, stock.getTickerSymbol());
+            stockInfo.put(COMPANY, stock.getCompanyName());
             portfolioStocks.put(stockInfo);
         }
 
@@ -191,7 +190,7 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
                     double cost = jStock.getDouble(COST);
 
                     //Builds the stock object
-                    Stock stock = stockFactory.create(ticker, company, cost);
+                    Stock stock = stockFactory.create(ticker, company);
 
                     //Adds stock to portfolio object
                     userPortfolio.addStock(stock);
