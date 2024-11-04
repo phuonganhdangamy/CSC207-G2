@@ -18,8 +18,8 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.stockPortfolio = new Portfolio(this);
-        this.profitLossCalculator = new ProfitLossCalculator(stockPortfolio);
+        this.portfolio = new Portfolio(this);
+        this.profitLossCalculator = new ProfitLossCalculator(portfolio);
     }
 
     // Method to log in
@@ -47,7 +47,7 @@ public class User {
     public static User isUniqueAccount(String username, String password) {
         // Check for unique username
         for (User user : users) {
-            if (user.getUsername().equals(username)) {
+            if (user.getName().equals(username)) {
                 System.out.println("Username already taken.");
                 return null; // Or throw an exception
             }
@@ -64,16 +64,6 @@ public class User {
         System.out.println("Profile updated successfully.");
     }
 
-    // Method to view portfolio balance
-    public double viewBalance() {
-        return stockPortfolio.getBalance();
-    }
-
-    // Method to view portfolio stocks
-    public void viewPortfolio() {
-        System.out.println("Current Balance: $" + viewBalance());
-        stockPortfolio.viewStocks();
-    }
 
     // Method to view total profit or loss
     public void viewProfitLoss() {
@@ -85,7 +75,7 @@ public class User {
         return username;
     }
 
-    private String getPassword() {
+    public String getPassword() {
         return password;
     }
 
