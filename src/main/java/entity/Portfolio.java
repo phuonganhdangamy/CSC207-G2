@@ -5,26 +5,16 @@ import java.util.List;
 
 public class Portfolio {
     private User user;
-    private List<StockEntry> stocksOwned;
+    private List<Stock> stocks;
 
     public Portfolio(User user) {
         this.user = user;
-        this.stocksOwned = new ArrayList<>();
+        this.stocks = new ArrayList<>();
     }
 
     // Method to add stocks to the portfolio
-    public void addStock(Stock stock, int numShares, double purchasePrice) {
-        for (StockEntry entry : stocksOwned) {
-            if (entry.getStock().getTickerSymbol().equals(stock.getTickerSymbol())) {
-                // If the stock already exists, update the number of shares and exit
-                entry.setNumShares(entry.getNumShares() + numShares);
-                System.out.println(numShares + " shares of " + stock.getCompanyName() + " added to your portfolio.");
-                return;
-            }
-        }
-        // If the stock does not exist, add a new entry with the purchase price
-        stocksOwned.add(new StockEntry(stock, numShares, purchasePrice));
-        System.out.println(numShares + " shares of " + stock.getCompanyName() + " added to your portfolio.");
+       public void addStock(Stock stock) {
+        stocks.add(stock);
     }
 
     // Method to remove stocks from the portfolio -- still need to think of a way to implement it
@@ -73,9 +63,6 @@ public class Portfolio {
             this.purchasePrice = purchasePrice;
         }
 
-        public Stock getStock() {
-            return stock;
-        }
 
         public int getNumShares() {
             return numShares;
@@ -88,5 +75,11 @@ public class Portfolio {
         public double getPurchasePrice() {
             return purchasePrice;
         }
+
+
+    public List<Stock> getStocks() {
+        return stocks;
     }
+
+ 
 }

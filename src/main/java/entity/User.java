@@ -2,12 +2,15 @@ package entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.sound.sampled.Port;
 
 public class User {
     private String username;
     private String password;
-    private Portfolio stockPortfolio;
+    private Portfolio portfolio;
     private ProfitLossCalculator profitLossCalculator;
+     private double balance = 10000;
+
 
     // Static list to hold users to ensure each username is unique
     private static List<User> users = new ArrayList<>();
@@ -41,7 +44,7 @@ public class User {
     }
 
     // Static method to create an account
-    public static User createAccount(String username, String password) {
+    public static User isUniqueAccount(String username, String password) {
         // Check for unique username
         for (User user : users) {
             if (user.getUsername().equals(username)) {
@@ -78,7 +81,7 @@ public class User {
         System.out.println("Your total profit/loss: $" + profitLoss);
     }
 
-    public String getUsername() {
+    public String getName() {
         return username;
     }
 
@@ -86,7 +89,26 @@ public class User {
         return password;
     }
 
-    public Portfolio getStockPortfolio() {
-        return stockPortfolio;
+    public Portfolio getPortfolio() {
+        return portfolio;
     }
+  
+    public double getBalance() {
+        return balance;
+    }
+
+
+    public void setPortfolio(Portfolio portfolio) {
+        this.portfolio = portfolio;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
 }
+
