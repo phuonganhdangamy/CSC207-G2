@@ -31,7 +31,6 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
     private final String BALANCE = "balance:";
     private final String PORTFOLIO = "portfolio:";
     private final String TICKER = "ticker:";
-    private final String COMPANY = "company:";
     private final String COST = "cost:";
 
 
@@ -73,7 +72,6 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
         for (Stock stock : stocksList) {
             JSONObject stockInfo = new JSONObject();
             stockInfo.put(TICKER, stock.getTicker());
-            stockInfo.put(COMPANY, stock.getCompany());
             stockInfo.put(COST, stock.getCost());
             portfolioStocks.put(stockInfo);
         }
@@ -187,11 +185,10 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
 
                     //Retrieves instance variable information
                     String ticker = jStock.getString(TICKER);
-                    String company = jStock.getString(COMPANY);
                     double cost = jStock.getDouble(COST);
 
                     //Builds the stock object
-                    Stock stock = stockFactory.create(ticker, company, cost);
+                    Stock stock = stockFactory.create(ticker, cost);
 
                     //Adds stock to portfolio object
                     userPortfolio.addStock(stock);
