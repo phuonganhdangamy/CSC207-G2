@@ -3,3 +3,4 @@ Team Members:
 - Anh Dang Phuong - amyanhdangphuong
 - Dora Gombar - dorcagombar
 - Maya Edri - EdriMaya
+- Mind Kunrattanaporn - Mind-MNK
