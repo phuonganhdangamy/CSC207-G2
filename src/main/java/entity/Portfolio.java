@@ -12,6 +12,10 @@ public class Portfolio {
         this.stocks = new ArrayList<>();
     }
 
+    public List<Stock> getStocks() {
+        return stocks;
+    }
+
     // Method to add stocks to the portfolio
        public void addStock(Stock stock) {
         stocks.add(stock);
@@ -22,64 +26,7 @@ public class Portfolio {
 
     }
 
-    // Method to view all stocks in the portfolio
-    public void viewStocks() {
-        if (stocksOwned.isEmpty()) {
-            System.out.println("Your portfolio is empty.");
-            return;
-        }
 
-        System.out.println("Stocks in your portfolio:");
-        for (StockEntry entry : stocksOwned) {
-            System.out.println("Ticker: " + entry.getStock().getTickerSymbol() +
-                    ", Company: " + entry.getStock().getCompanyName() +
-                    ", Shares: " + entry.getNumShares() +
-                    ", Current Price: $" + entry.getStock().getCurrentPrice() +
-                    ", Purchase Price: $" + entry.getPurchasePrice());
-        }
-    }
-
-    // Method to get the balance of the portfolio
-    public double getBalance() {
-        double balance = 0.0;
-        for (StockEntry entry : stocksOwned) {
-            balance += entry.getStock().getCurrentPrice() * entry.getNumShares();
-        }
-        return balance;
-    }
-
-    public List<StockEntry> getStocksOwned() {
-        return stocksOwned;
-    }
-
-    public static class StockEntry {
-        private Stock stock;
-        private int numShares;
-        private double purchasePrice;
-
-        public StockEntry(Stock stock, int numShares, double purchasePrice) {
-            this.stock = stock;
-            this.numShares = numShares;
-            this.purchasePrice = purchasePrice;
-        }
-
-
-        public int getNumShares() {
-            return numShares;
-        }
-
-        public void setNumShares(int numShares) {
-            this.numShares = numShares;
-        }
-
-        public double getPurchasePrice() {
-            return purchasePrice;
-        }
-
-
-    public List<Stock> getStocks() {
-        return stocks;
-    }
 
  
 }
