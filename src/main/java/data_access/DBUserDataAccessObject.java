@@ -177,7 +177,7 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
 
                 //Retrieves portfolio of stocks and creates the portfolio object
                 JSONArray portfolioStocks = userInfo.getJSONArray(PORTFOLIO);
-                Portfolio userPortfolio = new Portfolio(user);
+                Portfolio userPortfolio = user.getPortfolio();
 
                 for (int i = 0; i < portfolioStocks.length(); i++) {
                     //Retrieves JSONObject representing a single stock
@@ -193,7 +193,6 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
                     //Adds stock to portfolio object
                     userPortfolio.addStock(stock);
                 }
-                user.setPortfolio(userPortfolio);
 
                 return user;
             } else {

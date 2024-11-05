@@ -1,7 +1,13 @@
 package use_case.login;
 
+import entity.Stock;
 import entity.User;
 import use_case.UserDataAccessInterface;
+
+import java.awt.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Interactor for login use case.
@@ -33,7 +39,23 @@ public class LoginInteractor implements LoginInputBoundary {
                 loginPresenter.prepareFailView("Incorrect password");
             }
             else {
-                LoginOutputData output = new LoginOutputData(username);
+                // Transform the portfolio data from the entity class to match what is required of the
+                // LoginOutputData class. Portfolio data needs to be converted to a map where each key is a
+                // ticker and the value is the number of shares owned
+                List<Stock> portfolio = userFound.getPortfolio().getStocks();
+                Map<String, Integer> portfolioData = new HashMap<>();
+                for (Stock stock : portfolio) {
+                    String ticker = stock.getTicker();
+                    if(portfolioData.containsKey(ticker)){
+                        Integer oldValue = portfolioData.get(ticker);
+                        portfolioData.replace(ticker, oldValue+1);
+                    }
+                    else{
+                        portfolioData.put(ticker, 1);
+                    }
+                }
+                //If the password is correct, indicate success
+                LoginOutputData output = new LoginOutputData(username, userFound.getBalance(), portfolioData);
                 loginPresenter.prepareSuccessView(output);
 
             }
