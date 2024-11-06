@@ -2,7 +2,6 @@ package entity;
 
 
 import data_access.DBStockDataAccessObject;
-import data_access.DBUserDataAccessObject;
 
 /**
  * The Stock class represents a stock from our AlphaVantage API, where the user gives a tickerSymbol

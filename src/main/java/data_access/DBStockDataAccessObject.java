@@ -37,7 +37,7 @@ public class DBStockDataAccessObject {
             JSONObject json = new JSONObject(content.toString());
             JSONObject timeSeries = json.getJSONObject("Time Series (Daily)");
 
-            // Get today's date in the format used by the AlphaVantage API.
+            // Get yesterday's date in the format used by the AlphaVantage API.
             String today = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             if (timeSeries.has(today)) {
