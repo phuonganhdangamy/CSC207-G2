@@ -22,6 +22,13 @@ public class User {
         this.profitLossCalculator = new ProfitLossCalculator(portfolio);
     }
 
+    public User(String username, String password, Portfolio portfolio, double balance) {
+        this.username = username;
+        this.password = password;
+        this.portfolio = portfolio;
+        this.balance = balance;
+    }
+
     // Method to log in
     public boolean login(String username, String password) {
         if (checkCredentials(username, password)) {
@@ -87,10 +94,6 @@ public class User {
         return balance;
     }
 
-
-    public void setPortfolio(Portfolio portfolio) {
-        this.portfolio = portfolio;
-    }
 
     public void setPassword(String password) {
         this.password = password;
