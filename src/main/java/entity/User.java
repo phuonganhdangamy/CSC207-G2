@@ -2,15 +2,12 @@ package entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.sound.sampled.Port;
 
 public class User {
     private String username;
     private String password;
     private Portfolio portfolio;
     private ProfitLossCalculator profitLossCalculator;
-     private double balance = 10000;
-
 
     // Static list to hold users to ensure each username is unique
     private static List<User> users = new ArrayList<>();
@@ -18,36 +15,22 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.stockPortfolio = new Portfolio(this);
-        this.profitLossCalculator = new ProfitLossCalculator(stockPortfolio);
+        this.portfolio = new Portfolio(this);
+        this.profitLossCalculator = new ProfitLossCalculator(portfolio);
     }
 
-    // Method to log in
-    public boolean login(String username, String password) {
-        if (checkCredentials(username, password)) {
-            System.out.println("Login successful!");
-            return true;
-        } else {
-            System.out.println("Invalid username or password.");
-            return false;
-        }
-    }
-
-    // Helper method to check credentials
-    private boolean checkCredentials(String username, String password) {
-        return this.username.equals(username) && this.password.equals(password);
-    }
-
-    // Method to log out
-    public void logout() {
-        System.out.println("Logged out successfully.");
+    public User(String username, String password, Portfolio portfolio, double balance) {
+        this.username = username;
+        this.password = password;
+        this.portfolio = portfolio;
+        this.balance = balance;
     }
 
     // Static method to create an account
     public static User isUniqueAccount(String username, String password) {
         // Check for unique username
         for (User user : users) {
-            if (user.getUsername().equals(username)) {
+            if (user.getName().equals(username)) {
                 System.out.println("Username already taken.");
                 return null; // Or throw an exception
             }
@@ -64,17 +47,6 @@ public class User {
         System.out.println("Profile updated successfully.");
     }
 
-    // Method to view portfolio balance
-    public double viewBalance() {
-        return stockPortfolio.getBalance();
-    }
-
-    // Method to view portfolio stocks
-    public void viewPortfolio() {
-        System.out.println("Current Balance: $" + viewBalance());
-        stockPortfolio.viewStocks();
-    }
-
     // Method to view total profit or loss
     public void viewProfitLoss() {
         double profitLoss = profitLossCalculator.calculateTotalProfitLoss();
@@ -85,30 +57,11 @@ public class User {
         return username;
     }
 
-    private String getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public Portfolio getPortfolio() {
-        return portfolio;
+    public Portfolio getStockPortfolio() {
+        return stockPortfolio;
     }
-  
-    public double getBalance() {
-        return balance;
-    }
-
-
-    public void setPortfolio(Portfolio portfolio) {
-        this.portfolio = portfolio;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
 }
-
