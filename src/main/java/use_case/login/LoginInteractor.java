@@ -14,10 +14,10 @@ import java.util.Map;
  */
 public class LoginInteractor implements LoginInputBoundary {
     private final LoginOutputBoundary loginPresenter;
-    private UserDataAccessInterface userDataAccess;
+    private LoginUserDataAccessInterface userDataAccess;
 
     //Interactor requires access to the database and needs to pass the result to the presenter.
-    public LoginInteractor(UserDataAccessInterface userDataAccessInterface, LoginOutputBoundary outputBoundary) {
+    public LoginInteractor(LoginUserDataAccessInterface userDataAccessInterface, LoginOutputBoundary outputBoundary) {
         this.userDataAccess = userDataAccessInterface;
         this.loginPresenter = outputBoundary;
     }
