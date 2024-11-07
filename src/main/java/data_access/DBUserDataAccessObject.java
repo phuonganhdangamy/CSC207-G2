@@ -71,7 +71,7 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
 
         for (Stock stock : stocksList) {
             JSONObject stockInfo = new JSONObject();
-            stockInfo.put(TICKER, stock.getTicker());
+            stockInfo.put(TICKER, stock.getTickerSymbol());
             stockInfo.put(COST, stock.getCost());
             portfolioStocks.put(stockInfo);
         }
