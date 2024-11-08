@@ -45,7 +45,7 @@ public class LoginInteractor implements LoginInputBoundary {
                 List<Stock> portfolio = userFound.getPortfolio().getStocks();
                 Map<String, Integer> portfolioData = new HashMap<>();
                 for (Stock stock : portfolio) {
-                    String ticker = stock.getTicker();
+                    String ticker = stock.getTickerSymbol();
                     if(portfolioData.containsKey(ticker)){
                         Integer oldValue = portfolioData.get(ticker);
                         portfolioData.replace(ticker, oldValue+1);
