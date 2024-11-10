@@ -1,6 +1,6 @@
 package view;
 
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -30,6 +30,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     private final JTextField usernameInputField = new JTextField(15);
     private final JPasswordField passwordInputField = new JPasswordField(15);
     private SignupController signupController;
+    private final JLabel errorLabel = new JLabel(); // Error label for dynamic error messages
 
     private final JButton signUp;
     private final JButton cancel;
@@ -42,6 +43,11 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         final JLabel title = new JLabel(SignupViewModel.TITLE_LABEL);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Add the error label which initially hidden
+        errorLabel.setForeground(Color.RED);
+        errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        errorLabel.setVisible(false);
+
         final LabelTextPanel usernameInfo = new LabelTextPanel(
                 new JLabel(SignupViewModel.USERNAME_LABEL), usernameInputField);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
@@ -49,7 +55,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 
         final JPanel buttons = new JPanel();
         toLogin = new JButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
-        buttons.add(toLogin);
+        // remove buttons.add so we can split toLogin to another line
         signUp = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
         buttons.add(signUp);
         cancel = new JButton(SignupViewModel.CANCEL_BUTTON_LABEL);
@@ -87,10 +93,20 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         this.add(title);
+        this.add(errorLabel); // Adding error label, initially hidden
         this.add(usernameInfo);
         this.add(passwordInfo);
         this.add(buttons);
+        // For switching between login and signup
+        final JLabel switchToLoginLabel = new JLabel("Have user:");
+        JPanel switchToLoginPanel = new JPanel();
+        switchToLoginPanel.add(switchToLoginLabel);
+        switchToLoginPanel.add(toLogin);
+
+        // Button to switch panel at the bottom
+        this.add(switchToLoginPanel);
     }
+
 
     private void addUsernameListener() {
         usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
@@ -99,6 +115,8 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
                 final SignupState currentState = signupViewModel.getState();
                 currentState.setUsername(usernameInputField.getText());
                 signupViewModel.setState(currentState);
+                // Clear the error message when the user modifies the username
+                errorLabel.setText(" ");
             }
 
             @Override
@@ -147,16 +165,24 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        JOptionPane.showMessageDialog(this, "Cancel not implemented yet.");
+        // Implement cancel button functionality like clear fields or navigate to another view
+        usernameInputField.setText("");
+        passwordInputField.setText("");
+        errorLabel.setText(" ");
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final SignupState state = (SignupState) evt.getNewValue();
-        if (state.getUsernameError() != null) {
-            JOptionPane.showMessageDialog(this, state.getUsernameError());
+        // Show the error message if username already exists
+        if (state.getUsernameError() != null && !state.getUsernameError().isEmpty()) {
+            errorLabel.setText("This user already exists!" + state.getUsernameError());
+            errorLabel.setVisible(true);
+        } else {
+            errorLabel.setVisible(false);
         }
     }
+
 
     public String getViewName() {
         return viewName;

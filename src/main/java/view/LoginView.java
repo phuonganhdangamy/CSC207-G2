@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Component;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -33,8 +34,11 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     private final JPasswordField passwordInputField = new JPasswordField(15);
     private final JLabel passwordErrorField = new JLabel();
 
+    private final JLabel errorLabel = new JLabel();
+
     private final JButton logIn;
     private final JButton cancel;
+    private final JButton signUp;
     private LoginController loginController;
 
     public LoginView(LoginViewModel loginViewModel) {
@@ -42,19 +46,25 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         this.loginViewModel = loginViewModel;
         this.loginViewModel.addPropertyChangeListener(this);
 
-        final JLabel title = new JLabel("Login Screen");
+        final JLabel title = new JLabel("Login page");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        final LabelTextPanel usernameInfo = new LabelTextPanel(
-                new JLabel("Username"), usernameInputField);
-        final LabelTextPanel passwordInfo = new LabelTextPanel(
-                new JLabel("Password"), passwordInputField);
+        // Add error label which initially hidden
+        errorLabel.setForeground(Color.RED);
+        errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        errorLabel.setVisible(false);
 
+        final LabelTextPanel usernameInfo = new LabelTextPanel(
+                new JLabel("Username :"), usernameInputField);
+        final LabelTextPanel passwordInfo = new LabelTextPanel(
+                new JLabel("Password :"), passwordInputField);
         final JPanel buttons = new JPanel();
-        logIn = new JButton("log in");
+        logIn = new JButton("Log in");
         buttons.add(logIn);
-        cancel = new JButton("cancel");
+        cancel = new JButton("Cancel");
         buttons.add(cancel);
+        signUp = new JButton("Sign up");
+
 
         logIn.addActionListener(
                 new ActionListener() {
@@ -123,11 +133,19 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
             }
         });
 
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(title);
+        this.add(errorLabel);
         this.add(usernameInfo);
-        this.add(usernameErrorField);
         this.add(passwordInfo);
         this.add(buttons);
+
+        // Panel for "No user: Sign up"
+        JPanel signUpPanel = new JPanel();
+        JLabel noUserLabel = new JLabel("No user:");
+        signUpPanel.add(noUserLabel);
+        signUpPanel.add(signUp);
+        this.add(signUpPanel);
     }
 
     /**
@@ -143,7 +161,17 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         final LoginState state = (LoginState) evt.getNewValue();
         setFields(state);
         usernameErrorField.setText(state.getLoginError());
+        passwordInputField.setText(state.getPassword());
+
+        // Show error message only if there's a login error
+        if (state.getLoginError() != null && !state.getLoginError().isEmpty()) {
+            errorLabel.setText("Wrong username/password!" + state.getLoginError());
+            errorLabel.setVisible(true);
+        } else {
+            errorLabel.setVisible(false);
+        }
     }
+
 
     private void setFields(LoginState state) {
         usernameInputField.setText(state.getUsername());
