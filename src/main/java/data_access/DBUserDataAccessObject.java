@@ -54,8 +54,7 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             return responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE;
-        }
-        catch (IOException | JSONException ex) {
+        } catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -103,15 +102,12 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
                 //success
-            }
-            else if (responseBody.getInt(STATUS_CODE_LABEL) == CREDENTIAL_ERROR) {
+            } else if (responseBody.getInt(STATUS_CODE_LABEL) == CREDENTIAL_ERROR) {
                 throw new DataAccessException("Incorrect credentials");
-            }
-            else {
+            } else {
                 throw new DataAccessException("database error: " + responseBody.getString(MESSAGE));
             }
-        }
-        catch (IOException | JSONException ex) {
+        } catch (IOException | JSONException ex) {
             throw new DataAccessException(ex.getMessage());
         }
 
@@ -141,12 +137,10 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
                 // success!
-            }
-            else {
+            } else {
                 throw new RuntimeException(responseBody.getString(MESSAGE));
             }
-        }
-        catch (IOException | JSONException ex) {
+        } catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
 
@@ -200,6 +194,24 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
             }
         } catch (IOException | JSONException | DataAccessException ex) {
             throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public boolean logoutUser(String username) {
+        // Implement the logic to handle user logout, such as clearing session data. Haven't add api-url
+        try {
+            final OkHttpClient client = new OkHttpClient().newBuilder().build();
+            final Request request = new Request.Builder()
+                    .url(String.format("http://api-url/logout?username=%s", username))
+                    .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
+                    .build();
+
+            final Response response = client.newCall(request).execute();
+            return response.isSuccessful(); // Return true if logout is successful
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false; // Return false if an error occurs
         }
     }
 }

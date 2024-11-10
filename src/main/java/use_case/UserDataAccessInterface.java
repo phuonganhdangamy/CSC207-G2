@@ -35,4 +35,5 @@ public interface UserDataAccessInterface {
 
     User get(String username);
 
+    boolean logoutUser(String username);
 }

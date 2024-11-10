@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 public class Main {
     /**
      * Builds and runs the CA architecture of the application.
+     *
      * @param args unused arguments
      */
     public static void main(String[] args) {
@@ -15,3 +16,4 @@ public class Main {
 
         // Set up in the AppBuilder and add the use cases here
     }
+}
