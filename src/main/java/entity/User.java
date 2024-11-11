@@ -73,10 +73,10 @@ public class User {
 
 
     // Method to view total profit or loss
-    public void viewProfitLoss() {
-        double profitLoss = profitLossCalculator.calculateTotalProfitLoss();
-        System.out.println("Your total profit/loss: $" + profitLoss);
-    }
+//    public double viewProfitLoss() {
+//        double profitLoss = profitLossCalculator.calculateTotalProfitLoss();
+//        return profitLoss;
+//    }
 
     public String getName() {
         return username;

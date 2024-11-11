@@ -30,15 +30,17 @@ public class LoginInteractor implements LoginInputBoundary {
 
         // Check if the username exists in the database
         if (!userDataAccess.existsByName(username)){
-            loginPresenter.prepareFailView("User not found");
+            loginPresenter.prepareFailView(username + ": Account does not exist.");
         }
         else {
             //If the user is found, check if the encrypted password matches the entered password
             User userFound = userDataAccess.get(username);
             if (!userFound.getPassword().equals(password)){
-                loginPresenter.prepareFailView("Incorrect password");
+                loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
             }
             else {
+                final User user = userDataAccess.get(loginInputData.getUsername());
+                userDataAccess.setCurrentUsername(user.getName());
                 // Transform the portfolio data from the entity class to match what is required of the
                 // LoginOutputData class. Portfolio data needs to be converted to a map where each key is a
                 // ticker and the value is the number of shares owned

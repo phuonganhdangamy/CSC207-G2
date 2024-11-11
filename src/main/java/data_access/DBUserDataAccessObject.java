@@ -15,8 +15,12 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import use_case.DataAccessException;
 import use_case.UserDataAccessInterface;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.logout.LogoutUserDataAccessInterface;
+import use_case.signup.SignupUserDataAccessInterface;
 
-public class DBUserDataAccessObject implements UserDataAccessInterface {
+public class DBUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface,
+        LogoutUserDataAccessInterface {
     private static final int SUCCESS_CODE = 200;
     private static final int CREDENTIAL_ERROR = 401;
     private static final String CONTENT_TYPE_LABEL = "Content-Type";
@@ -32,6 +36,8 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
     private final String PORTFOLIO = "portfolio:";
     private final String TICKER = "ticker:";
     private final String COST = "cost:";
+
+    private String currentUsername;
 
 
     public DBUserDataAccessObject(StockFactory stockFactory, UserFactory userFactory) {
@@ -60,7 +66,7 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
     }
 
     @Override
-    public void save(User user) throws DataAccessException {
+    public void save(User user) {
         //Build JSON object
         Portfolio portfolio = user.getPortfolio();
         List<Stock> stocksList = portfolio.getStocks();
@@ -102,19 +108,16 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
                 //success
-            } else if (responseBody.getInt(STATUS_CODE_LABEL) == CREDENTIAL_ERROR) {
-                throw new DataAccessException("Incorrect credentials");
             } else {
-                throw new DataAccessException("database error: " + responseBody.getString(MESSAGE));
+                throw new RuntimeException(responseBody.getString(MESSAGE));
             }
         } catch (IOException | JSONException ex) {
-            throw new DataAccessException(ex.getMessage());
+            throw new RuntimeException(ex);
         }
 
 
     }
 
-    @Override
     public void changePassword(User user) {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -195,6 +198,16 @@ public class DBUserDataAccessObject implements UserDataAccessInterface {
         } catch (IOException | JSONException | DataAccessException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public String getCurrentUsername() {
+        return currentUsername;
+    }
+
+    @Override
+    public void setCurrentUsername(String username) {
+        this.currentUsername = username;
     }
 
     @Override
