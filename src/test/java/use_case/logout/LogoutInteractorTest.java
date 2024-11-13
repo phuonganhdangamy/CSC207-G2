@@ -5,8 +5,6 @@ import entity.StockFactory;
 import entity.User;
 import entity.UserFactory;
 import org.junit.jupiter.api.Test;
-import use_case.UserDataAccessInterface;
-import use_case.login.LoginUserDataAccessInterface;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,13 +15,13 @@ class LogoutInteractorTest {
         LogoutInputData inputData = new LogoutInputData("Paul");
         DBUserDataAccessObject userRepository = new DBUserDataAccessObject(new StockFactory(), new UserFactory());
 
-        // For the success test, we need to add Paul to the data access repository before we log in.
+        // add Paul to the data access repository before we log in.
         UserFactory factory = new UserFactory();
         User user = factory.create("Paul", "password");
         userRepository.save(user);
         userRepository.setCurrentUsername("Paul");
 
-        // This creates a successPresenter that tests whether the test case is as we expect.
+        // creates a successPresenter that tests whether the test case is as we expect.
         LogoutOutputBoundary successPresenter = new LogoutOutputBoundary() {
             @Override
             public void prepareSuccessView(LogoutOutputData user) {
