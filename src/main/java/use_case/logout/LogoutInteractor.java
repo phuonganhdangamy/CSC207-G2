@@ -1,16 +1,14 @@
 package use_case.logout;
 
-import use_case.UserDataAccessInterface;
-
 /**
  * Interactor for logout use case.
  */
 public class LogoutInteractor implements LogoutInputBoundary {
     private final LogoutOutputBoundary logoutPresenter;
-    private final UserDataAccessInterface userDataAccess;
+    private final LogoutUserDataAccessInterface userDataAccess;
 
     // Constructor requires access to the presenter and data layer for logout process
-    public LogoutInteractor(UserDataAccessInterface userDataAccess, LogoutOutputBoundary logoutPresenter) {
+    public LogoutInteractor(LogoutUserDataAccessInterface userDataAccess, LogoutOutputBoundary logoutPresenter) {
         this.userDataAccess = userDataAccess;
         this.logoutPresenter = logoutPresenter;
     }
@@ -24,12 +22,10 @@ public class LogoutInteractor implements LogoutInputBoundary {
 
         // Notify presenter of the result
         if (success) {
-            LogoutOutputData outputData = new LogoutOutputData(true, "Logout successful");
+            LogoutOutputData outputData = new LogoutOutputData(true, "Logout successful", username);
             logoutPresenter.prepareSuccessView(outputData);
         } else {
             logoutPresenter.prepareFailView("Logout failed, please try again");
         }
     }
 }
-
-

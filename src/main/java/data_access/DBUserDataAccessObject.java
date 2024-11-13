@@ -212,19 +212,11 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
 
     @Override
     public boolean logoutUser(String username) {
-        // Implement the logic to handle user logout, such as clearing session data. Haven't add api-url
-        try {
-            final OkHttpClient client = new OkHttpClient().newBuilder().build();
-            final Request request = new Request.Builder()
-                    .url(String.format("http://api-url/logout?username=%s", username))
-                    .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
-                    .build();
-
-            final Response response = client.newCall(request).execute();
-            return response.isSuccessful(); // Return true if logout is successful
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false; // Return false if an error occurs
+        // Simulate clearing session data
+        if (username != null && !username.isEmpty() && username.equals(this.getCurrentUsername())) {
+            this.setCurrentUsername(null); // Clear the current username to log out
+            return true;
         }
+        return false;
     }
 }
