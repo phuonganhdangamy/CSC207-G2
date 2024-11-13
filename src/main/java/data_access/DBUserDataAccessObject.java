@@ -215,7 +215,6 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
         // Simulate clearing session data
         if (username != null && !username.isEmpty() && username.equals(this.getCurrentUsername())) {
             this.setCurrentUsername(null); // Clear the current username to log out
-            System.out.println("User " + username + " logged out successfully.");
             return true;
         }
         return false;
