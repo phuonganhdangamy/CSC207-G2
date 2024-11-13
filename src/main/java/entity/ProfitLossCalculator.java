@@ -2,6 +2,7 @@ package entity;
 
 import data_access.DBStockDataAccessObject;
 
+
 public class ProfitLossCalculator {
     private Portfolio portfolio;
 
