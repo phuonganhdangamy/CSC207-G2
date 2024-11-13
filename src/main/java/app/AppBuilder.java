@@ -22,6 +22,7 @@ import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 
+import use_case.logout.LogoutOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -131,6 +132,24 @@ public class AppBuilder {
      * Adds the Logout Use Case to the application.
      * @return this builder
      */
+
+    /**
+     * Creates the JFrame and the first view is the signup view.
+     * Tells the viewManager what view is currently shown to the user.
+     * @return application
+     */
+    public JFrame build() {
+        final JFrame application = new JFrame("Stock Market Simulator");
+        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        application.add(cardPanel);
+
+        viewManagerModel.setState(signupView.getViewName());
+        viewManagerModel.firePropertyChanged();
+
+        return application;
+
+    }
 
 
 }
