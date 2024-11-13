@@ -38,6 +38,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
     private final String COST = "cost:";
 
     private String currentUsername;
+    private User currentUser;
 
 
     public DBUserDataAccessObject(StockFactory stockFactory, UserFactory userFactory) {
@@ -203,6 +204,16 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
     @Override
     public String getCurrentUsername() {
         return currentUsername;
+    }
+
+    @Override
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return this.currentUser;
     }
 
     @Override
