@@ -56,7 +56,7 @@ public class User {
         for (User user : users) {
             if (user.getName().equals(username)) {
                 System.out.println("Username already taken.");
-                return null; // Or throw an exception
+                return null;
             }
         }
         User newUser = new User(username, password);
