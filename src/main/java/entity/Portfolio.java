@@ -16,17 +16,28 @@ public class Portfolio {
         return stocks;
     }
 
-    // Method to add stocks to the portfolio
-       public void addStock(Stock stock) {
+    // Method to add a stock (which represents 1 share) to the portfolio
+    public void addStock(Stock stock) {
+        // Simply add the stock object to the portfolio (each stock is 1 share)
         stocks.add(stock);
     }
 
-    // Method to remove stocks from the portfolio -- still need to think of a way to implement it
-    public void removeStock(Stock stock, int numShares) {
-
+    // Method to remove a stock (1 share) from the portfolio
+    public void removeStock(Stock stock) {
+        // Remove the first occurrence of the stock object from the portfolio
+        stocks.remove(stock);
     }
 
-
-
- 
+    // Method to get the number of shares for a specific ticker symbol
+    public int getShareCount(String tickerSymbol) {
+        int count = 0;
+        // Loop through the portfolio and count stocks with the matching ticker
+        for (Stock stock : stocks) {
+            if (stock.getTickerSymbol().equals(tickerSymbol)) {
+                count++;
+            }
+        }
+        return count;
+    }
 }
+
