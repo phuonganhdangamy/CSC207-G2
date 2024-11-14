@@ -69,38 +69,18 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
 
     @Override
     public void save(User user) {
-        //Build JSON object
-        Portfolio portfolio = user.getPortfolio();
-        List<Stock> stocksList = portfolio.getStocks();
-
-        final JSONObject userInfo = new JSONObject();
-        final JSONArray portfolioStocks = new JSONArray();
-
-        for (Stock stock : stocksList) {
-            JSONObject stockInfo = new JSONObject();
-            stockInfo.put(TICKER, stock.getTickerSymbol());
-            stockInfo.put(COST, stock.getCost());
-            portfolioStocks.put(stockInfo);
-        }
-
-        userInfo.put(BALANCE, user.getBalance());
-        userInfo.put(PORTFOLIO, portfolioStocks);
-
-
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
 
-        // POST METHOD
+        // Uses the correct API method to create a new User in the database
         final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
         final JSONObject requestBody = new JSONObject();
         requestBody.put(USERNAME, user.getName());
         requestBody.put(PASSWORD, user.getPassword());
-
-        requestBody.put("info", userInfo);
         final RequestBody body = RequestBody.create(requestBody.toString(), mediaType);
         final Request request = new Request.Builder()
-                .url("http://vm003.teach.cs.toronto.edu:20112/modifyUserInfo")
-                .method("PUT", body)
+                .url("http://vm003.teach.cs.toronto.edu:20112/user")
+                .method("POST", body)
                 .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
                 .build();
         try {
@@ -109,13 +89,16 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
-                //success
-            } else {
+                // success!
+            }
+            else {
                 throw new RuntimeException(responseBody.getString(MESSAGE));
             }
-        } catch (IOException | JSONException ex) {
+        }
+        catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
+
 
 
     }
@@ -200,6 +183,59 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
         } catch (IOException | JSONException | DataAccessException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public void saveUserInfo(User user) {
+        //Build JSON object
+        Portfolio portfolio = user.getPortfolio();
+        List<Stock> stocksList = portfolio.getStocks();
+
+        final JSONObject userInfo = new JSONObject();
+        final JSONArray portfolioStocks = new JSONArray();
+
+        for (Stock stock : stocksList) {
+            JSONObject stockInfo = new JSONObject();
+            stockInfo.put(TICKER, stock.getTickerSymbol());
+            stockInfo.put(COST, stock.getCost());
+            portfolioStocks.put(stockInfo);
+        }
+
+        userInfo.put(BALANCE, user.getBalance());
+        userInfo.put(PORTFOLIO, portfolioStocks);
+
+
+        final OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+
+        // POST METHOD
+        final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
+        final JSONObject requestBody = new JSONObject();
+        requestBody.put(USERNAME, user.getName());
+        requestBody.put(PASSWORD, user.getPassword());
+
+        requestBody.put("info", userInfo);
+        final RequestBody body = RequestBody.create(requestBody.toString(), mediaType);
+        final Request request = new Request.Builder()
+                .url("http://vm003.teach.cs.toronto.edu:20112/modifyUserInfo")
+                .method("PUT", body)
+                .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+
+            final JSONObject responseBody = new JSONObject(response.body().string());
+
+            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
+                //success
+            } else {
+                throw new RuntimeException(responseBody.getString(MESSAGE));
+            }
+        } catch (IOException | JSONException ex) {
+            throw new RuntimeException(ex);
+        }
+
+
     }
 
     @Override

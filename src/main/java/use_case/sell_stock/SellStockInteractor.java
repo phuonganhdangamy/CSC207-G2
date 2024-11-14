@@ -32,7 +32,7 @@ public class SellStockInteractor implements SellStockInputBoundary{
                 userPortfolio.removeStock(ticker);
             }
 
-            database.save(user);
+            database.saveUserInfo(user);
 
         }
 
