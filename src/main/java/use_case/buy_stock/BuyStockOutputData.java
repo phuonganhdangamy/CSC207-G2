@@ -23,4 +23,5 @@ public class BuyStockOutputData {
     public int getNumberOfShares() {
         return numberOfShares;
     }
+
 }
