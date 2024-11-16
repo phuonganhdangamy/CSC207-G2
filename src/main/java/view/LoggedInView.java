@@ -1,10 +1,19 @@
 package view;
 
+import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.signup.SignupViewModel;
 
 import javax.swing.*;
 
-public class LoggedInView {
+public class LoggedInView extends JPanel{
+    private final String viewName = "logged in";
+
+    public LoggedInView(LoggedInViewModel loggedInViewModel) {
+    }
+
+    public String getViewName() {
+        return viewName;
+    }
 
 
 
@@ -17,4 +26,6 @@ public class LoggedInView {
         frame.pack();
         frame.setVisible(true);
     }
+
+
 }
