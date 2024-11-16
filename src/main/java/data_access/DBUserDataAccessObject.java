@@ -17,10 +17,11 @@ import use_case.DataAccessException;
 import use_case.UserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
+import use_case.sell_stock.SellStockUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class DBUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface,
-        LogoutUserDataAccessInterface {
+        LogoutUserDataAccessInterface, SellStockUserDataAccessInterface {
     private static final int SUCCESS_CODE = 200;
     private static final int CREDENTIAL_ERROR = 401;
     private static final String CONTENT_TYPE_LABEL = "Content-Type";
@@ -38,6 +39,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
     private final String COST = "cost:";
 
     private String currentUsername;
+    private User currentUser;
 
 
     public DBUserDataAccessObject(StockFactory stockFactory, UserFactory userFactory) {
@@ -67,38 +69,18 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
 
     @Override
     public void save(User user) {
-        //Build JSON object
-        Portfolio portfolio = user.getPortfolio();
-        List<Stock> stocksList = portfolio.getStocks();
-
-        final JSONObject userInfo = new JSONObject();
-        final JSONArray portfolioStocks = new JSONArray();
-
-        for (Stock stock : stocksList) {
-            JSONObject stockInfo = new JSONObject();
-            stockInfo.put(TICKER, stock.getTickerSymbol());
-            stockInfo.put(COST, stock.getCost());
-            portfolioStocks.put(stockInfo);
-        }
-
-        userInfo.put(BALANCE, user.getBalance());
-        userInfo.put(PORTFOLIO, portfolioStocks);
-
-
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
 
-        // POST METHOD
+        // Uses the correct API method to create a new User in the database
         final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
         final JSONObject requestBody = new JSONObject();
         requestBody.put(USERNAME, user.getName());
         requestBody.put(PASSWORD, user.getPassword());
-
-        requestBody.put("info", userInfo);
         final RequestBody body = RequestBody.create(requestBody.toString(), mediaType);
         final Request request = new Request.Builder()
-                .url("http://vm003.teach.cs.toronto.edu:20112/modifyUserInfo")
-                .method("PUT", body)
+                .url("http://vm003.teach.cs.toronto.edu:20112/user")
+                .method("POST", body)
                 .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
                 .build();
         try {
@@ -107,13 +89,16 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
-                //success
-            } else {
+                // success!
+            }
+            else {
                 throw new RuntimeException(responseBody.getString(MESSAGE));
             }
-        } catch (IOException | JSONException ex) {
+        }
+        catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
+
 
 
     }
@@ -201,8 +186,71 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
     }
 
     @Override
+    public void saveUserInfo(User user) {
+        //Build JSON object
+        Portfolio portfolio = user.getPortfolio();
+        List<Stock> stocksList = portfolio.getStocks();
+
+        final JSONObject userInfo = new JSONObject();
+        final JSONArray portfolioStocks = new JSONArray();
+
+        for (Stock stock : stocksList) {
+            JSONObject stockInfo = new JSONObject();
+            stockInfo.put(TICKER, stock.getTickerSymbol());
+            stockInfo.put(COST, stock.getCost());
+            portfolioStocks.put(stockInfo);
+        }
+
+        userInfo.put(BALANCE, user.getBalance());
+        userInfo.put(PORTFOLIO, portfolioStocks);
+
+
+        final OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+
+        // POST METHOD
+        final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
+        final JSONObject requestBody = new JSONObject();
+        requestBody.put(USERNAME, user.getName());
+        requestBody.put(PASSWORD, user.getPassword());
+
+        requestBody.put("info", userInfo);
+        final RequestBody body = RequestBody.create(requestBody.toString(), mediaType);
+        final Request request = new Request.Builder()
+                .url("http://vm003.teach.cs.toronto.edu:20112/modifyUserInfo")
+                .method("PUT", body)
+                .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+
+            final JSONObject responseBody = new JSONObject(response.body().string());
+
+            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
+                //success
+            } else {
+                throw new RuntimeException(responseBody.getString(MESSAGE));
+            }
+        } catch (IOException | JSONException ex) {
+            throw new RuntimeException(ex);
+        }
+
+
+    }
+
+    @Override
     public String getCurrentUsername() {
         return currentUsername;
+    }
+
+    @Override
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return this.currentUser;
     }
 
     @Override
@@ -212,19 +260,11 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
 
     @Override
     public boolean logoutUser(String username) {
-        // Implement the logic to handle user logout, such as clearing session data. Haven't add api-url
-        try {
-            final OkHttpClient client = new OkHttpClient().newBuilder().build();
-            final Request request = new Request.Builder()
-                    .url(String.format("http://api-url/logout?username=%s", username))
-                    .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
-                    .build();
-
-            final Response response = client.newCall(request).execute();
-            return response.isSuccessful(); // Return true if logout is successful
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false; // Return false if an error occurs
+        // Simulate clearing session data
+        if (username != null && !username.isEmpty() && username.equals(this.getCurrentUsername())) {
+            this.setCurrentUsername(null); // Clear the current username to log out
+            return true;
         }
+        return false;
     }
 }
