@@ -3,6 +3,9 @@ package interface_adapter.sell_stock;
 import use_case.sell_stock.SellStockInputBoundary;
 import use_case.sell_stock.SellStockInputData;
 
+/**
+ * The Controller for the Sell Stock Use Case.
+ */
 public class SellStockController {
     private SellStockInputBoundary sellStockInteractor;
 
