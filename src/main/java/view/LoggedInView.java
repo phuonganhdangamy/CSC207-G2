@@ -200,3 +200,5 @@ public class LoggedInView extends JPanel {
         frame.setVisible(true);
     }
 }
+
+
