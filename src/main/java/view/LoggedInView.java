@@ -190,17 +190,18 @@ public class LoggedInView extends JPanel {
     /**
      * Mockup Main Function to Display the LoggedInView UI
      */
-//    public static void main(String[] args) {
-//        JFrame frame = new JFrame("Logged In View");
-//        LoggedInView loggedInView = new LoggedInView(loggedInViewModel);
-//        loggedInView.setUsername("Testtest");
-//        loggedInView.setBalance(5555.55);
-//
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.add(loggedInView);
-//        frame.setSize(1000, 600); // Set the frame size
-//        frame.setVisible(true);
-//    }
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Logged In View");
+
+        LoggedInView loggedInView = new LoggedInView(new LoggedInViewModel());
+        loggedInView.setUsername("Testtest");
+        loggedInView.setBalance(5555.55);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(loggedInView);
+        frame.setSize(1000, 600); // Set the frame size
+        frame.setVisible(true);
+    }
 
     public String getViewName() {
         return this.viewName;
