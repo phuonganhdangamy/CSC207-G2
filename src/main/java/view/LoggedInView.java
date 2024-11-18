@@ -54,7 +54,7 @@ public class LoggedInView extends JPanel {
         topPanel.add(balanceLabel);
 
         // Stock Table
-        String[] columnNames = {"Ticker", "Shares", "Cost", "Current Price", "Total Value", "Profit/Loss"};
+        String[] columnNames = {"Ticker", "Shares", "Cost", "Profit/Loss"};
         stockTable = new JTable(new Object[0][columnNames.length], columnNames);
         JScrollPane scrollPane = new JScrollPane(stockTable);
 
