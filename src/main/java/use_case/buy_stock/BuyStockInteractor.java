@@ -23,7 +23,7 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
             return;
         }
 
-        double stockCost = stockDAO.setCost(new Stock(inputData.getTickerSymbol(), 0));
+        double stockCost = stockDAO.getCost(new Stock(inputData.getTickerSymbol(), 0).getTickerSymbol());
         double totalCost = stockCost * inputData.getNumberOfShares();
 
         if (user.getBalance() < totalCost) {
