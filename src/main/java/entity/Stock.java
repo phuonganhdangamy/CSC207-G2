@@ -10,6 +10,8 @@ import java.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 
 
+import data_access.DBStockDataAccessObject;
+
 /**
  * The Stock class represents a stock from our AlphaVantage API, where the user gives a tickerSymbol
  * and the companyName to get the current (in our case daily opening) price (currentPrice) of the stock.
@@ -40,6 +42,18 @@ public class Stock {
 
     public double getCurrentPrice() {
         return currentPrice;
+    private final String tickerSymbol;
+    private double cost;
+
+    // Cannot pass in DBStockDataAccessObject to the entity!
+    // Clean Architecture approach: only use DBStockDataAccessObject in the use case interactors (find/buy stock)
+    public Stock(String tickerSymbol, double cost) {
+        this.tickerSymbol = tickerSymbol;
+        this.cost = cost;
+    }
+
+    public String getTickerSymbol() {
+        return tickerSymbol;
     }
 
     public int getNumberOfShares() {
@@ -52,6 +66,11 @@ public class Stock {
 
     public void setCurrentPrice(double currentPrice) {
         this.currentPrice = currentPrice;
+    }
+
+    public static void main(String[] args) {
+        // Stock stock = new Stock("IBM", "IBM");
+        // System.out.println(stock.currentPrice);
     }
 
     public static void main(String[] args) {
