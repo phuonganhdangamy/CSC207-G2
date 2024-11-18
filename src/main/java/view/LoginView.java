@@ -60,7 +60,17 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         buttons.add(cancel);
         signUp = new JButton("Sign up");
 
+        // Switch to sign up view
+        signUp.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        loginController.switchToSignUpView();
 
+                    }
+                }
+        );
+
+        // Try logging the user in
         logIn.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
@@ -76,7 +86,23 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                 }
         );
 
-        cancel.addActionListener(this);
+        //Reset input fields
+        cancel.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        usernameInputField.setText("");
+                        passwordInputField.setText("");
+                        final LoginState currentState = loginViewModel.getState();
+                        currentState.setLoginError("");
+                        errorLabel.setVisible(false);
+
+                    }
+                }
+
+
+
+
+        );
 
         usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -160,7 +186,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
         // Show error message only if there's a login error
         if (state.getLoginError() != null && !state.getLoginError().isEmpty()) {
-            errorLabel.setText("Wrong username/password!" + state.getLoginError());
+            errorLabel.setText(state.getLoginError());
             errorLabel.setVisible(true);
         } else {
             errorLabel.setVisible(false);
