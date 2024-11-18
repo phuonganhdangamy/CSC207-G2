@@ -4,7 +4,7 @@ import use_case.buy_stock.*;
 
 public class BuyStockPresenter implements BuyStockOutputBoundary {
     @Override
-    public void presentSuccess(BuyStockOutputData outputData) {
+    public void prepareSuccessView(BuyStockOutputData outputData) {
         System.out.println("Stock purchase successful!");
         System.out.println("Ticker: " + outputData.getTickerSymbol());
         System.out.println("Shares Bought: " + outputData.getNumberOfShares());
@@ -12,7 +12,7 @@ public class BuyStockPresenter implements BuyStockOutputBoundary {
     }
 
     @Override
-    public void presentError(String errorMessage) {
+    public void prepareFailView(String errorMessage) {
         System.out.println("Error: " + errorMessage);
     }
 }

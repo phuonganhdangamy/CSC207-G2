@@ -68,6 +68,26 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
     }
 
     @Override
+    public void save(User user) throws DataAccessException {
+        //Build JSON object
+        Portfolio portfolio = user.getPortfolio();
+        List<Stock> stocksList = portfolio.getStocks();
+
+        final JSONObject userInfo = new JSONObject();
+        final JSONArray portfolioStocks = new JSONArray();
+
+        for (Stock stock : stocksList) {
+            JSONObject stockInfo = new JSONObject();
+            stockInfo.put(TICKER, stock.getTickerSymbol());
+            stockInfo.put(COMPANY, stock.getCompanyName());
+            portfolioStocks.put(stockInfo);
+        }
+
+        userInfo.put(BALANCE, user.getBalance());
+        userInfo.put(PORTFOLIO, portfolioStocks);
+
+
+
     public void save(User user) {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -170,6 +190,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
                     double cost = jStock.getDouble(COST);
 
                     //Builds the stock object
+                    Stock stock = stockFactory.create(ticker, company);
                     Stock stock = stockFactory.create(ticker, cost);
 
                     //Adds stock to portfolio object

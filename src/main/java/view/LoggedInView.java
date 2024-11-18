@@ -1,6 +1,7 @@
 package view;
 
 import interface_adapter.buy_stock.BuyStockController;
+import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.find_stock.FindStockController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.sell_stock.SellStockController;
@@ -34,8 +35,9 @@ public class LoggedInView extends JPanel {
 
     private String username = "<username>";
     private double balance = 0.0;
+    private String viewName = "logged in";
 
-    public LoggedInView() {
+    public LoggedInView(LoggedInViewModel loggedInViewModel) {
         this.setLayout(new BorderLayout(10, 10));
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
 
@@ -190,7 +192,8 @@ public class LoggedInView extends JPanel {
      */
     public static void main(String[] args) {
         JFrame frame = new JFrame("Logged In View");
-        LoggedInView loggedInView = new LoggedInView();
+
+        LoggedInView loggedInView = new LoggedInView(new LoggedInViewModel());
         loggedInView.setUsername("Testtest");
         loggedInView.setBalance(5555.55);
 
@@ -198,6 +201,10 @@ public class LoggedInView extends JPanel {
         frame.add(loggedInView);
         frame.setSize(1000, 600); // Set the frame size
         frame.setVisible(true);
+    }
+
+    public String getViewName() {
+        return this.viewName;
     }
 }
 
