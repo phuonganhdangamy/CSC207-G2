@@ -31,9 +31,7 @@ public class ViewModel<T> {
     }
 
     public void setState(T state) {
-        T oldState = this.state;
         this.state = state;
-        support.firePropertyChange("state", oldState, this.state);
     }
 
     /**
