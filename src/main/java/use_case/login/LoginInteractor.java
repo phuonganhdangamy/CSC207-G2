@@ -29,8 +29,8 @@ public class LoginInteractor implements LoginInputBoundary {
         String password = loginInputData.getPassword();
 
         // Check if the username exists in the database
-        if (!userDataAccess.existsByName(username)){
-            loginPresenter.prepareFailView(username + ": Account does not exist.");
+        if (!userDataAccess.existsByName(username) || username.equals("") || password.equals("")) {
+            loginPresenter.prepareFailView( "Account does not exist.");
         }
         else {
             //If the user is found, check if the encrypted password matches the entered password
@@ -39,8 +39,8 @@ public class LoginInteractor implements LoginInputBoundary {
                 loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
             }
             else {
-                final User user = userDataAccess.get(loginInputData.getUsername());
-                userDataAccess.setCurrentUsername(user.getName());
+                userDataAccess.setCurrentUsername(username);
+                userDataAccess.setCurrentUser(userFound);
                 // Transform the portfolio data from the entity class to match what is required of the
                 // LoginOutputData class. Portfolio data needs to be converted to a map where each key is a
                 // ticker and the value is the number of shares owned
@@ -63,6 +63,12 @@ public class LoginInteractor implements LoginInputBoundary {
             }
 
         }
+
+    }
+
+    @Override
+    public void switchToSignUpView() {
+        loginPresenter.switchToSignUpView();
 
     }
 }
