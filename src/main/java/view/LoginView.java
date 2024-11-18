@@ -64,6 +64,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         signUp.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
+                        errorLabel.setVisible(false);
                         loginController.switchToSignUpView();
 
                     }
