@@ -37,6 +37,7 @@ public class Portfolio {
         return false;
     }
 
+
     // Method to get the number of shares for a specific ticker symbol
     public int getShareCount(String tickerSymbol) {
         int count = 0;
@@ -48,3 +49,4 @@ public class Portfolio {
         return count;
     }
 }
+

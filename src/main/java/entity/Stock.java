@@ -14,11 +14,8 @@ public class Stock {
     private final String tickerSymbol;
     private double cost;
 
-    public Stock(String tickerSymbol) {
-        this.tickerSymbol = tickerSymbol;
-        this.cost = DBStockDataAccessObject.setCost(this);
-    }
-
+    // Cannot pass in DBStockDataAccessObject to the entity!
+    // Clean Architecture approach: only use DBStockDataAccessObject in the use case interactors (find/buy stock)
     public Stock(String tickerSymbol, double cost) {
         this.tickerSymbol = tickerSymbol;
         this.cost = cost;

@@ -39,8 +39,8 @@ public class LoginInteractor implements LoginInputBoundary {
                 loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
             }
             else {
-                final User user = userDataAccess.get(loginInputData.getUsername());
-                userDataAccess.setCurrentUsername(user.getName());
+                userDataAccess.setCurrentUsername(username);
+                userDataAccess.setCurrentUser(userFound);
                 // Transform the portfolio data from the entity class to match what is required of the
                 // LoginOutputData class. Portfolio data needs to be converted to a map where each key is a
                 // ticker and the value is the number of shares owned
