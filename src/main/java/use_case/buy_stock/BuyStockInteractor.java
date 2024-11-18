@@ -19,15 +19,15 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
     public void execute(BuyStockInputData inputData) {
         User user = userDAO.getUserByUsername(inputData.getUsername());
         if (user == null) {
-            outputBoundary.presentError("User not found.");
+            outputBoundary.prepareFailView("User not found.");
             return;
         }
 
-        double stockCost = stockDAO.setCost(new Stock(inputData.getTickerSymbol(), 0));
+        double stockCost = stockDAO.getCost(new Stock(inputData.getTickerSymbol(), 0).getTickerSymbol());
         double totalCost = stockCost * inputData.getNumberOfShares();
 
         if (user.getBalance() < totalCost) {
-            outputBoundary.presentError("Insufficient balance.");
+            outputBoundary.prepareFailView("Insufficient balance.");
             return;
         }
 
@@ -37,6 +37,6 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
         }
 
         userDAO.saveUser(user);
-        outputBoundary.presentSuccess(new BuyStockOutputData(user.getBalance(), inputData.getTickerSymbol(), inputData.getNumberOfShares()));
+        outputBoundary.prepareSuccessView(new BuyStockOutputData(user.getBalance(), inputData.getTickerSymbol(), inputData.getNumberOfShares()));
     }
 }

@@ -19,7 +19,6 @@ public class DBStockDataAccessObject {
         String urlString = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + stock.getTickerSymbol() + "&apikey=" + apiKey;
 public class DBStockDataAccessObject implements FindStockDataAccessInterface {
 
-    @Override
     public double getCost(String tickerSymbol) {
         String apiKey = "ID8RVT9J10LA48HD";
         String urlString = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + tickerSymbol + "&apikey=" + apiKey;
