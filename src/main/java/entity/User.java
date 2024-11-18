@@ -9,7 +9,7 @@ public class User {
     private String password;
     private Portfolio portfolio;
     private ProfitLossCalculator profitLossCalculator;
-     private double balance = 10000;
+    private double balance = 10000;
 
 
     // Static list to hold users to ensure each username is unique
@@ -56,7 +56,7 @@ public class User {
         for (User user : users) {
             if (user.getName().equals(username)) {
                 System.out.println("Username already taken.");
-                return null;
+                return null; // Or throw an exception
             }
         }
         User newUser = new User(username, password);
@@ -89,7 +89,7 @@ public class User {
     public Portfolio getPortfolio() {
         return portfolio;
     }
-  
+
     public double getBalance() {
         return balance;
     }
@@ -104,4 +104,3 @@ public class User {
     }
 
 }
-
