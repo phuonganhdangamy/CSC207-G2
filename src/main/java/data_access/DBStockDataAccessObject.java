@@ -1,7 +1,7 @@
 package data_access;
 
-import entity.Stock;
 import org.json.JSONObject;
+import use_case.find_stock.FindStockDataAccessInterface;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -10,11 +10,12 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class DBStockDataAccessObject {
+public class DBStockDataAccessObject implements FindStockDataAccessInterface {
 
-    public static double setCost(Stock stock) {
+    @Override
+    public double getCost(String tickerSymbol) {
         String apiKey = "ID8RVT9J10LA48HD";
-        String urlString = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + stock.getTickerSymbol() + "&apikey=" + apiKey;
+        String urlString = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + tickerSymbol + "&apikey=" + apiKey;
 
         try {
             URL url = new URL(urlString);
@@ -50,5 +51,12 @@ public class DBStockDataAccessObject {
             e.printStackTrace();
         }
         return 0.0;
+    }
+
+    @Override
+    public boolean isStockExist(String tickerSymbol) {
+        String apiKey = "ID8RVT9J10LA48HD";
+        String urlString = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + tickerSymbol + "&apikey=" + apiKey;
+        return false;
     }
 }
