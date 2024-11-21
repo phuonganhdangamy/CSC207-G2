@@ -23,18 +23,18 @@ public class SellStockInteractor implements SellStockInputBoundary{
         Portfolio userPortfolio = user.getPortfolio();
 
         // Check the number of shares owned associated with the ticker
-        int numSharesOwned = userPortfolio.getShareCount();
+        //int numSharesOwned = userPortfolio.getShareCount();
 
         // If we own more than the number of shares that the user wishes to sell,
         // this can be executed
-        if (numSharesOwned >= quantity){
-            for(int i = 0; i < quantity; i++){
-                userPortfolio.removeStock(ticker);
-            }
-
-            database.saveUserInfo(user);
-
-        }
+//        if (numSharesOwned >= quantity){
+//            for(int i = 0; i < quantity; i++){
+//                userPortfolio.removeStock(ticker);
+//            }
+//
+//            database.saveUserInfo(user);
+//
+//        }
 
 
     }
