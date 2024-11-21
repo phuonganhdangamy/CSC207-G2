@@ -44,4 +44,27 @@ public class FindStockInteractorTest {
         FindStockInputBoundary interactor = new FindStockInteractor(stockRepository, successPresenter);
         interactor.execute(inputData);
     }
+
+    @Test
+    void stockDoesNotExistTest() {
+
+        FindStockInputData inputData = new FindStockInputData("TSLA");
+
+        InMemoryStockDataAccessObject stockRepository = new InMemoryStockDataAccessObject();
+
+        FindStockOutputBoundary failPresenter = new FindStockOutputBoundary() {
+            @Override
+            public void prepareSuccessView(FindStockOutputData outputData) {
+                fail("Use case success is unexpected.");
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                assertEquals("TSLA does not exist.", errorMessage);
+            }
+        };
+
+        FindStockInputBoundary interactor = new FindStockInteractor(stockRepository, failPresenter);
+        interactor.execute(inputData);
+    }
 }
