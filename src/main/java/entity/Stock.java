@@ -34,5 +34,3 @@ public class Stock {
         // System.out.println(stock.currentPrice);
     }
 }
-
-
