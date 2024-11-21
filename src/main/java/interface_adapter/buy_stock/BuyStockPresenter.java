@@ -2,6 +2,9 @@ package interface_adapter.buy_stock;
 
 import use_case.buy_stock.*;
 
+/**
+ * The Presenter for the Buy Stock Use Case.
+ */
 public class BuyStockPresenter implements BuyStockOutputBoundary {
     @Override
     public void prepareSuccessView(BuyStockOutputData outputData) {

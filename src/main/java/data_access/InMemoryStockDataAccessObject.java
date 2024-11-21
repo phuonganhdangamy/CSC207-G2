@@ -2,6 +2,7 @@ package data_access;
 
 import entity.Stock;
 import entity.User;
+import use_case.buy_stock.BuyStockUserDataAccessInterface;
 import use_case.find_stock.FindStockDataAccessInterface;
 
 import java.util.HashMap;

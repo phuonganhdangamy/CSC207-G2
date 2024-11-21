@@ -46,7 +46,7 @@ public class FindStockInteractorTest {
     }
 
     @Test
-    void stockDoesNotExistTest() {
+    void failureStockDoesNotExistTest() {
 
         FindStockInputData inputData = new FindStockInputData("TSLA");
 
@@ -61,6 +61,29 @@ public class FindStockInteractorTest {
             @Override
             public void prepareFailView(String errorMessage) {
                 assertEquals("TSLA does not exist.", errorMessage);
+            }
+        };
+
+        FindStockInputBoundary interactor = new FindStockInteractor(stockRepository, failPresenter);
+        interactor.execute(inputData);
+    }
+
+    @Test
+    void failureEmptyStockTest() {
+
+        FindStockInputData inputData = new FindStockInputData(null);
+
+        InMemoryStockDataAccessObject stockRepository = new InMemoryStockDataAccessObject();
+
+        FindStockOutputBoundary failPresenter = new FindStockOutputBoundary() {
+            @Override
+            public void prepareSuccessView(FindStockOutputData outputData) {
+                fail("Use case success is unexpected.");
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                assertEquals("Input cannot be empty.", errorMessage);
             }
         };
 
