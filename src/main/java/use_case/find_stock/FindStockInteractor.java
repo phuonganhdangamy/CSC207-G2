@@ -18,7 +18,7 @@ public class FindStockInteractor implements FindStockInputBoundary{
 
         if (!stockExist) {
 
-            findStockPresenter.prepareFailView(tickerSymbol + "does not exist.");
+            findStockPresenter.prepareFailView(tickerSymbol + " does not exist.");
         }
         else {
             double currentCost = findStockUserDataAccess.getCost(tickerSymbol);
