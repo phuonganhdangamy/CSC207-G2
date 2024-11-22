@@ -1,7 +1,7 @@
 package use_case.profit_loss;
 
 public class ProfitLossInputData {
-    private String userId; // User's unique ID
+    private final String userId;
 
     public ProfitLossInputData(String userId) {
         this.userId = userId;

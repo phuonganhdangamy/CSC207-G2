@@ -1,13 +1,13 @@
 package use_case.profit_loss;
 
 public class ProfitLossOutputData {
-    private final double totalProfitLoss;
+    private final double profitLoss;
 
-    public ProfitLossOutputData(double totalProfitLoss) {
-        this.totalProfitLoss = totalProfitLoss;
+    public ProfitLossOutputData(double profitLoss) {
+        this.profitLoss = profitLoss;
     }
 
-    public double getTotalProfitLoss() {
-        return totalProfitLoss;
+    public double getProfitLoss() {
+        return profitLoss;
     }
 }
