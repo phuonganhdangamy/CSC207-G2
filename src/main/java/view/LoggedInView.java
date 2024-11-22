@@ -1,7 +1,7 @@
 package view;
 
 import interface_adapter.buy_stock.BuyStockController;
-import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.LoggedInViewModel;
 import interface_adapter.find_stock.FindStockController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.sell_stock.SellStockController;
