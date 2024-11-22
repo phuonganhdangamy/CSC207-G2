@@ -22,7 +22,8 @@ public class ProfitLossCalculator {
 
             // Calculate profit/loss based on the purchase price (cost) and current price
             double purchasePrice = stock.getCost();
-            double profitLossPerStock = currentPrice - purchasePrice;
+            int shareCount = portfolio.getShareCount(stock.getTickerSymbol()); // Get number of shares
+            double profitLossPerStock = (currentPrice - purchasePrice) * shareCount;
 
             // Add the profit/loss for this stock (since each Stock object represents 1 share)
             totalProfitLoss += profitLossPerStock;
@@ -40,7 +41,8 @@ public class ProfitLossCalculator {
                 double currentPrice = stockDataAccess.getCost(stock.getTickerSymbol());
 
                 double purchasePrice = stock.getCost();
-                totalProfitLossForStock = currentPrice - purchasePrice;
+                int shareCount = portfolio.getShareCount(stock.getTickerSymbol()); // Get number of shares
+                totalProfitLossForStock = (currentPrice - purchasePrice) * shareCount;
 
                 break;
             }
