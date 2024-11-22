@@ -63,7 +63,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         topPanel.add(balanceLabel);
 
         // Stock Table
-        String[] columnNames = {"Ticker", "Shares", "Cost", "Current Price", "Total Value", "Profit/Loss"};
+        String[] columnNames = {"Ticker", "Shares", "Profit/Loss"};
         stockTable = new JTable(new Object[0][columnNames.length], columnNames);
         JScrollPane scrollPane = new JScrollPane(stockTable);
 
@@ -161,8 +161,9 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(LoggedInView.this, "Logged out. Redirecting to Login Page...");
+                //JOptionPane.showMessageDialog(LoggedInView.this, "Logged out. Redirecting to Login Page...");
                 // Mock action will replace with controller later
+                logoutController.execute(username);
             }
         });
     }
@@ -234,7 +235,17 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     //Needs implementation
 
     private void setFields(LoggedInState state) {
+        setBalance(state.getBalance());
+        updateBalanceLabel();
 
+        setUsername(state.getUsername());
+        setUsername(state.getUsername());
+
+
+    }
+
+    public void setLogoutController(LogoutController logoutController) {
+        this.logoutController = logoutController;
     }
 }
 

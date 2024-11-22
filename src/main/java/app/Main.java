@@ -20,6 +20,7 @@ public class Main {
                 .addLoggedInView()
                 .addSignupUseCase()
                 .addLoginUseCase()
+                .addLogoutUseCase()
                 .build();
 
         // Makes the application visible
