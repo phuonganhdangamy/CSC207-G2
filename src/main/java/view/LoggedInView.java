@@ -1,8 +1,10 @@
 package view;
 
+import interface_adapter.LoggedInState;
 import interface_adapter.buy_stock.BuyStockController;
 import interface_adapter.LoggedInViewModel;
 import interface_adapter.find_stock.FindStockController;
+import interface_adapter.login.LoginState;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.sell_stock.SellStockController;
 import interface_adapter.view_owned_stock.ViewOwnedStockController;
@@ -12,9 +14,12 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class LoggedInView extends JPanel {
+public class LoggedInView extends JPanel implements PropertyChangeListener {
 
+    private final LoggedInViewModel loggedInViewModel;
     private JLabel balanceLabel;
     private JTable stockTable;
     private JTextField tickerInputField;
@@ -38,6 +43,8 @@ public class LoggedInView extends JPanel {
     private String viewName = "logged in";
 
     public LoggedInView(LoggedInViewModel loggedInViewModel) {
+        this.loggedInViewModel = loggedInViewModel;
+        this.loggedInViewModel.addPropertyChangeListener(this);
         this.setLayout(new BorderLayout(10, 10));
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
 
@@ -205,6 +212,29 @@ public class LoggedInView extends JPanel {
 
     public String getViewName() {
         return this.viewName;
+    }
+
+    // Detects changes in the logged in state and updates UI accordingly
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        final LoggedInState state = (LoggedInState) evt.getNewValue();
+        setFields(state);
+
+//        //HANDLES ERROR CASE
+        if (state.getError() != null && !state.getError().isEmpty()){
+            JOptionPane.showMessageDialog(this, state.getError(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+
+            state.setError("");
+        }
+
+
+    }
+
+    //Needs implementation
+
+    private void setFields(LoggedInState state) {
+
     }
 }
 
