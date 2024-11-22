@@ -217,16 +217,16 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     // Detects changes in the logged in state and updates UI accordingly
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        final LoggedInState state = (LoggedInState) evt.getNewValue();
-        setFields(state);
-
-        //HANDLES ERROR CASE
-        if (state.getError().equals("")){
-            JOptionPane.showMessageDialog(this, state.getError(),
-                "Error", JOptionPane.ERROR_MESSAGE);
-
-            state.setError("");
-        }
+//        final LoggedInState state = (LoggedInState) evt.getNewValue();
+//        setFields(state);
+//
+//        //HANDLES ERROR CASE
+//        if (!state.getError().equals("") || state.getError() != null){
+//            JOptionPane.showMessageDialog(this, state.getError(),
+//                "Error", JOptionPane.ERROR_MESSAGE);
+//
+//            state.setError("");
+//        }
 
 
     }
