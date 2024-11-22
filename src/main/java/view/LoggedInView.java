@@ -64,6 +64,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
         // Stock Table
         String[] columnNames = {"Ticker", "Shares", "Profit/Loss"};
+
         stockTable = new JTable(new Object[0][columnNames.length], columnNames);
         JScrollPane scrollPane = new JScrollPane(stockTable);
 

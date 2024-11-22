@@ -1,5 +1,8 @@
 package use_case.buy_stock;
 
+/**
+ * The input data for the Buy Stock Use Case.
+ */
 public class BuyStockInputData {
     private final String username;
     private final String tickerSymbol;

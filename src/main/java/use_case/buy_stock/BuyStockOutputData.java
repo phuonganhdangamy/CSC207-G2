@@ -1,5 +1,8 @@
 package use_case.buy_stock;
 
+/**
+ * The output data for the Buy Stock Use Case.
+ */
 public class BuyStockOutputData {
 
     private final double remainingBalance;
