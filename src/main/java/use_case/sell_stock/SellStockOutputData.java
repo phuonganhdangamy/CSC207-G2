@@ -7,12 +7,15 @@ import java.util.Map;
  */
 public class SellStockOutputData {
     // Will need to update the balance for the user.
-    private Double newBalance;
-    // Keys for this map are of a ticker and the value is the number of shares owned
-    private Map<String, Integer> newPortfolioData;
+    private double newBalance;
 
-    public SellStockOutputData(Map<String, Integer> newPortfolioData, Double newBalance) {
-        this.newPortfolioData = newPortfolioData;
+
+    public SellStockOutputData(double newBalance) {
         this.newBalance = newBalance;
     }
+
+    public double getNewBalance() {
+        return newBalance;
+    }
+
 }
