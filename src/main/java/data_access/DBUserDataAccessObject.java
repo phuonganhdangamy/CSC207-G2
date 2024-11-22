@@ -156,6 +156,10 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
 
                 //Creates a user and sets balance
                 User user = userFactory.create(name, password);
+
+                if (userInfo.isEmpty()){
+                    return user;
+                }
                 user.setBalance(userInfo.getDouble(BALANCE));
 
                 //Retrieves portfolio of stocks and creates the portfolio object
