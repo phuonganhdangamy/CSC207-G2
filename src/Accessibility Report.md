@@ -32,4 +32,11 @@ which could help them gain confidence and encourage them to pursue personal trad
 financial stability and improve their financial status. This is important for users of any background, especially for 
 minorities who may not know much about trading growing up.
 
-The second embedded ethics module was about individuals with disabilites. [FILL IN]
+The second embedded ethics module was about individuals with disabilites. Our program currently lacks specific features 
+designed to address the needs of users with disabilities, such as screen reader compatibility or customizable input 
+methods for those with motor impairments. However, it would be possible to develop features like adjustable font sizes, 
+keyboard-only navigation, and compatibility with assistive technologies to align with the social model of disability in 
+future. These enhancements would align with the social model of disability by addressing design barriers and ensuring 
+the program is more inclusive for a diverse range of users. Prioritizing accessibility not only prevents potential harm 
+but also promotes equality, as highlighted in the ethics module, by enabling broader access and usability for all 
+individuals.
