@@ -15,6 +15,7 @@ public class LoggedInState {
     private double totalPurchasePrice;
     private double totalCurrentPrice;
     private double totalProfitLoss;
+    private String error;
 
     private double balance;
     // First index is number of shares; second index is profit/loss
@@ -85,11 +86,14 @@ public class LoggedInState {
     }
 
 
-
-    public LoggedInState(LoggedInState copy) {
-        username = copy.username;
-
+    public void setError(String error) {
+        this.error = error;
     }
+
+    public String getError() {
+        return error;
+    }
+
 
     // Because of the previous copy constructor, the default constructor must be explicit.
     public LoggedInState() {

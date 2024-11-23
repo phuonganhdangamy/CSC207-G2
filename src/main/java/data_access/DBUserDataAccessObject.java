@@ -15,13 +15,14 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import use_case.DataAccessException;
 import use_case.UserDataAccessInterface;
+import use_case.buy_stock.BuyStockUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.sell_stock.SellStockUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class DBUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface,
-        LogoutUserDataAccessInterface, SellStockUserDataAccessInterface {
+        LogoutUserDataAccessInterface, SellStockUserDataAccessInterface, BuyStockUserDataAccessInterface {
     private static final int SUCCESS_CODE = 200;
     private static final int CREDENTIAL_ERROR = 401;
     private static final String CONTENT_TYPE_LABEL = "Content-Type";
@@ -155,6 +156,10 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
 
                 //Creates a user and sets balance
                 User user = userFactory.create(name, password);
+
+                if (userInfo.isEmpty()){
+                    return user;
+                }
                 user.setBalance(userInfo.getDouble(BALANCE));
 
                 //Retrieves portfolio of stocks and creates the portfolio object

@@ -2,6 +2,9 @@ package interface_adapter.buy_stock;
 
 import use_case.buy_stock.*;
 
+/**
+ * The Controller for the Buy Stock Use Case.
+ */
 public class BuyStockController {
     private final BuyStockInputBoundary interactor;
 
