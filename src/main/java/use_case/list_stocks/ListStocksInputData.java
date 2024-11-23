@@ -29,3 +29,4 @@ public class ListStocksInputData {
         return username;
     }
 }
+

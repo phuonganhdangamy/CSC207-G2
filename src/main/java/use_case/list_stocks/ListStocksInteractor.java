@@ -51,3 +51,4 @@ public class ListStocksInteractor implements ListStocksInputBoundary {
         outputBoundary.present(outputData);
     }
 }
+

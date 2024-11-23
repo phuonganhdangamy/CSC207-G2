@@ -14,3 +14,4 @@ public interface ListStocksInputBoundary {
      */
     void execute(ListStocksInputData inputData);
 }
+
