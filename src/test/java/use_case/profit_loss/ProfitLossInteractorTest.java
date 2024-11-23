@@ -2,6 +2,7 @@ package use_case.profit_loss;
 
 import entity.Stock;
 import entity.Portfolio;
+import entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -56,13 +57,46 @@ class ProfitLossInteractorTest {
 
     private static class TestProfitLossDataAccess implements ProfitLossDataAccessInterface {
         @Override
-        public Portfolio getPortfolio(String userId) {
-            // Create a mock portfolio with predefined stocks
-            List<Stock> stocks = new ArrayList<>();
-            stocks.add(new Stock("AAPL", 150.0));
-            stocks.add(new Stock("GOOGL", 200.0));
-            stocks.add(new Stock("TSLA", 300.0));
-            return new Portfolio(stocks);
+        public Portfolio getPortfolio(String username) {
+            // Mock user and portfolio
+            User user = new User(username, "password"); // Create a User object
+            Portfolio portfolio = user.getPortfolio();
+
+            // Add predefined stocks to the portfolio
+            portfolio.addStock(new Stock("AAPL", 150.0));
+            portfolio.addStock(new Stock("AAPL", 150.0));
+            portfolio.addStock(new Stock("AAPL", 150.0));
+            portfolio.addStock(new Stock("AAPL", 150.0));
+            portfolio.addStock(new Stock("AAPL", 150.0)); // 5 shares
+
+            portfolio.addStock(new Stock("GOOGL", 200.0));
+            portfolio.addStock(new Stock("GOOGL", 200.0));
+            portfolio.addStock(new Stock("GOOGL", 200.0));
+            portfolio.addStock(new Stock("GOOGL", 200.0));
+            portfolio.addStock(new Stock("GOOGL", 200.0));
+            portfolio.addStock(new Stock("GOOGL", 200.0));
+            portfolio.addStock(new Stock("GOOGL", 200.0));
+            portfolio.addStock(new Stock("GOOGL", 200.0));
+            portfolio.addStock(new Stock("GOOGL", 200.0));
+            portfolio.addStock(new Stock("GOOGL", 200.0)); // 10 shares
+
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0)); // 15 shares
+
+            return portfolio;
         }
     }
 
