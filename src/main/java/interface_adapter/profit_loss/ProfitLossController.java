@@ -11,15 +11,14 @@ public class ProfitLossController {
     }
 
     // Method to calculate total profit/loss
-    public void calculateTotalProfitLoss(String userId) {
-        ProfitLossInputData inputData = new ProfitLossInputData(userId);
+    public void calculateTotalProfitLoss(String username) {
+        ProfitLossInputData inputData = new ProfitLossInputData(username);
         profitLossInteractor.calculateTotalProfitLoss(inputData);
     }
 
     // Method to calculate profit/loss for a specific stock
-    public void calculateStockProfitLoss(String userId, String tickerSymbol) {
-        ProfitLossInputData inputData = new ProfitLossInputData(userId);
+    public void calculateStockProfitLoss(String username, String tickerSymbol) {
+        ProfitLossInputData inputData = new ProfitLossInputData(username);
         profitLossInteractor.calculateStockProfitLoss(inputData, tickerSymbol);
     }
 }
-

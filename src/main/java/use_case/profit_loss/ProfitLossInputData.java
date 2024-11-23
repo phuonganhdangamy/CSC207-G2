@@ -6,15 +6,15 @@ package use_case.profit_loss;
  */
 public class ProfitLossInputData {
 
-    private final String userId;
+    private final String username;
 
     /**
      * Creates a new ProfitLossInputData object.
      *
-     * @param userId the unique ID of the user
+     * @param username the unique ID of the user
      */
-    public ProfitLossInputData(String userId) {
-        this.userId = userId;
+    public ProfitLossInputData(String username) {
+        this.username = username;
     }
 
     /**
@@ -22,7 +22,7 @@ public class ProfitLossInputData {
      *
      * @return the user ID
      */
-    public String getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 }
