@@ -44,7 +44,7 @@ public class SellStockInteractor implements SellStockInputBoundary{
                 userPortfolio.removeStock(ticker);
             }
 
-            // Save the user's information in the database
+            // Save the user's information in the online database
             database.saveUserInfo(user);
 
             // define the output needed by the presenter

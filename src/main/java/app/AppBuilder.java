@@ -16,6 +16,8 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.sell_stock.SellStockController;
+import interface_adapter.sell_stock.SellStockPresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -23,8 +25,12 @@ import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 
+import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.sell_stock.SellStockInputBoundary;
+import use_case.sell_stock.SellStockInteractor;
+import use_case.sell_stock.SellStockOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -136,12 +142,25 @@ public class AppBuilder {
      */
     public AppBuilder addLogoutUseCase(){
         final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(loginViewModel,loggedInViewModel,viewManagerModel);
-        final LogoutInteractor logoutInteractor = new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
+        final LogoutInputBoundary logoutInteractor = new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
         final LogoutController logoutController = new LogoutController(logoutInteractor);
         loggedInView.setLogoutController (logoutController);
 
         return this;
 
+    }
+
+    /**
+     * Adds the SellStock Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addSellStockUseCase() {
+        final SellStockOutputBoundary sellStockPresenter = new SellStockPresenter(loggedInViewModel,viewManagerModel);
+        final SellStockInputBoundary sellStockInteractor = new SellStockInteractor(sellStockPresenter, userDataAccessObject);
+        final SellStockController sellStockController = new SellStockController(sellStockInteractor);
+
+        loggedInView.setSellStockController(sellStockController);
+        return this;
     }
 
     /**
