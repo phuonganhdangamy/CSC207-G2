@@ -4,6 +4,7 @@ import data_access.DBStockDataAccessObject;
 import entity.Portfolio;
 import entity.Stock;
 import entity.User;
+import use_case.find_stock.FindStockDataAccessInterface;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,15 +14,19 @@ public class SellStockInteractor implements SellStockInputBoundary{
     // Needs to send results to the view
     SellStockUserDataAccessInterface database;
     SellStockOutputBoundary sellStockPresenter;
+    FindStockDataAccessInterface stockDatabase;
+
 
     // Need access to the view stock use case interactor and profit loss interactor to update UI
     // ViewOwnedStockInputBoundary viewOwnedStockInteractor;
     // ProfitLossInputBoundary profitLossInteractor;
 
-    public SellStockInteractor(SellStockOutputBoundary sellStockPresenter, SellStockUserDataAccessInterface database ) {
+    public SellStockInteractor(SellStockOutputBoundary sellStockPresenter, SellStockUserDataAccessInterface database,
+                               FindStockDataAccessInterface stockDatabase) {
        // Add to parameters: ViewOwnedStockInputBoundary viewOwnedStockInteractor,  ProfitLossInputBoundary profitLossInteractor
         this.sellStockPresenter = sellStockPresenter;
         this.database = database;
+        this.stockDatabase = stockDatabase;
         // this.viewOwnedStockInteractor = viewOwnedStockInteractor;
         // this.profitLossInteractor = profitLossInteractor
     }
@@ -37,11 +42,9 @@ public class SellStockInteractor implements SellStockInputBoundary{
         // Check the number of shares owned associated with the ticker
         int numSharesOwned = userPortfolio.getShareCount(ticker);
 
-        //New stock database to see if the company exists.
-        DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
+        //Check if the company exists.
 
-
-        if (!stockDataAccessObject.isStockExist(ticker)) {
+        if (!stockDatabase.isStockExist(ticker)) {
             sellStockPresenter.prepareFailView( "This ticker does not exist.");
 
         }
@@ -50,9 +53,11 @@ public class SellStockInteractor implements SellStockInputBoundary{
         // If we own more than the number of shares that the user wishes to sell,
         // this can be executed
         else if (numSharesOwned >= quantity){
+            //Get current market price for the stock
+            double marketPrice = stockDatabase.getCost(ticker);
             // removes the stock and updates the balance
             for(int i = 0; i < quantity; i++){
-                userPortfolio.removeStock(ticker);
+                userPortfolio.removeStock(ticker, marketPrice);
             }
 
             // Save the user's information in the online database

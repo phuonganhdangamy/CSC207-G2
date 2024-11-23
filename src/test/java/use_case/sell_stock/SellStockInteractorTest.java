@@ -3,24 +3,26 @@ package use_case.sell_stock;
 import entity.Portfolio;
 import entity.Stock;
 import entity.User;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
+import use_case.find_stock.FindStockDataAccessInterface;
 
-import static org.junit.Assert.assertNotNull;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 
 public class SellStockInteractorTest {
-
-
-    @Test
-    public void tickerDoesNotExist() {
-        SellStockInputData sellStockInputData = new SellStockInputData(2, "NotReal");
-
+    User testUser;
+    SellStockUserDataAccessInterface database;
+    FindStockDataAccessInterface stockDatabase;
+    @Before
+    public void setUp() throws Exception {
         // Setting up a user and database
-        String[] stockTickers = {"MSFT","AAPL", "GOOG", "WMT", "MSFT", "AAPL", "GOOG", "WMT"};
-        User testUser = new User("Name", "Password");
+        List<String> stockTickers = new ArrayList<>(List.of("MSFT","AAPL", "GOOG", "WMT", "MSFT", "AAPL", "GOOG", "WMT"));
+        testUser = new User("Name", "Password");
         Portfolio userPortfolio = testUser.getPortfolio();
 
         for (String ticker : stockTickers) {
@@ -28,10 +30,11 @@ public class SellStockInteractorTest {
             userPortfolio.addStock(stock);
         }
 
-        SellStockUserDataAccessInterface database = new SellStockUserDataAccessInterface() {
-            private User user = testUser;
+         database = new SellStockUserDataAccessInterface() {
+            private User user;
             @Override
             public void saveUserInfo(User user) {
+                this.user = user;
 
             }
 
@@ -46,9 +49,32 @@ public class SellStockInteractorTest {
             }
         };
 
+        database.saveUserInfo(testUser);
+
+        // Create the stock database
+        stockDatabase = new FindStockDataAccessInterface() {
+            List<String> stockTickers = new ArrayList<>(List.of("MSFT","AAPL", "GOOG", "WMT", "MSFT", "AAPL", "GOOG", "WMT"));
+            @Override
+            public double getCost(String tickerSymbol) {
+                return 10;
+            }
+
+            @Override
+            public boolean isStockExist(String tickerSymbol) {
+                return stockTickers.contains(tickerSymbol);
+            }
+        };
+
+
+    }
+
+    @Test
+    public void tickerDoesNotExist() {
+        SellStockInputData sellStockInputData = new SellStockInputData(2, "NotReal");
+
         SellStockOutputBoundary testPresenter = new SellStockOutputBoundary() {
             @Override
-            public void prepareSuccessView(SellStockOutputData outputData) {fail("Use case failure is unexpected.");}
+            public void prepareSuccessView(SellStockOutputData outputData) {fail("Use case success is unexpected.");}
 
             @Override
             public void prepareFailView(String errorMessage) {
@@ -56,7 +82,43 @@ public class SellStockInteractorTest {
 
             }
         };
-        SellStockInteractor sellStockInteractor = new SellStockInteractor(testPresenter, database);
+        SellStockInteractor sellStockInteractor = new SellStockInteractor(testPresenter, database, stockDatabase);
+        sellStockInteractor.execute(sellStockInputData);
+    }
+    @Test
+    public void notEnoughShares() {
+        SellStockInputData sellStockInputData = new SellStockInputData(3, "MSFT");
+
+        SellStockOutputBoundary testPresenter = new SellStockOutputBoundary() {
+            @Override
+            public void prepareSuccessView(SellStockOutputData outputData) {fail("Use case success is unexpected.");}
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                assertEquals("Name, you don't have enough shares of this company to sell.", errorMessage);
+
+            }
+        };
+        SellStockInteractor sellStockInteractor = new SellStockInteractor(testPresenter, database, stockDatabase);
+        sellStockInteractor.execute(sellStockInputData);
+    }
+
+    @Test
+    public void EnoughShares() {
+        SellStockInputData sellStockInputData = new SellStockInputData(2, "MSFT");
+        double oldBalance = testUser.getBalance();
+
+        SellStockOutputBoundary testPresenter = new SellStockOutputBoundary() {
+            @Override
+            public void prepareSuccessView(SellStockOutputData outputData) {
+                assertEquals(oldBalance + 20, outputData.getNewBalance());
+
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {fail("Use case failure is unexpected.");}
+        };
+        SellStockInteractor sellStockInteractor = new SellStockInteractor(testPresenter, database, stockDatabase);
         sellStockInteractor.execute(sellStockInputData);
     }
 }
