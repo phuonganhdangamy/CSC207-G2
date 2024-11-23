@@ -20,6 +20,8 @@ public class Main {
                 .addLoggedInView()
                 .addSignupUseCase()
                 .addLoginUseCase()
+                .addLogoutUseCase()
+                .addSellStockUseCase()
                 .build();
 
         // Makes the application visible

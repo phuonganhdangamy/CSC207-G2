@@ -21,12 +21,22 @@ public class Stock {
         this.cost = cost;
     }
 
+    public Stock(String tickerSymbol) {
+        this.tickerSymbol = tickerSymbol;
+        DBStockDataAccessObject access = new DBStockDataAccessObject();
+        this.cost = access.getCost(tickerSymbol);
+    }
+
     public String getTickerSymbol() {
         return tickerSymbol;
     }
 
     public double getCost() {
         return cost;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
     }
 
     public static void main(String[] args) {

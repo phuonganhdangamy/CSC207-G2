@@ -1,8 +1,10 @@
 package view;
 
+import interface_adapter.LoggedInState;
 import interface_adapter.buy_stock.BuyStockController;
 import interface_adapter.LoggedInViewModel;
 import interface_adapter.find_stock.FindStockController;
+import interface_adapter.login.LoginState;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.sell_stock.SellStockController;
 import interface_adapter.view_owned_stock.ViewOwnedStockController;
@@ -12,9 +14,14 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class LoggedInView extends JPanel {
+public class LoggedInView extends JPanel implements PropertyChangeListener {
 
+    private final LoggedInViewModel loggedInViewModel;
     private JLabel balanceLabel;
     private JTable stockTable;
     private JTextField tickerInputField;
@@ -38,6 +45,8 @@ public class LoggedInView extends JPanel {
     private String viewName = "logged in";
 
     public LoggedInView(LoggedInViewModel loggedInViewModel) {
+        this.loggedInViewModel = loggedInViewModel;
+        this.loggedInViewModel.addPropertyChangeListener(this);
         this.setLayout(new BorderLayout(10, 10));
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
 
@@ -56,7 +65,8 @@ public class LoggedInView extends JPanel {
         topPanel.add(balanceLabel);
 
         // Stock Table
-        String[] columnNames = {"Ticker", "Shares", "Cost", "Profit/Loss"};
+        String[] columnNames = {"Ticker", "Shares", "Profit/Loss"};
+
         stockTable = new JTable(new Object[0][columnNames.length], columnNames);
         JScrollPane scrollPane = new JScrollPane(stockTable);
 
@@ -91,6 +101,15 @@ public class LoggedInView extends JPanel {
         sharesInputField = new JTextField(15);
         sharesInputField.setPreferredSize(new Dimension(200, 20));
 
+        //Allows you to input only numbers
+        sharesInputField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (!Character.isDigit(e.getKeyChar())) {
+                    e.consume();
+                }
+            }
+        });
         sharesPanel.add(sharesLabel, BorderLayout.NORTH);
         sharesPanel.add(sharesInputField, BorderLayout.CENTER);
 
@@ -154,11 +173,28 @@ public class LoggedInView extends JPanel {
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(LoggedInView.this, "Logged out. Redirecting to Login Page...");
+                //JOptionPane.showMessageDialog(LoggedInView.this, "Logged out. Redirecting to Login Page...");
                 // Mock action will replace with controller later
+                logoutController.execute(username);
             }
         });
+
+        sellButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String ticker = tickerInputField.getText();
+                int quantity = Integer.parseInt(sharesInputField.getText());
+
+                sellStockController.execute(quantity, ticker);
+                sharesInputField.setText("");
+                tickerInputField.setText("");
+            }
+        });
+
+
     }
+
+
 
     /**
      * Updates the balance label dynamically.
@@ -187,24 +223,48 @@ public class LoggedInView extends JPanel {
         updateBalanceLabel();
     }
 
-    /**
-     * Mockup Main Function to Display the LoggedInView UI
-     */
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Logged In View");
-
-        LoggedInView loggedInView = new LoggedInView(new LoggedInViewModel());
-        loggedInView.setUsername("Testtest");
-        loggedInView.setBalance(5555.55);
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(loggedInView);
-        frame.setSize(1000, 600); // Set the frame size
-        frame.setVisible(true);
-    }
 
     public String getViewName() {
         return this.viewName;
+    }
+
+    // Detects changes in the logged in state and updates UI accordingly
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        final LoggedInState state = (LoggedInState) evt.getNewValue();
+        setFields(state);
+
+//        //HANDLES ERROR CASE
+        if (state.getError() != null && !state.getError().isEmpty()){
+            JOptionPane.showMessageDialog(this, state.getError(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+
+            state.setError("");
+        }
+
+
+    }
+
+    //Needs implementation
+
+    private void setFields(LoggedInState state) {
+        setBalance(state.getBalance());
+        updateBalanceLabel();
+
+        setUsername(state.getUsername());
+        setUsername(state.getUsername());
+
+
+    }
+
+    //Adding the logout use case to make the logout button functional.
+    public void setLogoutController(LogoutController logoutController) {
+        this.logoutController = logoutController;
+    }
+
+    //Adding the sell stock use case to make the sell stock button functional.
+    public void setSellStockController(SellStockController sellStockController) {
+        this.sellStockController = sellStockController;
     }
 }
 

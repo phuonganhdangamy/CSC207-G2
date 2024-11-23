@@ -1,15 +1,11 @@
 package use_case.login;
 
-import data_access.DBStockDataAccessObject;
 import data_access.DBUserDataAccessObject;
-import data_access.InMemoryUserDataAccess;
 import data_access.InMemoryUserDataAccessObject;
 import entity.StockFactory;
 import entity.UserFactory;
 import entity.User;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
