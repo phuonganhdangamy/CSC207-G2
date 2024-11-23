@@ -1,5 +1,6 @@
 package use_case.sell_stock;
 
+import data_access.DBStockDataAccessObject;
 import entity.Portfolio;
 import entity.Stock;
 import entity.User;
@@ -36,9 +37,19 @@ public class SellStockInteractor implements SellStockInputBoundary{
         // Check the number of shares owned associated with the ticker
         int numSharesOwned = userPortfolio.getShareCount(ticker);
 
+        //New stock database to see if the company exists.
+        DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
+
+
+        if (!stockDataAccessObject.isStockExist(ticker)) {
+            sellStockPresenter.prepareFailView( "This ticker does not exist.");
+
+        }
+
+
         // If we own more than the number of shares that the user wishes to sell,
         // this can be executed
-        if (numSharesOwned >= quantity){
+        else if (numSharesOwned >= quantity){
             // removes the stock and updates the balance
             for(int i = 0; i < quantity; i++){
                 userPortfolio.removeStock(ticker);
@@ -60,7 +71,7 @@ public class SellStockInteractor implements SellStockInputBoundary{
             // profitLossInteractor.execute();
 
         }else{
-            sellStockPresenter.prepareFailView(user.getName()+ ", you don't have enough shares to sell.");
+            sellStockPresenter.prepareFailView(user.getName()+ ", you don't have enough shares of this company to sell.");
 
         }
 
