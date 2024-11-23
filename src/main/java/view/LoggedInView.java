@@ -14,6 +14,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -63,7 +65,8 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         topPanel.add(balanceLabel);
 
         // Stock Table
-        String[] columnNames = {"Ticker", "Shares", "Cost", "Profit/Loss"};
+        String[] columnNames = {"Ticker", "Shares", "Profit/Loss"};
+
         stockTable = new JTable(new Object[0][columnNames.length], columnNames);
         JScrollPane scrollPane = new JScrollPane(stockTable);
 
@@ -98,6 +101,15 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         sharesInputField = new JTextField(15);
         sharesInputField.setPreferredSize(new Dimension(200, 20));
 
+        //Allows you to input only numbers
+        sharesInputField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (!Character.isDigit(e.getKeyChar())) {
+                    e.consume();
+                }
+            }
+        });
         sharesPanel.add(sharesLabel, BorderLayout.NORTH);
         sharesPanel.add(sharesInputField, BorderLayout.CENTER);
 
@@ -161,11 +173,28 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(LoggedInView.this, "Logged out. Redirecting to Login Page...");
+                //JOptionPane.showMessageDialog(LoggedInView.this, "Logged out. Redirecting to Login Page...");
                 // Mock action will replace with controller later
+                logoutController.execute(username);
             }
         });
+
+        sellButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String ticker = tickerInputField.getText();
+                int quantity = Integer.parseInt(sharesInputField.getText());
+
+                sellStockController.execute(quantity, ticker);
+                sharesInputField.setText("");
+                tickerInputField.setText("");
+            }
+        });
+
+
     }
+
+
 
     /**
      * Updates the balance label dynamically.
@@ -194,21 +223,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         updateBalanceLabel();
     }
 
-    /**
-     * Mockup Main Function to Display the LoggedInView UI
-     */
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Logged In View");
-
-        LoggedInView loggedInView = new LoggedInView(new LoggedInViewModel());
-        loggedInView.setUsername("Testtest");
-        loggedInView.setBalance(5555.55);
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(loggedInView);
-        frame.setSize(1000, 600); // Set the frame size
-        frame.setVisible(true);
-    }
 
     public String getViewName() {
         return this.viewName;
@@ -234,7 +248,23 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     //Needs implementation
 
     private void setFields(LoggedInState state) {
+        setBalance(state.getBalance());
+        updateBalanceLabel();
 
+        setUsername(state.getUsername());
+        setUsername(state.getUsername());
+
+
+    }
+
+    //Adding the logout use case to make the logout button functional.
+    public void setLogoutController(LogoutController logoutController) {
+        this.logoutController = logoutController;
+    }
+
+    //Adding the sell stock use case to make the sell stock button functional.
+    public void setSellStockController(SellStockController sellStockController) {
+        this.sellStockController = sellStockController;
     }
 }
 

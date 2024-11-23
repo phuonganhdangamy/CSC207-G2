@@ -23,6 +23,8 @@ public class SellStockPresenter implements SellStockOutputBoundary {
         final LoggedInState loggedInState = loggedInViewModel.getState();
         loggedInState.setBalance(response.getNewBalance());
         loggedInViewModel.setState(loggedInState);
+        loggedInViewModel.firePropertyChanged();
+
 
     }
 
@@ -31,8 +33,8 @@ public class SellStockPresenter implements SellStockOutputBoundary {
         final LoggedInState loggedInState = loggedInViewModel.getState();
         loggedInState.setError(errorMessage);
         loggedInViewModel.setState(loggedInState);
+        loggedInViewModel.firePropertyChanged();
 
-        this.loggedInViewModel.firePropertyChanged();
 
     }
 }
