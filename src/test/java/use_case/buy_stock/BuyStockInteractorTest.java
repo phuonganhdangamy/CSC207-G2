@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BuyStockInteractorTest {
 
+
     private InMemoryStockDataAccessObject stockRepository;
     private InMemoryUserDataAccessObject userRepository;
     private BuyStockOutputBoundary successPresenter;
