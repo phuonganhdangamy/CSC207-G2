@@ -1,49 +1,58 @@
 package use_case.profitloss;
 
+import data_access.DBStockDataAccessObject;
 import entity.Portfolio;
+import entity.ProfitLossCalculator;
 import entity.Stock;
+import entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ProfitLossCalculatorTest {
 
     private Portfolio portfolio;
+    DBStockDataAccessObject dataAccessObject = new DBStockDataAccessObject();
 
     @BeforeEach
     void setUp() {
         // Sample stocks and buying price
-        Stock stock1 = new Stock("AAPL", 5, 150.0);
-        Stock stock2 = new Stock("GOOGL", 10, 200.0);
-        Stock stock3 = new Stock("TSLA", 15, 300.0);
+        Stock stock1 = new Stock("AAPL", 150.0);
+        Stock stock2 = new Stock("GOOGL", 200.0);
+        Stock stock3 = new Stock("TSLA",300.0);
 
-        // Create a portfolio and add stocks
-        List<Stock> stocks = new ArrayList<>();
-        stocks.add(stock1);
-        stocks.add(stock2);
-        stocks.add(stock3);
-        portfolio = new Portfolio(stocks);
+        // Mock user:
+        User user = new User("UserOne", "654321");
+
+        // Creating a sample portfolio from the sample stocks:
+        portfolio = new Portfolio(user);
+
+        // Adding the mock stocks:
+        portfolio.addStock(stock1);
+        portfolio.addStock(stock2);
+        portfolio.addStock(stock3);
+
     }
 
     @Test
     void testCalculateTotalProfitLoss() {
-        // Sample current prices
-        portfolio.getStocks().get(0).setCurrentPrice(160.0);
-        portfolio.getStocks().get(1).setCurrentPrice(210.0);
-        portfolio.getStocks().get(2).setCurrentPrice(310.0);
+        // Setting up a sample ProfitLossCalculator
+        ProfitLossCalculator profitLossCalculator = new ProfitLossCalculator(portfolio);
+
+        // Sample current prices from API
+        double currentPrice1 = dataAccessObject.getCost(portfolio.getStocks().get(0).getTickerSymbol());
+        double currentPrice2 = dataAccessObject.getCost(portfolio.getStocks().get(1).getTickerSymbol());
+        double currentPrice3 = dataAccessObject.getCost(portfolio.getStocks().get(2).getTickerSymbol());
 
         // Expected profit/loss
         double expectedProfitLoss =
-                (160.0 - 150.0) * 5 +
-                        (210.0 - 200.0) * 10 +
-                        (310.0 - 300.0) * 15;
+                (currentPrice1 - 150.0) +
+                        (currentPrice2 - 200.0) +
+                        (currentPrice3 - 300.0);
 
         // Calculate using the method
-        double actualProfitLoss = portfolio.calculateTotalProfitLoss();
+        double actualProfitLoss = profitLossCalculator.calculateTotalProfitLoss();
 
         // Assert the values match
         assertEquals(expectedProfitLoss, actualProfitLoss, 0.01);
@@ -51,14 +60,17 @@ class ProfitLossCalculatorTest {
 
     @Test
     void testCalculateStockProfitLoss() {
-        // Mock current prices
-        portfolio.getStocks().get(0).setCurrentPrice(160.0);
+        // Setting up a sample ProfitLossCalculator
+        ProfitLossCalculator profitLossCalculator = new ProfitLossCalculator(portfolio);
+
+        // Sample current prices from API
+        double currentPrice = dataAccessObject.getCost(portfolio.getStocks().get(0).getTickerSymbol());
 
         // Expected profit/loss for AAPL
-        double expectedProfitLoss = (160.0 - 150.0) * 5;
+        double expectedProfitLoss = (currentPrice - 150.0);
 
         // Calculate using the method
-        double actualProfitLoss = portfolio.calculateStockProfitLoss("AAPL");
+        double actualProfitLoss = profitLossCalculator.calculateStockProfitLoss("AAPL");
 
         // Assert the values match
         assertEquals(expectedProfitLoss, actualProfitLoss, 0.01);
