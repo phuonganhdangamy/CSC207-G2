@@ -7,7 +7,7 @@ package use_case.find_stock;
  */
 public interface FindStockInputBoundary {
     /**
-     * Executes the login use case.
+     * Executes the find stock use case.
      * @param findStockInputData the input data
      */
     void execute(FindStockInputData findStockInputData);

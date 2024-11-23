@@ -3,13 +3,17 @@ package use_case.buy_stock;
 import entity.*;
 import data_access.*;
 
+/**
+ * Interactor for buy stock use case.
+ */
 public class BuyStockInteractor implements BuyStockInputBoundary {
 
     private final BuyStockOutputBoundary outputBoundary;
     private final BuyStockUserDataAccessInterface userDAO;
     private final DBStockDataAccessObject stockDAO;
 
-    public BuyStockInteractor(BuyStockOutputBoundary outputBoundary, BuyStockUserDataAccessInterface userDAO, DBStockDataAccessObject stockDAO) {
+    public BuyStockInteractor(BuyStockOutputBoundary outputBoundary, BuyStockUserDataAccessInterface userDAO,
+                              DBStockDataAccessObject stockDAO) {
         this.outputBoundary = outputBoundary;
         this.userDAO = userDAO;
         this.stockDAO = stockDAO;
@@ -17,26 +21,34 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
 
     @Override
     public void execute(BuyStockInputData inputData) {
-        User user = userDAO.getUserByUsername(inputData.getUsername());
+        String username = inputData.getUsername();
+        User user = userDAO.get(username);
         if (user == null) {
-            outputBoundary.prepareFailView("User not found.");
+            outputBoundary.prepareFailView(username + ": Account does not exist.");
             return;
         }
 
-        double stockCost = stockDAO.getCost(new Stock(inputData.getTickerSymbol(), 0).getTickerSymbol());
-        double totalCost = stockCost * inputData.getNumberOfShares();
+        String tickerSymbol = inputData.getTickerSymbol();
+        double stockCost = stockDAO.getCost(tickerSymbol);
+        int numberOfShares = inputData.getNumberOfShares();
+        double totalCost = stockCost * numberOfShares;
+        double balance = user.getBalance();
 
-        if (user.getBalance() < totalCost) {
+        // TODO: Have to check if the stock exists? We implicitly agreed that Stock DNE => cost = 0.
+        // TODO: Also have to check if the Find Stock is executed (successfully) before click the Buy Stock.
+
+        if (balance < totalCost) {
             outputBoundary.prepareFailView("Insufficient balance.");
             return;
         }
 
-        user.setBalance(user.getBalance() - totalCost);
-        for (int i = 0; i < inputData.getNumberOfShares(); i++) {
-            user.getPortfolio().addStock(new Stock(inputData.getTickerSymbol(), stockCost));
+        user.setBalance(balance - totalCost);
+        for (int i = 0; i < numberOfShares; i++) {
+            user.getPortfolio().addStock(new Stock(tickerSymbol, stockCost));
         }
 
-        userDAO.saveUser(user);
-        outputBoundary.prepareSuccessView(new BuyStockOutputData(user.getBalance(), inputData.getTickerSymbol(), inputData.getNumberOfShares()));
+        userDAO.saveUserInfo(user);
+        outputBoundary.prepareSuccessView(new BuyStockOutputData(balance, tickerSymbol,
+                numberOfShares));
     }
 }

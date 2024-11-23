@@ -30,7 +30,7 @@ public class LoginInteractor implements LoginInputBoundary {
 
         // Check if the username exists in the database
         if (!userDataAccess.existsByName(username) || username.equals("") || password.equals("")) {
-            loginPresenter.prepareFailView( "Account does not exist.");
+            loginPresenter.prepareFailView( username + ": Account does not exist.");
         }
         else {
             //If the user is found, check if the encrypted password matches the entered password
