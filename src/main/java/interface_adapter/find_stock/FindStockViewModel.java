@@ -17,7 +17,7 @@ public class FindStockViewModel extends ViewModel<FindStockState> {
      * @return true if successful, false otherwise.
      */
     public boolean isFindStockSuccessful() {
-        return getState().isSuccess();
+        return getState().getSuccess();
     }
 
     /**
