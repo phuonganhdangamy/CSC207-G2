@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.DBStockDataAccessObject;
 import data_access.DBUserDataAccessObject;
 import entity.StockFactory;
 import entity.UserFactory;
@@ -22,6 +23,7 @@ import interface_adapter.sell_stock.SellStockPresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import use_case.find_stock.FindStockDataAccessInterface;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -158,7 +160,11 @@ public class AppBuilder {
      */
     public AppBuilder addSellStockUseCase() {
         final SellStockOutputBoundary sellStockPresenter = new SellStockPresenter(loggedInViewModel,viewManagerModel);
-        final SellStockInputBoundary sellStockInteractor = new SellStockInteractor(sellStockPresenter, userDataAccessObject);
+
+        //Create new stockDatabase for the sellStockUseCase
+        final FindStockDataAccessInterface stockDatabase = new DBStockDataAccessObject();
+        final SellStockInputBoundary sellStockInteractor = new SellStockInteractor(sellStockPresenter,
+                userDataAccessObject, stockDatabase);
         final SellStockController sellStockController = new SellStockController(sellStockInteractor);
 
         loggedInView.setSellStockController(sellStockController);

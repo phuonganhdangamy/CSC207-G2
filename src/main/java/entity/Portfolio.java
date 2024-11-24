@@ -24,12 +24,12 @@ public class Portfolio {
     }
 
     // Revised method to remove a stock by ticker symbol and update balance
-    public boolean removeStock(String tickerSymbol) {
+    public boolean removeStock(String tickerSymbol, double sellingPrice) {
         for (Stock stock : stocks) {
             if (stock.getTickerSymbol().equals(tickerSymbol)) {
                 stocks.remove(stock);
                 // Add the cost of the stock to the user's balance when selling
-                user.setBalance(user.getBalance() + stock.getCost());
+                user.setBalance(user.getBalance() + sellingPrice);
                 return true;
             }
         }
