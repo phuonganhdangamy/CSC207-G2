@@ -1,7 +1,8 @@
 # Stock Simulation Application
 ### Authors:
+
 - Amvi Patel - amvipat
-- Anh Dang Phuong - amyanhdangphuong
+- Anh Dang Phuong - phuonganhdangamy
 - Dora Gombar - dorcagombar
 - Maya Edri - EdriMaya
 - Mind Kunrattanaporn - Mind-MNK

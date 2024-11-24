@@ -12,6 +12,7 @@ import entity.StockFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.LoggedInViewModel;
+import interface_adapter.find_stock.FindStockViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -36,10 +37,8 @@ import use_case.sell_stock.SellStockOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
-import view.LoggedInView;
-import view.LoginView;
-import view.SignupView;
-import view.ViewManager;
+import view.*;
+
 /**
  * The AppBuilder class is responsible for putting together the pieces of
  * our CA architecture; piece by piece.
@@ -64,6 +63,9 @@ public class AppBuilder {
     private LoggedInView loggedInView;
     private LoginView loginView;
     private LoginViewModel loginViewModel;
+
+    private FindStockView findStockView;
+    private FindStockViewModel findStockViewModel;
 
 
     public AppBuilder() {
@@ -166,6 +168,17 @@ public class AppBuilder {
         final SellStockController sellStockController = new SellStockController(sellStockInteractor);
 
         loggedInView.setSellStockController(sellStockController);
+        return this;
+    }
+
+    /**
+     * Adds the FindStock View to the application.
+     * @return this builder
+     */
+    public AppBuilder addFindStockView() {
+        findStockViewModel = new FindStockViewModel();
+        findStockView = new FindStockView(findStockViewModel);
+        cardPanel.add(findStockView, findStockView.getViewName());
         return this;
     }
 
