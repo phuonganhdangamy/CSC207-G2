@@ -1,5 +1,6 @@
 package use_case.sell_stock;
 
+import data_access.InMemoryStockDataAccessObject;
 import entity.Portfolio;
 import entity.Stock;
 import entity.User;
@@ -17,20 +18,35 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class SellStockInteractorTest {
     User testUser;
     SellStockUserDataAccessInterface database;
-    FindStockDataAccessInterface stockDatabase;
+    FindStockDataAccessInterface findStockDatabase;
+    InMemoryStockDataAccessObject stockDatabase;
+
+
     @Before
     public void setUp() throws Exception {
         // Setting up a user and database
-        List<String> stockTickers = new ArrayList<>(List.of("MSFT","AAPL", "GOOG", "WMT", "MSFT", "AAPL", "GOOG", "WMT"));
+        List<String> stockTickers = new ArrayList<>(List.of("MSFT","AAPL", "GOOG", "WMT", "MSFT", "AAPL", "GOOG",
+                "WMT"));
         testUser = new User("Name", "Password");
         Portfolio userPortfolio = testUser.getPortfolio();
+
+        // Initialize the InMemory stock database
+        stockDatabase = new InMemoryStockDataAccessObject();
+
+        // Save stock information in the database
+        stockDatabase.saveStock(new Stock("MSFT", 10.0));
+        stockDatabase.saveStock(new Stock("AAPL", 12.0));
+        stockDatabase.saveStock(new Stock("GOOG", 15.0));
+        stockDatabase.saveStock(new Stock("WMT", 8.0));
 
         for (String ticker : stockTickers) {
             Stock stock = new Stock(ticker, 50);
             userPortfolio.addStock(stock);
         }
 
-         database = new SellStockUserDataAccessInterface() {
+        stockDatabase.saveUser(testUser);
+
+        database = new SellStockUserDataAccessInterface() {
             private User user;
             @Override
             public void saveUserInfo(User user) {
@@ -50,22 +66,6 @@ public class SellStockInteractorTest {
         };
 
         database.saveUserInfo(testUser);
-
-        // Create the stock database
-        stockDatabase = new FindStockDataAccessInterface() {
-            List<String> stockTickers = new ArrayList<>(List.of("MSFT","AAPL", "GOOG", "WMT", "MSFT", "AAPL", "GOOG", "WMT"));
-            @Override
-            public double getCost(String tickerSymbol) {
-                return 10;
-            }
-
-            @Override
-            public boolean isStockExist(String tickerSymbol) {
-                return stockTickers.contains(tickerSymbol);
-            }
-        };
-
-
     }
 
     @Test

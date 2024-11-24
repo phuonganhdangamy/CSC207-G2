@@ -57,6 +57,6 @@ public class DBStockDataAccessObject implements FindStockDataAccessInterface {
     public boolean isStockExist(String tickerSymbol) {
         String apiKey = "ID8RVT9J10LA48HD";
         String urlString = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + tickerSymbol + "&apikey=" + apiKey;
-        return false;
+        return getCost(tickerSymbol) > 0;
     }
 }

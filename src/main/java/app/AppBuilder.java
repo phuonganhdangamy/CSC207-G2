@@ -12,6 +12,8 @@ import entity.StockFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.LoggedInViewModel;
+import interface_adapter.find_stock.FindStockController;
+import interface_adapter.find_stock.FindStockPresenter;
 import interface_adapter.find_stock.FindStockViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
@@ -24,6 +26,9 @@ import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import use_case.find_stock.FindStockDataAccessInterface;
+import use_case.find_stock.FindStockInputBoundary;
+import use_case.find_stock.FindStockInteractor;
+import use_case.find_stock.FindStockOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -56,6 +61,7 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(stockFactory, userFactory);
+    private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -64,8 +70,8 @@ public class AppBuilder {
     private LoginView loginView;
     private LoginViewModel loginViewModel;
 
-    private FindStockView findStockView;
     private FindStockViewModel findStockViewModel;
+    private FindStockView findStockView;
 
 
     public AppBuilder() {
@@ -100,7 +106,11 @@ public class AppBuilder {
      */
     public AppBuilder addLoggedInView() {
         loggedInViewModel = new LoggedInViewModel();
-        loggedInView = new LoggedInView(loggedInViewModel);
+
+        findStockViewModel = new FindStockViewModel(); // Initialize FindStockViewModel
+        findStockView = new FindStockView(findStockViewModel);
+
+        loggedInView = new LoggedInView(loggedInViewModel, findStockView);
         cardPanel.add(loggedInView, loggedInView.getViewName());
         return this;
     }
@@ -145,13 +155,41 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLogoutUseCase(){
-        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(loginViewModel,loggedInViewModel,viewManagerModel);
+        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(loginViewModel,
+                loggedInViewModel,viewManagerModel);
         final LogoutInputBoundary logoutInteractor = new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
         final LogoutController logoutController = new LogoutController(logoutInteractor);
         loggedInView.setLogoutController (logoutController);
 
         return this;
 
+    }
+
+    /**
+     * Adds the FindStock View to the application.
+     * @return this builder
+     */
+    public AppBuilder addFindStockView() {
+        findStockViewModel = new FindStockViewModel();
+        findStockView = new FindStockView(findStockViewModel);
+        cardPanel.add(findStockView, findStockView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the FindStock Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addFindStockUseCase() {
+        final FindStockOutputBoundary findStockOutputBoundary = new FindStockPresenter(findStockViewModel,
+                viewManagerModel);
+        final FindStockInputBoundary findStockInteractor = new FindStockInteractor(stockDataAccessObject,
+                findStockOutputBoundary);
+
+        final FindStockController findStockController = new FindStockController(findStockInteractor);
+        findStockView.setFindStockController(findStockController);
+
+        return this;
     }
 
     /**
@@ -168,17 +206,6 @@ public class AppBuilder {
         final SellStockController sellStockController = new SellStockController(sellStockInteractor);
 
         loggedInView.setSellStockController(sellStockController);
-        return this;
-    }
-
-    /**
-     * Adds the FindStock View to the application.
-     * @return this builder
-     */
-    public AppBuilder addFindStockView() {
-        findStockViewModel = new FindStockViewModel();
-        findStockView = new FindStockView(findStockViewModel);
-        cardPanel.add(findStockView, findStockView.getViewName());
         return this;
     }
 

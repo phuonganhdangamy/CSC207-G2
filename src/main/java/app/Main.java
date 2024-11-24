@@ -17,10 +17,12 @@ public class Main {
         final JFrame application = appBuilder
                 .addSignupView()
                 .addLoginView()
+                .addFindStockView()
                 .addLoggedInView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addLogoutUseCase()
+                .addFindStockUseCase()
                 .addSellStockUseCase()
                 .build();
 
