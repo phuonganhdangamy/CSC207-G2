@@ -1,47 +1,44 @@
 package entity;
 
-import data_access.DBStockDataAccessObject;
+import java.util.Map;
 
+/**
+ * Calculator for profit/loss.
+ */
 public class ProfitLossCalculator {
-    private Portfolio portfolio;
-    private DBStockDataAccessObject stockDataAccess;
+    private final Portfolio portfolio;
 
     public ProfitLossCalculator(Portfolio portfolio) {
         this.portfolio = portfolio;
-        this.stockDataAccess = new DBStockDataAccessObject();
     }
 
-    // Method to calculate the total profit/loss of the entire portfolio
-    public double calculateTotalProfitLoss() {
+    // Calculate total profit/loss for the portfolio
+    public double calculateTotalProfitLoss(Map<String, Double> stockPrices) {
         double totalProfitLoss = 0.0;
 
-        // Loop through each stock in the portfolio
         for (Stock stock : portfolio.getStocks()) {
-            // Fetch the current price from the API using the stock's ticker symbol
-            double currentPrice = stockDataAccess.getCost(stock.getTickerSymbol());
-
-            // Calculate profit/loss based on the purchase price (cost) and current price
+            String tickerSymbol = stock.getTickerSymbol();
+            double currentPrice = stockPrices.getOrDefault(tickerSymbol, 0.0);
             double purchasePrice = stock.getCost();
-            double profitLossPerStock = currentPrice - purchasePrice;
+            int shareCount = portfolio.getShareCount(tickerSymbol);
 
-            // Add the profit/loss for this stock (since each Stock object represents 1 share)
+            double profitLossPerStock = (currentPrice - purchasePrice) * shareCount;
             totalProfitLoss += profitLossPerStock;
         }
 
         return totalProfitLoss;
     }
 
-    // Method to calculate profit/loss for a specific stock by its ticker symbol
-    public double calculateStockProfitLoss(String tickerSymbol) {
+    // Calculate profit/loss for a specific stock
+    public double calculateStockProfitLoss(String tickerSymbol, double currentPrice) {
         double totalProfitLossForStock = 0.0;
 
         for (Stock stock : portfolio.getStocks()) {
             if (stock.getTickerSymbol().equalsIgnoreCase(tickerSymbol)) {
-                double currentPrice = stockDataAccess.getCost(stock.getTickerSymbol());
-
                 double purchasePrice = stock.getCost();
-                totalProfitLossForStock = currentPrice - purchasePrice;
+                int shareCount = portfolio.getShareCount(tickerSymbol);
 
+                totalProfitLossForStock = (currentPrice - purchasePrice) * shareCount;
                 break;
             }
         }
