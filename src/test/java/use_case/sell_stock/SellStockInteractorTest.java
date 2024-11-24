@@ -1,5 +1,6 @@
 package use_case.sell_stock;
 
+import data_access.InMemoryStockDataAccessObject;
 import entity.Portfolio;
 import entity.Stock;
 import entity.User;
@@ -17,7 +18,10 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class SellStockInteractorTest {
     User testUser;
     SellStockUserDataAccessInterface database;
-    FindStockDataAccessInterface stockDatabase;
+    FindStockDataAccessInterface findStockDatabase;
+    InMemoryStockDataAccessObject stockDatabase;
+
+
     @Before
     public void setUp() throws Exception {
         // Setting up a user and database
@@ -52,7 +56,7 @@ public class SellStockInteractorTest {
         database.saveUserInfo(testUser);
 
         // Create the stock database
-        stockDatabase = new FindStockDataAccessInterface() {
+        findStockDatabase = new FindStockDataAccessInterface() {
             List<String> stockTickers = new ArrayList<>(List.of("MSFT","AAPL", "GOOG", "WMT", "MSFT", "AAPL", "GOOG", "WMT"));
             @Override
             public double getCost(String tickerSymbol) {
@@ -82,7 +86,7 @@ public class SellStockInteractorTest {
 
             }
         };
-        SellStockInteractor sellStockInteractor = new SellStockInteractor(testPresenter, database, stockDatabase);
+        SellStockInteractor sellStockInteractor = new SellStockInteractor(testPresenter, database, findStockDatabase);
         sellStockInteractor.execute(sellStockInputData);
     }
     @Test
@@ -99,7 +103,7 @@ public class SellStockInteractorTest {
 
             }
         };
-        SellStockInteractor sellStockInteractor = new SellStockInteractor(testPresenter, database, stockDatabase);
+        SellStockInteractor sellStockInteractor = new SellStockInteractor(testPresenter, database, findStockDatabase);
         sellStockInteractor.execute(sellStockInputData);
     }
 
@@ -118,7 +122,7 @@ public class SellStockInteractorTest {
             @Override
             public void prepareFailView(String errorMessage) {fail("Use case failure is unexpected.");}
         };
-        SellStockInteractor sellStockInteractor = new SellStockInteractor(testPresenter, database, stockDatabase);
+        SellStockInteractor sellStockInteractor = new SellStockInteractor(testPresenter, database, findStockDatabase);
         sellStockInteractor.execute(sellStockInputData);
     }
 }

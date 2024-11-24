@@ -2,15 +2,15 @@ package interface_adapter.find_stock;
 
 public class FindStockState {
     private String tickerSymbol = "";
-    private boolean success;
+    private String success;
 
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
     public String getTickerSymbol() {return tickerSymbol;}
 
-    public boolean getSuccess() {
+    public String getSuccess() {
         return success;
     }
+
     public void setTickerSymbol(String tickerSymbol) {this.tickerSymbol = tickerSymbol;}
+
+    public void setSuccess(String success) {this.success = success;}
 }

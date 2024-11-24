@@ -99,10 +99,6 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
                     }
                 }
-
-
-
-
         );
 
         usernameInputField.getDocument().addDocumentListener(new DocumentListener() {

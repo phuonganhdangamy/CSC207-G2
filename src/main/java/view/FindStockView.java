@@ -5,6 +5,8 @@ import interface_adapter.find_stock.FindStockState;
 import interface_adapter.find_stock.FindStockViewModel;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -66,6 +68,23 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
                 }
         );
 
+        tickerInputField.getDocument().addDocumentListener(new DocumentListener() {
+            private void documentListenerHelper() {
+                final FindStockState currentState = findStockViewModel.getState();
+                currentState.setTickerSymbol(tickerInputField.getText());
+                findStockViewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {documentListenerHelper();}
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {documentListenerHelper();}
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {documentListenerHelper();}
+        });
+
         this.add(title);
         this.add(errorLabel);
         this.add(tickerInfo);
@@ -84,11 +103,25 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        final FindStockState state = (FindStockState) evt.getNewValue();
+        setFields(state);
+        tickerErrorField.setText(state.getSuccess());
+
+        // TO BE CONTINUED
+        // Show error message only if there's a find stock error
+        if (state.getSuccess() != null && !state.getSuccess().isEmpty()) {
+            errorLabel.setText(state.getSuccess());
+            errorLabel.setVisible(true);
+        } else {
+            errorLabel.setVisible(false);
+        }
     }
 
-    public String getViewName() {
-        return viewName;
+    private void setFields(FindStockState state) {
+        tickerInputField.setText(state.getTickerSymbol());
     }
+
+    public String getViewName() {return viewName;}
 
     /**
      * Sets the FindStockController for this view.

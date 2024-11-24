@@ -61,6 +61,7 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(stockFactory, userFactory);
+    private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -105,8 +106,10 @@ public class AppBuilder {
      */
     public AppBuilder addLoggedInView() {
         loggedInViewModel = new LoggedInViewModel();
+
         findStockViewModel = new FindStockViewModel(); // Initialize FindStockViewModel
         findStockView = new FindStockView(findStockViewModel);
+
         loggedInView = new LoggedInView(loggedInViewModel, findStockView);
         cardPanel.add(loggedInView, loggedInView.getViewName());
         return this;
@@ -177,13 +180,11 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addFindStockUseCase() {
-        final FindStockOutputBoundary findStockPresenter = new FindStockPresenter(findStockViewModel, viewManagerModel);
+        final FindStockOutputBoundary findStockOutputBoundary = new FindStockPresenter(findStockViewModel, viewManagerModel);
+        final FindStockInputBoundary findStockInteractor = new FindStockInteractor(stockDataAccessObject,
+                findStockOutputBoundary);
 
-        final FindStockDataAccessInterface stockDatabase = new DBStockDataAccessObject();
-        final FindStockInputBoundary findStockInteractor = new FindStockInteractor(stockDatabase, findStockPresenter);
         final FindStockController findStockController = new FindStockController(findStockInteractor);
-
-        // Link the controller to the FindStockView
         findStockView.setFindStockController(findStockController);
 
         return this;
