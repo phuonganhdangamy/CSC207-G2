@@ -23,9 +23,9 @@ public class FindStockInteractor implements FindStockInputBoundary{
         if (tickerSymbol == null) {
             findStockPresenter.prepareFailView("Input cannot be empty.");
         }
-        else if (!stockExist) {
-            findStockPresenter.prepareFailView(tickerSymbol + " does not exist.");
-        }
+//        else if (!stockExist) {
+//            findStockPresenter.prepareFailView(tickerSymbol + " does not exist.");
+//        }
         else {
             double currentCost = findStockUserDataAccess.getCost(tickerSymbol);
             FindStockOutputData outputData = new FindStockOutputData(tickerSymbol, currentCost);
