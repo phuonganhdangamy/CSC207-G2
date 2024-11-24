@@ -49,14 +49,20 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(searchTicker)) {
-                            final FindStockState currentState = findStockViewModel.getState();
+                            // final FindStockState currentState = findStockViewModel.getState();
                             String tickerSymbol = tickerInputField.getText();
+//                            JOptionPane.showMessageDialog(FindStockView.this,
+//                                    tickerSymbol, "Test", JOptionPane.PLAIN_MESSAGE);
+
+                            if (findStockController == null) {
+                                JOptionPane.showMessageDialog(FindStockView.this,
+                                        "FindStockController is not set!", "Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
 
                             findStockController.execute(tickerSymbol);
                         }
                     }
-
-
                 }
         );
 
@@ -69,6 +75,28 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
     private void findStock(String stockName) {
         // Call controller to handle business logic
         System.out.println("Finding stock: " + stockName);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+        System.out.println("Click " + evt.getActionCommand());
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+    }
+
+    public String getViewName() {
+        return viewName;
+    }
+
+    /**
+     * Sets the FindStockController for this view.
+     *
+     * @param controller the controller to handle user actions
+     */
+    public void setFindStockController(FindStockController controller) {
+        this.findStockController = controller;
     }
 
     public static void main(String[] args) {
@@ -85,18 +113,5 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
         // Set frame properties
         frame.setSize(400, 300); // Adjust the size as needed
         frame.setVisible(true);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent evt) {
-        System.out.println("Click " + evt.getActionCommand());
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-    }
-
-    public String getViewName() {
-        return viewName;
     }
 }

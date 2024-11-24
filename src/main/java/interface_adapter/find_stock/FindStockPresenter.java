@@ -1,7 +1,11 @@
 package interface_adapter.find_stock;
 
+import interface_adapter.ViewManagerModel;
 import use_case.find_stock.FindStockOutputBoundary;
 import use_case.find_stock.FindStockOutputData;
+import view.ViewManager;
+
+import javax.swing.text.View;
 
 /**
  * The Presenter for the Find Stock Use Case.
@@ -9,9 +13,11 @@ import use_case.find_stock.FindStockOutputData;
 public class FindStockPresenter implements FindStockOutputBoundary {
 
     private final FindStockViewModel viewModel;
+    private final ViewManagerModel viewManager;
 
-    public FindStockPresenter(FindStockViewModel viewModel) {
+    public FindStockPresenter(FindStockViewModel viewModel, ViewManagerModel viewManager) {
         this.viewModel = viewModel;
+        this.viewManager = viewManager;
     }
 
     @Override

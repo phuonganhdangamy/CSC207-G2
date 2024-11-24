@@ -44,7 +44,9 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private double balance = 0.0;
     private String viewName = "logged in";
 
-    public LoggedInView(LoggedInViewModel loggedInViewModel) {
+    private final JPanel findStockPanel;
+
+    public LoggedInView(LoggedInViewModel loggedInViewModel,  FindStockView findStockView) {
         this.loggedInViewModel = loggedInViewModel;
         this.loggedInViewModel.addPropertyChangeListener(this);
         this.setLayout(new BorderLayout(10, 10));
@@ -77,23 +79,27 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         transactionPanel.setBorder(BorderFactory.createTitledBorder("Transaction"));
 
         // Ticker Input Field
-        JPanel tickerPanel = new JPanel(new BorderLayout());
-        JLabel tickerLabel = new JLabel("Ticker:");
-        tickerInputField = new JTextField(15);
-        tickerInputField.setPreferredSize(new Dimension(200, 20));
-        searchButton = new JButton("Search");
-        searchButton.setPreferredSize(new Dimension(100, 40));
-        tickerPanel.add(tickerLabel, BorderLayout.NORTH);
-        tickerPanel.add(tickerInputField, BorderLayout.CENTER);
-        tickerPanel.add(searchButton, BorderLayout.EAST);
+//        JPanel tickerPanel = new JPanel(new BorderLayout());
+//        JLabel tickerLabel = new JLabel("Ticker:");
+//        tickerInputField = new JTextField(15);
+//        tickerInputField.setPreferredSize(new Dimension(200, 20));
+//        searchButton = new JButton("Search");
+//        searchButton.setPreferredSize(new Dimension(100, 40));
+//        tickerPanel.add(tickerLabel, BorderLayout.NORTH);
+//        tickerPanel.add(tickerInputField, BorderLayout.CENTER);
+//        tickerPanel.add(searchButton, BorderLayout.EAST);
+//
+//        tickerErrorLabel = new JLabel("! Ticker doesn't exist");
+//        tickerErrorLabel.setForeground(Color.RED);
+//        tickerErrorLabel.setVisible(false);
+//
+//        transactionPanel.add(tickerPanel);
+//        transactionPanel.add(tickerErrorLabel);
+//        transactionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        tickerErrorLabel = new JLabel("! Ticker doesn't exist");
-        tickerErrorLabel.setForeground(Color.RED);
-        tickerErrorLabel.setVisible(false);
-
-        transactionPanel.add(tickerPanel);
-        transactionPanel.add(tickerErrorLabel);
-        transactionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        findStockPanel = new JPanel(new BorderLayout());
+        findStockPanel.add(findStockView, BorderLayout.CENTER);
+        transactionPanel.add(findStockPanel, BorderLayout.CENTER);
 
         // Shares Input Field
         JPanel sharesPanel = new JPanel(new BorderLayout());
@@ -155,19 +161,19 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.add(summaryPanel, BorderLayout.SOUTH);
 
         // Search Button Listener
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String ticker = tickerInputField.getText();
-                if (ticker.isEmpty()) {
-                    tickerErrorLabel.setText("! Ticker field cannot be empty");
-                    tickerErrorLabel.setVisible(true);
-                } else {
-                    tickerErrorLabel.setVisible(false);
-                    JOptionPane.showMessageDialog(LoggedInView.this, "Searching for ticker: " + ticker);
-                }
-            }
-        });
+//        searchButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                String ticker = tickerInputField.getText();
+//                if (ticker.isEmpty()) {
+//                    tickerErrorLabel.setText("! Ticker field cannot be empty");
+//                    tickerErrorLabel.setVisible(true);
+//                } else {
+//                    tickerErrorLabel.setVisible(false);
+//                    JOptionPane.showMessageDialog(LoggedInView.this, "Searching for ticker: " + ticker);
+//                }
+//            }
+//        });
 
         // Logout Button Listener
         logoutButton.addActionListener(new ActionListener() {
@@ -265,6 +271,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     //Adding the sell stock use case to make the sell stock button functional.
     public void setSellStockController(SellStockController sellStockController) {
         this.sellStockController = sellStockController;
+    }
+
+    public JPanel getFindStockPanel() {
+        return findStockPanel;
     }
 }
 
