@@ -79,22 +79,12 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         transactionPanel.setBorder(BorderFactory.createTitledBorder("Transaction"));
 
         // Ticker Input Field
-//        JPanel tickerPanel = new JPanel(new BorderLayout());
-//        JLabel tickerLabel = new JLabel("Ticker:");
-//        tickerInputField = new JTextField(15);
-//        tickerInputField.setPreferredSize(new Dimension(200, 20));
-//        searchButton = new JButton("Search");
-//        searchButton.setPreferredSize(new Dimension(100, 40));
-//        tickerPanel.add(tickerLabel, BorderLayout.NORTH);
-//        tickerPanel.add(tickerInputField, BorderLayout.CENTER);
-//        tickerPanel.add(searchButton, BorderLayout.EAST);
-//
-//        tickerErrorLabel = new JLabel("! Ticker doesn't exist");
-//        tickerErrorLabel.setForeground(Color.RED);
-//        tickerErrorLabel.setVisible(false);
-//
+        tickerErrorLabel = new JLabel("! Ticker doesn't exist");
+        tickerErrorLabel.setForeground(Color.RED);
+        tickerErrorLabel.setVisible(false);
+
 //        transactionPanel.add(tickerPanel);
-//        transactionPanel.add(tickerErrorLabel);
+        transactionPanel.add(tickerErrorLabel);
 //        transactionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         findStockPanel = new JPanel(new BorderLayout());

@@ -70,8 +70,8 @@ public class AppBuilder {
     private LoginView loginView;
     private LoginViewModel loginViewModel;
 
-    private FindStockView findStockView;
     private FindStockViewModel findStockViewModel;
+    private FindStockView findStockView;
 
 
     public AppBuilder() {
@@ -155,7 +155,8 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLogoutUseCase(){
-        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(loginViewModel,loggedInViewModel,viewManagerModel);
+        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(loginViewModel,
+                loggedInViewModel,viewManagerModel);
         final LogoutInputBoundary logoutInteractor = new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
         final LogoutController logoutController = new LogoutController(logoutInteractor);
         loggedInView.setLogoutController (logoutController);
@@ -180,7 +181,8 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addFindStockUseCase() {
-        final FindStockOutputBoundary findStockOutputBoundary = new FindStockPresenter(findStockViewModel, viewManagerModel);
+        final FindStockOutputBoundary findStockOutputBoundary = new FindStockPresenter(findStockViewModel,
+                viewManagerModel);
         final FindStockInputBoundary findStockInteractor = new FindStockInteractor(stockDataAccessObject,
                 findStockOutputBoundary);
 

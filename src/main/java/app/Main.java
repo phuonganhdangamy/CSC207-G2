@@ -17,13 +17,13 @@ public class Main {
         final JFrame application = appBuilder
                 .addSignupView()
                 .addLoginView()
-                .addLoggedInView()
                 .addFindStockView()
+                .addLoggedInView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addLogoutUseCase()
-                .addSellStockUseCase()
                 .addFindStockUseCase()
+                .addSellStockUseCase()
                 .build();
 
         // Makes the application visible

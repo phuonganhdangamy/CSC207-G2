@@ -37,9 +37,13 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
         final JLabel title = new JLabel("Find stock");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        errorLabel.setForeground(Color.RED);
-        errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        errorLabel.setVisible(false);
+//        errorLabel.setForeground(Color.RED);
+//        errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+//        errorLabel.setVisible(false);
+
+        tickerErrorField.setForeground(Color.RED);
+        tickerErrorField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        tickerErrorField.setVisible(false);
 
         final LabelTextPanel tickerInfo = new LabelTextPanel(
                 new JLabel("Ticker: "), tickerInputField);
@@ -87,6 +91,7 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
 
         this.add(title);
         this.add(errorLabel);
+        this.add(tickerErrorField);
         this.add(tickerInfo);
         this.add(buttons);
     }
