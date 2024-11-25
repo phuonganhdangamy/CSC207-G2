@@ -40,6 +40,7 @@ public class ProfitLossInteractor implements ProfitLossInputBoundary {
         // Fetch the user's portfolio
         Portfolio portfolio = dataAccess.getCurrentUser().getPortfolio();
 
+
         // Use the calculator to calculate profit/loss for the specific stock
         ProfitLossCalculator calculator = new ProfitLossCalculator(portfolio);
         double stockProfitLoss = calculator.calculateStockProfitLoss(tickerSymbol, currentPrice);
