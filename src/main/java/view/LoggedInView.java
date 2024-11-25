@@ -4,6 +4,7 @@ import interface_adapter.LoggedInState;
 import interface_adapter.buy_stock.BuyStockController;
 import interface_adapter.LoggedInViewModel;
 import interface_adapter.find_stock.FindStockController;
+import interface_adapter.find_stock.FindStockViewModel;
 import interface_adapter.login.LoginState;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.profit_loss.ProfitLossController;
@@ -23,22 +24,17 @@ import java.beans.PropertyChangeListener;
 public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     private final LoggedInViewModel loggedInViewModel;
+    private final BuySellStockView buySellStockView;
     private JLabel balanceLabel;
     private JTable stockTable;
     private JTextField tickerInputField;
-    private JTextField sharesInputField;
     private JLabel tickerErrorLabel;
-    private JLabel sharesErrorLabel;
     private JLabel totalValueLabel;
     private JLabel profitLossLabel;
-    private JButton buyButton;
-    private JButton sellButton;
-    private JButton logoutButton;
+
     private JButton searchButton;
-    private LogoutController logoutController;
     private FindStockController findStockController;
-    private BuyStockController buyStockController;
-    private SellStockController sellStockController;
+
     private ViewOwnedStockController viewOwnedStockController;
     private ProfitLossController profitLossController;
 
@@ -88,60 +84,43 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         tickerErrorLabel.setForeground(Color.RED);
         tickerErrorLabel.setVisible(false);
 
-//        transactionPanel.add(tickerPanel);
+  //      transactionPanel.add(tickerPanel);
         transactionPanel.add(tickerErrorLabel);
 //        transactionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         findStockPanel = new JPanel(new BorderLayout());
         findStockPanel.add(findStockView, BorderLayout.CENTER);
-        transactionPanel.add(findStockPanel, BorderLayout.CENTER);
+        transactionPanel.add(findStockView, BorderLayout.CENTER);
 
-        // Shares Input Field
-        JPanel sharesPanel = new JPanel(new BorderLayout());
-        JLabel sharesLabel = new JLabel("Shares:");
-        sharesInputField = new JTextField(15);
-        sharesInputField.setPreferredSize(new Dimension(200, 20));
 
         // Buy/Sell Stock Panel
-//        buySellStockPanel = new JPanel(new BorderLayout());
-//        buySellStockPanel.add(buySellStockView, BorderLayout.CENTER);
-//        transactionPanel.add(buySellStockPanel, BorderLayout.CENTER);
+       buySellStockPanel = new JPanel(new BorderLayout());
+       this.buySellStockView = buySellStockView;
+       buySellStockPanel.add(buySellStockView, BorderLayout.CENTER);
+       transactionPanel.add(buySellStockPanel, BorderLayout.CENTER);
 
-        //Allows you to input only numbers
-        sharesInputField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if (!Character.isDigit(e.getKeyChar())) {
-                    e.consume();
-                }
-            }
-        });
-        sharesPanel.add(sharesLabel, BorderLayout.NORTH);
-        sharesPanel.add(sharesInputField, BorderLayout.CENTER);
 
-        sharesErrorLabel = new JLabel("! Balance is not enough");
-        sharesErrorLabel.setForeground(Color.RED);
-        sharesErrorLabel.setVisible(false);
+       // sharesPanel.add(sharesLabel, BorderLayout.NORTH);
+       // sharesPanel.add(sharesInputField, BorderLayout.CENTER);
 
-        transactionPanel.add(sharesPanel);
-        transactionPanel.add(sharesErrorLabel);
+
+
+     //   transactionPanel.add(sharesPanel);
+      //  transactionPanel.add(sharesErrorLabel);
         transactionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // Buttons
-        JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 5, 10));
-        buyButton = new JButton("Buy");
-        sellButton = new JButton("Sell");
-        logoutButton = new JButton("Log out");
+
 
         Dimension buttonSize = new Dimension(150, 60);
-        buyButton.setPreferredSize(buttonSize);
-        sellButton.setPreferredSize(buttonSize);
-        logoutButton.setPreferredSize(buttonSize);
-
-        buttonPanel.add(buyButton);
-        buttonPanel.add(sellButton);
-        buttonPanel.add(logoutButton);
-        transactionPanel.add(buttonPanel);
+//        buyButton.setPreferredSize(buttonSize);
+//        sellButton.setPreferredSize(buttonSize);
+//        logoutButton.setPreferredSize(buttonSize);
+//
+//        buttonPanel.add(buyButton);
+//        buttonPanel.add(sellButton);
+//        buttonPanel.add(logoutButton);
+//        transactionPanel.add(buttonPanel);
 
         // Summary
         JLabel purchasePriceLabel = new JLabel("Total Purchase Price: XXXXX.XX");
@@ -159,29 +138,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.add(scrollPane, BorderLayout.CENTER);
         this.add(transactionPanel, BorderLayout.EAST);
         this.add(summaryPanel, BorderLayout.SOUTH);
-
-        // Logout Button Listener
-        logoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //JOptionPane.showMessageDialog(LoggedInView.this, "Logged out. Redirecting to Login Page...");
-                // Mock action will replace with controller later
-                logoutController.execute(username);
-            }
-        });
-
-        sellButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String ticker = tickerInputField.getText();
-                int quantity = Integer.parseInt(sharesInputField.getText());
-
-                sellStockController.execute(quantity, ticker);
-                sharesInputField.setText("");
-                tickerInputField.setText("");
-            }
-        });
-
 
     }
 
@@ -201,6 +157,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
      */
     public void setUsername(String username) {
         this.username = username;
+        buySellStockView.setUsername(username);
         updateBalanceLabel();
     }
 
@@ -250,16 +207,16 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     //Adding the logout use case to make the logout button functional.
     public void setLogoutController(LogoutController logoutController) {
-        this.logoutController = logoutController;
+        buySellStockView.setLogoutController (logoutController);
     }
 
     //Adding the sell stock use case to make the sell stock button functional.
     public void setSellStockController(SellStockController sellStockController) {
-        this.sellStockController = sellStockController;
+        buySellStockView.setSellStockController (sellStockController);
     }
 
     public void setBuyStockController(BuyStockController buyStockController) {
-        this.buyStockController = buyStockController;
+        this.setBuyStockController(buyStockController);
     }
 
     public void setProfitLossController(ProfitLossController profitLossController) {

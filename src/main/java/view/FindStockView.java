@@ -197,6 +197,10 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
         this.findStockController = controller;
     }
 
+    public String getTickerField(){
+        return tickerInputField.getText();
+    }
+
     public static void main(String[] args) {
         // Create the JFrame
         JFrame frame = new JFrame("Find Stock Test");
@@ -211,5 +215,9 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
         // Set frame properties
         frame.setSize(400, 300); // Adjust the size as needed
         frame.setVisible(true);
+    }
+
+    public void setTickerField(String s) {
+        tickerInputField.setText(s);
     }
 }
