@@ -6,11 +6,13 @@ import interface_adapter.LoggedInViewModel;
 import interface_adapter.find_stock.FindStockController;
 import interface_adapter.login.LoginState;
 import interface_adapter.logout.LogoutController;
+import interface_adapter.profit_loss.ProfitLossController;
 import interface_adapter.sell_stock.SellStockController;
 import interface_adapter.view_owned_stock.ViewOwnedStockController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +20,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Map;
 
 public class LoggedInView extends JPanel implements PropertyChangeListener {
 
@@ -28,7 +31,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private JTextField sharesInputField;
     private JLabel tickerErrorLabel;
     private JLabel sharesErrorLabel;
-    private JLabel totalValueLabel;
     private JLabel profitLossLabel;
     private JButton buyButton;
     private JButton sellButton;
@@ -39,6 +41,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private BuyStockController buyStockController;
     private SellStockController sellStockController;
     private ViewOwnedStockController viewOwnedStockController;
+    private final ProfitLossController profitLossController;
 
     private String username = "<username>";
     private double balance = 0.0;
@@ -47,12 +50,21 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private final JPanel findStockPanel;
     private JPanel buySellStockPanel;
 
-    public LoggedInView(LoggedInViewModel loggedInViewModel,  FindStockView findStockView,
+
+    public LoggedInView(LoggedInViewModel loggedInViewModel, FindStockView findStockView,
                         BuySellStockView buySellStockView) {
+
         this.loggedInViewModel = loggedInViewModel;
+        this.profitLossController = profitLossController;
+
+        // Observe changes in ViewModel to update total profit loss
         this.loggedInViewModel.addPropertyChangeListener(this);
         this.setLayout(new BorderLayout(10, 10));
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // Listen to state changes
+        this.loggedInViewModel.addPropertyChangeListener(this);
+
 
         // Balance and Greeting
         JLabel titleLabel = new JLabel("List of Stocks");
@@ -140,22 +152,37 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         buttonPanel.add(logoutButton);
         transactionPanel.add(buttonPanel);
 
-        // Summary
-        JLabel purchasePriceLabel = new JLabel("Total Purchase Price: XXXXX.XX");
-        JLabel currentPriceLabel = new JLabel("Total Current Price: XXXXX.XX");
-        JLabel profitLossLabel = new JLabel("Total Profit/Loss: +XX.XX%");
+        // Summary Panel: Profit/Loss
+        profitLossLabel = new JLabel("Total Profit/Loss: +XX.XX%");
+        profitLossLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        profitLossLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        JPanel summaryPanel = new JPanel(new GridLayout(1, 3));
+        JPanel summaryPanel = new JPanel(new BorderLayout());
         summaryPanel.setBorder(BorderFactory.createTitledBorder("Summary"));
-        summaryPanel.add(purchasePriceLabel);
-        summaryPanel.add(currentPriceLabel);
-        summaryPanel.add(profitLossLabel);
+        summaryPanel.add(profitLossLabel, BorderLayout.CENTER);
 
         // Adding Sections to Main Layout
         this.add(topPanel, BorderLayout.NORTH);
         this.add(scrollPane, BorderLayout.CENTER);
         this.add(transactionPanel, BorderLayout.EAST);
         this.add(summaryPanel, BorderLayout.SOUTH);
+
+
+
+        // Search Button Listener
+//        searchButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                String ticker = tickerInputField.getText();
+//                if (ticker.isEmpty()) {
+//                    tickerErrorLabel.setText("! Ticker field cannot be empty");
+//                    tickerErrorLabel.setVisible(true);
+//                } else {
+//                    tickerErrorLabel.setVisible(false);
+//                    JOptionPane.showMessageDialog(LoggedInView.this, "Searching for ticker: " + ticker);
+//                }
+//            }
+//        });
 
         // Logout Button Listener
         logoutButton.addActionListener(new ActionListener() {
@@ -183,13 +210,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     }
 
 
-
     /**
      * Updates the balance label dynamically.
      */
     private void updateBalanceLabel() {
         balanceLabel.setText(String.format("Hi, %s your Balance is %.2f", username, balance));
     }
+
 
     /**
      * Sets the username and updates the balance label.
@@ -242,8 +269,23 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         setUsername(state.getUsername());
         setUsername(state.getUsername());
 
+        // Update stock table data
+        Object[][] stockData = state.getStockTable();
+        String[] columnNames = {"Ticker", "Shares", "Profit/Loss"};
+        stockTable.setModel(new DefaultTableModel(stockData, columnNames));
 
+        // Clear error messages
+        tickerErrorLabel.setVisible(false);
+        sharesErrorLabel.setVisible(false);
+        tickerErrorLabel.repaint();
+        sharesErrorLabel.repaint();
+        tickerErrorLabel.revalidate();
+        sharesErrorLabel.revalidate();
+
+        // Update profit/loss summary
+        profitLossLabel.setText(String.format("Total Profit/Loss: %.2f%%", state.getTotalProfitLoss()));
     }
+
 
     //Adding the logout use case to make the logout button functional.
     public void setLogoutController(LogoutController logoutController) {
