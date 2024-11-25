@@ -19,7 +19,7 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
     private final FindStockViewModel findStockViewModel;
 
     private final JTextField tickerInputField = new JTextField(15);
-    private final JLabel tickerErrorField = new JLabel();
+    private final JLabel tickerErrorField = new JLabel("");
 
     private final JTextField numSharesField;
 
@@ -90,7 +90,7 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
                 final FindStockState currentState = findStockViewModel.getState();
                 currentState.setTickerSymbol(tickerInputField.getText());
                 findStockViewModel.setState(currentState);
-                errorLabel.setText("hi");
+                errorLabel.setText(" ");
             }
 
             @Override
@@ -144,22 +144,37 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
 //            }
 //        }
 
-        if ("findStockSuccess".equals(evt.getPropertyName())) {
-            String success = (String) evt.getNewValue();
-            if ("true".equals(success)) {
-                // Hide the error label if the search is successful
+//        if ("findStockSuccess".equals(evt.getPropertyName())) {
+//            String success = (String) evt.getNewValue();
+//            if ("true".equals(success)) {
+//                // Hide the error label if the search is successful
+//                errorLabel.setVisible(true);
+//                resultLabel.setText("Stock search was successful: " + findStockViewModel.getSuccess());
+//                resultLabel.setVisible(true);
+//            } else {
+//                // Display the error message in the error label
+//                System.out.println("Error message: " + findStockViewModel.getError());
+//                errorLabel.setText("Error: " + findStockViewModel.getError());
+//                errorLabel.setVisible(true);
+//                resultLabel.setVisible(false); // Hide success result if any
+//                this.revalidate(); // Recalculate the layout
+//                this.repaint();
+//            }
+//        }
+
+        FindStockState state = findStockViewModel.getState();
+        if ("findStockState".equals(evt.getPropertyName())) {
+            if ("true".equals(state.getSuccess())) {
                 errorLabel.setVisible(false);
-                resultLabel.setText("Stock search was successful: " + findStockViewModel.getSuccess());
+                resultLabel.setText(state.getMessage());
                 resultLabel.setVisible(true);
             } else {
-                // Display the error message in the error label
-                System.out.println("Error message: " + findStockViewModel.getError());
-                errorLabel.setText("Error: " + findStockViewModel.getError());
+                errorLabel.setText(state.getError());
                 errorLabel.setVisible(true);
-                resultLabel.setVisible(false); // Hide success result if any
-                this.revalidate(); // Recalculate the layout
-                this.repaint();
+                resultLabel.setVisible(false);
             }
+            this.revalidate();
+            this.repaint();
         }
     }
 

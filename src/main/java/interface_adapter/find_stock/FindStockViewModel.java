@@ -21,19 +21,6 @@ public class FindStockViewModel extends ViewModel<FindStockState> {
         setState(new FindStockState("", "", ""));
     }
 
-//    public String getFindStockSuccess() {
-//        return getState().getSuccess();
-//    }
-//
-//    /**
-//     * Updates the success status of the find stock operation.
-//     *
-//     * @param success true if the operation was successful, false otherwise.
-//     */
-//    public void setFindStockSuccess(String success) {
-//        getState().setSuccess(success);
-//    }
-
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
     }
@@ -56,6 +43,7 @@ public class FindStockViewModel extends ViewModel<FindStockState> {
     }
 
     public void setSuccess(String success) {
+        getState().setSuccess(success);
         support.firePropertyChange("success", this.success, success);
         this.success = success;
     }
@@ -65,6 +53,7 @@ public class FindStockViewModel extends ViewModel<FindStockState> {
     }
 
     public void setError(String error) {
+        getState().setError(error);
         support.firePropertyChange("error", this.error, error);
         this.error = error;
     }
@@ -74,6 +63,7 @@ public class FindStockViewModel extends ViewModel<FindStockState> {
     }
 
     public void setFindStockState(String findStockState) {
+        getState().setSuccess(findStockState); // Assuming `success` holds this info
         support.firePropertyChange("findStockState", this.findStockState, findStockState);
         this.findStockState = findStockState;
     }
