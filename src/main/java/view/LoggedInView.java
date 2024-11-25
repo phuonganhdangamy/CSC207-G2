@@ -48,11 +48,12 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private String viewName = "logged in";
 
     private final JPanel findStockPanel;
+    private JPanel summaryPanel;
     private JPanel buySellStockPanel;
 
 
     public LoggedInView(LoggedInViewModel loggedInViewModel, FindStockView findStockView,
-                        BuySellStockView buySellStockView) {
+                        BuySellStockView buySellStockView, ProfitLossView profitLossView) {
 
         this.loggedInViewModel = loggedInViewModel;
         this.profitLossController = profitLossController;
@@ -153,13 +154,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         transactionPanel.add(buttonPanel);
 
         // Summary Panel: Profit/Loss
-        profitLossLabel = new JLabel("Total Profit/Loss: +XX.XX%");
-        profitLossLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        profitLossLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        // profitLossLabel = new JLabel("Total Profit/Loss: +XX.XX%");
+        // profitLossLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        // profitLossLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        JPanel summaryPanel = new JPanel(new BorderLayout());
-        summaryPanel.setBorder(BorderFactory.createTitledBorder("Summary"));
-        summaryPanel.add(profitLossLabel, BorderLayout.CENTER);
+        summaryPanel = new JPanel(new BorderLayout());
+        summaryPanel.add(profitLossView, BorderLayout.CENTER);
+
 
         // Adding Sections to Main Layout
         this.add(topPanel, BorderLayout.NORTH);
