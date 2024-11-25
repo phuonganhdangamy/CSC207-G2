@@ -19,11 +19,14 @@ public class FindStockPresenter implements FindStockOutputBoundary {
 
     @Override
     public void prepareSuccessView(FindStockOutputData response) {
+
+        // Reset the state so that the label can appear again
+        findStockViewModel.setFindStockState("");
+        findStockViewModel.setSuccess("");
+        findStockViewModel.setError("");
+
         String successMessage = "The current price of " + response.getTickerSymbol() + " is $" +
                 response.getCurrentCost() + ".";
-
-        // FindStockState successState = new FindStockState(successMessage, response.getTickerSymbol(), "true");
-
         findStockViewModel.setSuccess(successMessage);
         // System.out.println(successMessage);
 
@@ -33,10 +36,16 @@ public class FindStockPresenter implements FindStockOutputBoundary {
     @Override
     public void prepareFailView(String errorMessage) {
         // System.out.println("Error: " + errorMessage);
-        FindStockState errorState = new FindStockState("", "", "");
-        errorState.setError(errorMessage);
-        findStockViewModel.setError(errorMessage);
+//        FindStockState errorState = new FindStockState("", "", "");
+//        errorState.setError(errorMessage);
 
+        // Reset the state so that the label can appear again
+        findStockViewModel.setFindStockState("");
+        findStockViewModel.setSuccess("");
+        findStockViewModel.setError("");
+
+        System.out.println(errorMessage);
+        findStockViewModel.setError(errorMessage);
         findStockViewModel.setFindStockState("false");
     }
 }
