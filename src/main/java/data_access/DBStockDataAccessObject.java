@@ -46,7 +46,7 @@ public class DBStockDataAccessObject implements FindStockDataAccessInterface {
             JSONObject json = new JSONObject(content.toString());
             if (!json.has("Time Series (Daily)")) {
                 System.out.println("Error: No Time Series (Daily) data available.");
-                return -1;
+                return 0;
             }
 
             JSONObject timeSeries = json.getJSONObject("Time Series (Daily)");
