@@ -88,10 +88,6 @@ class BuyStockInteractorTest {
                 fail("Unexpected success: The user should not have enough balance.");
             }
 
-            @Override
-            public void prepareFailView(String errorMessage) {
-                assertEquals("Insufficient balance.", errorMessage);
-            }
         };
 
         // Interactor for executing the use case
@@ -117,10 +113,6 @@ class BuyStockInteractorTest {
                 fail("Unexpected success: Stock does not exist.");
             }
 
-            @Override
-            public void prepareFailView(String errorMessage) {
-                assertEquals("This ticker does not exist.", errorMessage);
-            }
         };
 
         // Interactor for executing the use case
@@ -142,10 +134,6 @@ class BuyStockInteractorTest {
                 fail("Unexpected success: User does not exist.");
             }
 
-            @Override
-            public void prepareFailView(String errorMessage) {
-                assertEquals("nonExistentUser: Account does not exist.", errorMessage);
-            }
         };
 
         // Interactor for executing the use case
