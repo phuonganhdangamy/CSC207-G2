@@ -77,7 +77,7 @@ class ProfitLossInteractorTest {
     // Mock data access class for testing
     private static class TestProfitLossDataAccess implements ProfitLossDataAccessInterface {
         @Override
-        public Portfolio getPortfolio(String username) {
+        public Portfolio getCurrentUser(String username) {
             User user = new User(username, "password"); // Create a User object
             Portfolio portfolio = user.getPortfolio();
 
