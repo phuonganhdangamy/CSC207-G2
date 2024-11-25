@@ -21,6 +21,12 @@ public class Stock {
         this.cost = cost;
     }
 
+    public Stock(String tickerSymbol) {
+        this.tickerSymbol = tickerSymbol;
+        DBStockDataAccessObject access = new DBStockDataAccessObject();
+        this.cost = access.getCost(tickerSymbol);
+    }
+
     public String getTickerSymbol() {
         return tickerSymbol;
     }
@@ -29,10 +35,12 @@ public class Stock {
         return cost;
     }
 
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
     public static void main(String[] args) {
         // Stock stock = new Stock("IBM", "IBM");
         // System.out.println(stock.currentPrice);
     }
 }
-
-

@@ -6,30 +6,44 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.DBStockDataAccessObject;
 import data_access.DBUserDataAccessObject;
 import entity.StockFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.LoggedInViewModel;
+import interface_adapter.find_stock.FindStockController;
+import interface_adapter.find_stock.FindStockPresenter;
+import interface_adapter.find_stock.FindStockViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.logout.LogoutController;
+import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.sell_stock.SellStockController;
+import interface_adapter.sell_stock.SellStockPresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import interface_adapter.logout.LogoutController;
+import use_case.find_stock.FindStockDataAccessInterface;
+import use_case.find_stock.FindStockInputBoundary;
+import use_case.find_stock.FindStockInteractor;
+import use_case.find_stock.FindStockOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 
+import use_case.logout.LogoutInputBoundary;
+import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.sell_stock.SellStockInputBoundary;
+import use_case.sell_stock.SellStockInteractor;
+import use_case.sell_stock.SellStockOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
-import view.LoggedInView;
-import view.LoginView;
-import view.SignupView;
-import view.ViewManager;
+import view.*;
+
 /**
  * The AppBuilder class is responsible for putting together the pieces of
  * our CA architecture; piece by piece.
@@ -47,6 +61,7 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(stockFactory, userFactory);
+    private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -54,6 +69,9 @@ public class AppBuilder {
     private LoggedInView loggedInView;
     private LoginView loginView;
     private LoginViewModel loginViewModel;
+
+    private FindStockViewModel findStockViewModel;
+    private FindStockView findStockView;
 
 
     public AppBuilder() {
@@ -88,7 +106,11 @@ public class AppBuilder {
      */
     public AppBuilder addLoggedInView() {
         loggedInViewModel = new LoggedInViewModel();
-        loggedInView = new LoggedInView(loggedInViewModel);
+
+        findStockViewModel = new FindStockViewModel(); // Initialize FindStockViewModel
+        findStockView = new FindStockView(findStockViewModel);
+
+        loggedInView = new LoggedInView(loggedInViewModel, findStockView);
         cardPanel.add(loggedInView, loggedInView.getViewName());
         return this;
     }
@@ -132,6 +154,60 @@ public class AppBuilder {
      * Adds the Logout Use Case to the application.
      * @return this builder
      */
+    public AppBuilder addLogoutUseCase(){
+        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(loginViewModel,
+                loggedInViewModel,viewManagerModel);
+        final LogoutInputBoundary logoutInteractor = new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
+        final LogoutController logoutController = new LogoutController(logoutInteractor);
+        loggedInView.setLogoutController (logoutController);
+
+        return this;
+
+    }
+
+    /**
+     * Adds the FindStock View to the application.
+     * @return this builder
+     */
+    public AppBuilder addFindStockView() {
+        findStockViewModel = new FindStockViewModel();
+        findStockView = new FindStockView(findStockViewModel);
+        cardPanel.add(findStockView, findStockView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the FindStock Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addFindStockUseCase() {
+        final FindStockOutputBoundary findStockOutputBoundary = new FindStockPresenter(findStockViewModel,
+                viewManagerModel);
+        final FindStockInputBoundary findStockInteractor = new FindStockInteractor(stockDataAccessObject,
+                findStockOutputBoundary);
+
+        final FindStockController findStockController = new FindStockController(findStockInteractor);
+        findStockView.setFindStockController(findStockController);
+
+        return this;
+    }
+
+    /**
+     * Adds the SellStock Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addSellStockUseCase() {
+        final SellStockOutputBoundary sellStockPresenter = new SellStockPresenter(loggedInViewModel,viewManagerModel);
+
+        //Create new stockDatabase for the sellStockUseCase
+        final FindStockDataAccessInterface stockDatabase = new DBStockDataAccessObject();
+        final SellStockInputBoundary sellStockInteractor = new SellStockInteractor(sellStockPresenter,
+                userDataAccessObject, stockDatabase);
+        final SellStockController sellStockController = new SellStockController(sellStockInteractor);
+
+        loggedInView.setSellStockController(sellStockController);
+        return this;
+    }
 
     /**
      * Creates the JFrame and the first view is the signup view.

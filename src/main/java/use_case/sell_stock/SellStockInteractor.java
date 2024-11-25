@@ -1,17 +1,34 @@
 package use_case.sell_stock;
 
+import data_access.DBStockDataAccessObject;
 import entity.Portfolio;
+import entity.Stock;
 import entity.User;
+import use_case.find_stock.FindStockDataAccessInterface;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SellStockInteractor implements SellStockInputBoundary{
     // Needs access to the database
     // Needs to send results to the view
     SellStockUserDataAccessInterface database;
     SellStockOutputBoundary sellStockPresenter;
+    FindStockDataAccessInterface stockDatabase;
 
-    public SellStockInteractor(SellStockOutputBoundary sellStockPresenter, SellStockUserDataAccessInterface database) {
+
+    // Need access to the view stock use case interactor and profit loss interactor to update UI
+    // ViewOwnedStockInputBoundary viewOwnedStockInteractor;
+    // ProfitLossInputBoundary profitLossInteractor;
+
+    public SellStockInteractor(SellStockOutputBoundary sellStockPresenter, SellStockUserDataAccessInterface database,
+                               FindStockDataAccessInterface stockDatabase) {
+       // Add to parameters: ViewOwnedStockInputBoundary viewOwnedStockInteractor,  ProfitLossInputBoundary profitLossInteractor
         this.sellStockPresenter = sellStockPresenter;
         this.database = database;
+        this.stockDatabase = stockDatabase;
+        // this.viewOwnedStockInteractor = viewOwnedStockInteractor;
+        // this.profitLossInteractor = profitLossInteractor
     }
 
     @Override
@@ -23,18 +40,45 @@ public class SellStockInteractor implements SellStockInputBoundary{
         Portfolio userPortfolio = user.getPortfolio();
 
         // Check the number of shares owned associated with the ticker
-        //int numSharesOwned = userPortfolio.getShareCount();
+        int numSharesOwned = userPortfolio.getShareCount(ticker);
+
+        //Check if the company exists.
+
+        if (!stockDatabase.isStockExist(ticker)) {
+            sellStockPresenter.prepareFailView( "This ticker does not exist.");
+
+        }
+
 
         // If we own more than the number of shares that the user wishes to sell,
         // this can be executed
-//        if (numSharesOwned >= quantity){
-//            for(int i = 0; i < quantity; i++){
-//                userPortfolio.removeStock(ticker);
-//            }
-//
-//            database.saveUserInfo(user);
-//
-//        }
+        else if (numSharesOwned >= quantity){
+            //Get current market price for the stock
+            double marketPrice = stockDatabase.getCost(ticker);
+            // removes the stock and updates the balance
+            for(int i = 0; i < quantity; i++){
+                userPortfolio.removeStock(ticker, marketPrice);
+            }
+
+            // Save the user's information in the online database
+            database.saveUserInfo(user);
+
+            // define the output needed by the presenter
+            double newBalance = user.getBalance();
+
+            SellStockOutputData output = new SellStockOutputData(newBalance);
+            sellStockPresenter.prepareSuccessView(output);
+
+            // Update UI by calling the view owned stock use case and profit loss use case after
+            // selling shares
+
+            // viewOwnedStockInteractor.execute();
+            // profitLossInteractor.execute();
+
+        }else{
+            sellStockPresenter.prepareFailView(user.getName()+ ", you don't have enough shares of this company to sell.");
+
+        }
 
 
     }

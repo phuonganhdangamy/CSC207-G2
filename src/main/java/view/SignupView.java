@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupState;
@@ -80,7 +81,18 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
                 }
         );
 
-        cancel.addActionListener(this);
+        cancel.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        usernameInputField.setText("");
+                        passwordInputField.setText("");
+                        final SignupState currentState = signupViewModel.getState();
+                        currentState.setError("");
+                        errorLabel.setVisible(false);
+                    }
+                }
+        );
 
         addUsernameListener();
         addPasswordListener();
@@ -169,9 +181,11 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final SignupState state = (SignupState) evt.getNewValue();
+        usernameInputField.setText(state.getUsername());
+        passwordInputField.setText(state.getPassword());
         // Show the error message if username already exists
-        if (state.getUsernameError() != null && !state.getUsernameError().isEmpty()) {
-            errorLabel.setText("This user already exists!" + state.getUsernameError());
+        if (state.getError() != null && !state.getError().isEmpty()) {
+            errorLabel.setText(state.getError());
             errorLabel.setVisible(true);
         } else {
             errorLabel.setVisible(false);
