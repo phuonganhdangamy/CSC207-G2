@@ -120,6 +120,7 @@ public class AppBuilder {
 
         findStockViewModel = new FindStockViewModel(); // Initialize FindStockViewModel
         findStockView = new FindStockView(findStockViewModel);
+        buySellStockView = new BuySellStockView(findStockView);
 
         loggedInView = new LoggedInView(loggedInViewModel, findStockView, buySellStockView);
         cardPanel.add(loggedInView, loggedInView.getViewName());
