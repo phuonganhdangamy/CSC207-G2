@@ -16,17 +16,11 @@ public class ProfitLossPresenter implements ProfitLossOutputBoundary {
         this.viewManagerModel = viewManagerModel;
     }
 
-    private final LoggedInState loggedInState;
-
-    public ProfitLossPresenter(LoggedInState loggedInState) {
-        this.loggedInState = loggedInState;
-    }
-
     @Override
     public void presentTotalProfitLoss(ProfitLossOutputData outputData) {
         // Update the state with the new profit/loss value
         double totalProfitLoss = outputData.getProfitLoss();
-        loggedInState.setTotalProfitLoss(totalProfitLoss);
+        loggedInViewModel.getState().setTotalProfitLoss(totalProfitLoss);
     }
 
     @Override

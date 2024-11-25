@@ -18,8 +18,8 @@ import java.beans.PropertyChangeListener;
 
 public class BuySellStockView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName  = "buy sell stock";
-    private final BuyStockViewModel buyStockViewModel;
-    private final SellStockViewModel sellStockViewModel;
+    //private final BuyStockViewModel buyStockViewModel;
+   // private final SellStockViewModel sellStockViewModel;
     private String username;
 
     private final FindStockView findStockView;
@@ -39,14 +39,13 @@ public class BuySellStockView extends JPanel implements ActionListener, Property
     private SellStockController sellStockController;
     private LogoutController logoutController;
 
-    public BuySellStockView(BuyStockViewModel buyStockViewModel, SellStockViewModel sellStockViewModel,
-                            FindStockView findStockView) {
-        this.buyStockViewModel  = buyStockViewModel;
-        this.sellStockViewModel = sellStockViewModel;
+    public BuySellStockView(FindStockView findStockView) {
+        //this.buyStockViewModel  = buyStockViewModel;
+        //this.sellStockViewModel = sellStockViewModel;
         this.findStockView = findStockView;
 
-        this.buyStockViewModel.addPropertyChangeListener(this);
-        this.sellStockViewModel.addPropertyChangeListener(this);
+       // this.buyStockViewModel.addPropertyChangeListener(this);
+        //this.sellStockViewModel.addPropertyChangeListener(this);
 
         // Set layout for the panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
