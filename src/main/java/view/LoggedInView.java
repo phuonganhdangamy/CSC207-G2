@@ -52,7 +52,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
 
     public LoggedInView(LoggedInViewModel loggedInViewModel, FindStockView findStockView,
-                        BuySellStockView buySellStockView, ProfitLossController profitLossController) {
+                        BuySellStockView buySellStockView) {
 
         this.loggedInViewModel = loggedInViewModel;
         this.profitLossController = profitLossController;
