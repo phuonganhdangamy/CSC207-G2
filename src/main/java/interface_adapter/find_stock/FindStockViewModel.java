@@ -14,25 +14,12 @@ public class FindStockViewModel extends ViewModel<FindStockState> {
     private String tickerSymbol;
     private String success;
     private String error;
-    private String findStockSuccess; // Tracks whether the operation succeeded
+    private String findStockState; // Tracks whether the operation succeeded
 
     public FindStockViewModel() {
         super("find stock");
         setState(new FindStockState("", "", ""));
     }
-
-//    public String getFindStockSuccess() {
-//        return getState().getSuccess();
-//    }
-//
-//    /**
-//     * Updates the success status of the find stock operation.
-//     *
-//     * @param success true if the operation was successful, false otherwise.
-//     */
-//    public void setFindStockSuccess(String success) {
-//        getState().setSuccess(success);
-//    }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
@@ -56,6 +43,7 @@ public class FindStockViewModel extends ViewModel<FindStockState> {
     }
 
     public void setSuccess(String success) {
+        getState().setSuccess(success);
         support.firePropertyChange("success", this.success, success);
         this.success = success;
     }
@@ -65,16 +53,18 @@ public class FindStockViewModel extends ViewModel<FindStockState> {
     }
 
     public void setError(String error) {
+        getState().setError(error);
         support.firePropertyChange("error", this.error, error);
         this.error = error;
     }
 
-    public String getFindStockSuccess() {
-        return findStockSuccess;
+    public String getFindStockState() {
+        return findStockState;
     }
 
-    public void setFindStockSuccess(String findStockSuccess) {
-        support.firePropertyChange("findStockSuccess", this.findStockSuccess, findStockSuccess);
-        this.findStockSuccess = findStockSuccess;
+    public void setFindStockState(String findStockState) {
+        getState().setSuccess(findStockState); // Assuming `success` holds this info
+        support.firePropertyChange("findStockState", this.findStockState, findStockState);
+        this.findStockState = findStockState;
     }
 }

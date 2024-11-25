@@ -50,8 +50,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private final JPanel findStockPanel;
     private JPanel buySellStockPanel;
 
+
     public LoggedInView(LoggedInViewModel loggedInViewModel, FindStockView findStockView,
                         BuySellStockView buySellStockView, ProfitLossController profitLossController) {
+
         this.loggedInViewModel = loggedInViewModel;
         this.profitLossController = profitLossController;
 
@@ -298,6 +300,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     //Adding the sell stock use case to make the sell stock button functional.
     public void setSellStockController(SellStockController sellStockController) {
         this.sellStockController = sellStockController;
+    }
+
+    public void setBuyStockController(BuyStockController buyStockController) {
+        this.buyStockController = buyStockController;
     }
 
     public JPanel getFindStockPanel() {
