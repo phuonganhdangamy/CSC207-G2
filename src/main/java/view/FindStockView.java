@@ -90,7 +90,7 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
                 final FindStockState currentState = findStockViewModel.getState();
                 currentState.setTickerSymbol(tickerInputField.getText());
                 findStockViewModel.setState(currentState);
-                errorLabel.setText(" ");
+                errorLabel.setText("hi");
             }
 
             @Override
@@ -144,7 +144,6 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
 //            }
 //        }
 
-        // final FindStockState currentState = (FindStockState) evt.getNewValue();
         if ("findStockSuccess".equals(evt.getPropertyName())) {
             String success = (String) evt.getNewValue();
             if ("true".equals(success)) {
@@ -154,10 +153,12 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
                 resultLabel.setVisible(true);
             } else {
                 // Display the error message in the error label
-                System.out.println(findStockViewModel.getError());
+                System.out.println("Error message: " + findStockViewModel.getError());
                 errorLabel.setText("Error: " + findStockViewModel.getError());
                 errorLabel.setVisible(true);
                 resultLabel.setVisible(false); // Hide success result if any
+                this.revalidate(); // Recalculate the layout
+                this.repaint();
             }
         }
     }
