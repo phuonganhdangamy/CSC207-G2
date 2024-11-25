@@ -167,8 +167,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.add(transactionPanel, BorderLayout.EAST);
         this.add(summaryPanel, BorderLayout.SOUTH);
 
-        // Calculate total profit/loss on load
-        triggerProfitLossCalculation();
+
 
         // Search Button Listener
 //        searchButton.addActionListener(new ActionListener() {
