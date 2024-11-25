@@ -21,6 +21,8 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
     private final JTextField tickerInputField = new JTextField(15);
     private final JLabel tickerErrorField = new JLabel();
 
+    private final JTextField numSharesField;
+
     private final JLabel errorLabel = new JLabel();
 
     private final JLabel resultLabel = new JLabel();
@@ -40,6 +42,7 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         errorLabel.setForeground(Color.RED);
+        errorLabel.setFont(new Font("Arial", Font.BOLD, 12));
         errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         errorLabel.setVisible(false);
 
@@ -53,6 +56,11 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
         searchTicker = new JButton("Search");
         buttons.add(searchTicker);
 
+        numSharesField = new JTextField(15);
+        numSharesField.setMaximumSize(new Dimension(200, 30));
+        final LabelTextPanel numSharesInfo = new LabelTextPanel(
+                new JLabel("Number of Shares:"), numSharesField);
+
         // Result label styling
         resultLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         resultLabel.setForeground(Color.BLUE);
@@ -64,8 +72,6 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
                         if (evt.getSource().equals(searchTicker)) {
                             // final FindStockState currentState = findStockViewModel.getState();
                             String tickerSymbol = tickerInputField.getText();
-//                            JOptionPane.showMessageDialog(FindStockView.this,
-//                                    tickerSymbol, "Test", JOptionPane.PLAIN_MESSAGE);
 
                             if (findStockController == null) {
                                 JOptionPane.showMessageDialog(FindStockView.this,
@@ -73,7 +79,6 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
                                         JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
-
                             findStockController.execute(tickerSymbol);
                         }
                     }
@@ -85,6 +90,7 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
                 final FindStockState currentState = findStockViewModel.getState();
                 currentState.setTickerSymbol(tickerInputField.getText());
                 findStockViewModel.setState(currentState);
+                errorLabel.setText("hi");
             }
 
             @Override
@@ -98,11 +104,12 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
         });
 
         this.add(title);
-        this.add(errorLabel);
         this.add(tickerErrorField);
         this.add(tickerInfo);
-        this.add(buttons);
+        this.add(errorLabel);
         this.add(resultLabel);
+        this.add(buttons);
+        this.add(numSharesInfo);
     }
 
     private void findStock(String stockName) {
@@ -110,23 +117,48 @@ public class FindStockView extends JPanel implements ActionListener, PropertyCha
         System.out.println("Finding stock: " + stockName);
     }
 
+    public int getNumShares() throws NumberFormatException {
+        return Integer.parseInt(numSharesField.getText().trim());
+    }
+
     @Override
     public void actionPerformed(ActionEvent evt) {
         System.out.println("Click " + evt.getActionCommand());
+        tickerInputField.setText("");
+        errorLabel.setText(" ");
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+//        final FindStockState currentState = (FindStockState) evt.getNewValue();
+//        if ("findStockSuccess".equals(evt.getPropertyName())) {
+//            String success = (String) evt.getNewValue();
+//            if ("true".equals(success)) {
+//                // If successful, show the success message
+//                String message = "Stock search was successful.\n" + findStockViewModel.getSuccess();
+//                showMessageDialog(message, "Success");
+//            } else {
+//                // If failed, show the error message
+//                String message = "Error: " + success + findStockViewModel.getError();
+//                showMessageDialog(message, "Error");
+//            }
+//        }
+
         if ("findStockSuccess".equals(evt.getPropertyName())) {
             String success = (String) evt.getNewValue();
             if ("true".equals(success)) {
-                // If successful, show the success message
-                String message = "Stock search was successful.\n" + findStockViewModel.getSuccess();
-                showMessageDialog(message, "Success");
+                // Hide the error label if the search is successful
+                errorLabel.setVisible(false);
+                resultLabel.setText("Stock search was successful: " + findStockViewModel.getSuccess());
+                resultLabel.setVisible(true);
             } else {
-                // If failed, show the error message
-                String message = "Error: " + findStockViewModel.getError();
-                showMessageDialog(message, "Error");
+                // Display the error message in the error label
+                System.out.println("Error message: " + findStockViewModel.getError());
+                errorLabel.setText("Error: " + findStockViewModel.getError());
+                errorLabel.setVisible(true);
+                resultLabel.setVisible(false); // Hide success result if any
+                this.revalidate(); // Recalculate the layout
+                this.repaint();
             }
         }
     }

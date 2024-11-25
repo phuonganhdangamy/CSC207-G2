@@ -18,7 +18,7 @@ public class FindStockInteractor implements FindStockInputBoundary{
     public void execute(FindStockInputData findStockInputData) {
         String tickerSymbol = findStockInputData.getTickerSymbol();
 
-        if (tickerSymbol == "") {
+        if (tickerSymbol == null || tickerSymbol.isEmpty()) {
             findStockPresenter.prepareFailView("Input cannot be empty.");
         }
         else if (!findStockUserDataAccess.isStockExist(tickerSymbol)) {

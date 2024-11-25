@@ -27,13 +27,16 @@ public class FindStockPresenter implements FindStockOutputBoundary {
         findStockViewModel.setSuccess(successMessage);
         // System.out.println(successMessage);
 
-        findStockViewModel.setFindStockSuccess("true");
+        findStockViewModel.setFindStockState("true");
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
         // System.out.println("Error: " + errorMessage);
+        FindStockState errorState = new FindStockState("", "", "");
+        errorState.setError(errorMessage);
         findStockViewModel.setError(errorMessage);
-        findStockViewModel.setFindStockSuccess("false");
+
+        findStockViewModel.setFindStockState("false");
     }
 }
