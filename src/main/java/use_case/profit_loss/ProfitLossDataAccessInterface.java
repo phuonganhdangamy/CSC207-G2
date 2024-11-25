@@ -14,5 +14,5 @@ public interface ProfitLossDataAccessInterface {
      * @param username the unique ID of the user
      * @return the user's portfolio
      */
-    Portfolio getPortfolio(String username);
+    Portfolio getCurrentUser(String username);
 }
