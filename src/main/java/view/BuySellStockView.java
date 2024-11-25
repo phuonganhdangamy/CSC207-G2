@@ -2,6 +2,9 @@ package view;
 
 import interface_adapter.buy_stock.BuyStockController;
 import interface_adapter.buy_stock.BuyStockViewModel;
+import interface_adapter.find_stock.FindStockViewModel;
+import interface_adapter.sell_stock.SellStockController;
+import interface_adapter.sell_stock.SellStockViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,9 +13,10 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class BuyStockView extends JPanel implements ActionListener, PropertyChangeListener {
-    private final String viewName  = "buy stock";
+public class BuySellStockView extends JPanel implements ActionListener, PropertyChangeListener {
+    private final String viewName  = "buy sell stock";
     private final BuyStockViewModel buyStockViewModel;
+    private final SellStockViewModel sellStockViewModel;
 
     private final FindStockView findStockView;
 
@@ -21,36 +25,37 @@ public class BuyStockView extends JPanel implements ActionListener, PropertyChan
 
     private final JLabel errorLabel = new JLabel();
 
-    private final JButton buyButton;
     private BuyStockController buyStockController;
 
-    public BuyStockView(BuyStockViewModel buyStockViewModel, FindStockView findStockView) {
+    public BuySellStockView(BuyStockViewModel buyStockViewModel, SellStockViewModel sellStockViewModel,
+                            FindStockView findStockView) {
         this.buyStockViewModel  = buyStockViewModel;
-        this.buyStockViewModel.addPropertyChangeListener(this);
-
+        this.sellStockViewModel = sellStockViewModel;
         this.findStockView = findStockView;
+
+        this.buyStockViewModel.addPropertyChangeListener(this);
+        this.sellStockViewModel.addPropertyChangeListener(this);
 
         // Set layout for the panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        final JLabel title = new JLabel("Buy stock");
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        final JLabel title = new JLabel("Make Transaction");
 
         errorLabel.setForeground(Color.RED);
         errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         errorLabel.setVisible(false);
 
-        buyButton = new JButton("Buy");
-        buyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JButton buyButton = new JButton("Buy");
+        JButton sellButton = new JButton("Sell");
 
         // TO BE CONSIDERED: The textfield for entering the number of Shares won't be placed in BuyStockView and
         // SellStockView (they are repeated) but instead be placed in FindStockView or in LoggedInView (to have shared
         // behavior. -> Which one do you prefer?
 
-
         this.add(title);
         this.add(errorLabel);
         this.add(buyButton);
+        this.add(sellButton);
     }
 
     @Override
@@ -61,5 +66,22 @@ public class BuyStockView extends JPanel implements ActionListener, PropertyChan
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
 
+    }
+
+    public static void main(String[] args) {
+        // Create the JFrame
+        JFrame frame = new JFrame("Buy Sell Stock Test");
+
+        // Set default close operation
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        BuySellStockView buySellStockView = new BuySellStockView(new BuyStockViewModel(), new SellStockViewModel(),
+                new FindStockView(new FindStockViewModel()));
+
+        frame.add(buySellStockView);
+
+        // Set frame properties
+        frame.setSize(400, 300); // Adjust the size as needed
+        frame.setVisible(true);
     }
 }

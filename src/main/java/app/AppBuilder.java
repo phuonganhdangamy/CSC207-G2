@@ -12,6 +12,7 @@ import entity.StockFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.LoggedInViewModel;
+import interface_adapter.buy_stock.BuyStockViewModel;
 import interface_adapter.find_stock.FindStockController;
 import interface_adapter.find_stock.FindStockPresenter;
 import interface_adapter.find_stock.FindStockViewModel;
@@ -22,6 +23,7 @@ import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.sell_stock.SellStockController;
 import interface_adapter.sell_stock.SellStockPresenter;
+import interface_adapter.sell_stock.SellStockViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -73,6 +75,10 @@ public class AppBuilder {
     private FindStockViewModel findStockViewModel;
     private FindStockView findStockView;
 
+    private BuyStockViewModel buyStockViewModel;
+    private SellStockViewModel sellStockViewModel;
+    private BuySellStockView buySellStockView;
+
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -110,7 +116,7 @@ public class AppBuilder {
         findStockViewModel = new FindStockViewModel(); // Initialize FindStockViewModel
         findStockView = new FindStockView(findStockViewModel);
 
-        loggedInView = new LoggedInView(loggedInViewModel, findStockView);
+        loggedInView = new LoggedInView(loggedInViewModel, findStockView, buySellStockView);
         cardPanel.add(loggedInView, loggedInView.getViewName());
         return this;
     }
