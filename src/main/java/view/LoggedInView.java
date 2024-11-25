@@ -41,7 +41,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private BuyStockController buyStockController;
     private SellStockController sellStockController;
     private ViewOwnedStockController viewOwnedStockController;
-    private final ProfitLossController profitLossController;
+    private ProfitLossController profitLossController;
 
     private String username = "<username>";
     private double balance = 0.0;
@@ -299,6 +299,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setBuyStockController(BuyStockController buyStockController) {
         this.buyStockController = buyStockController;
+    }
+
+    public void setProfitLossController(ProfitLossController profitLossController) {
+        this.profitLossController = profitLossController;
     }
 
     public JPanel getFindStockPanel() {

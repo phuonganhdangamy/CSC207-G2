@@ -21,6 +21,8 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.profit_loss.ProfitLossController;
+import interface_adapter.profit_loss.ProfitLossPresenter;
 import interface_adapter.sell_stock.SellStockController;
 import interface_adapter.sell_stock.SellStockPresenter;
 import interface_adapter.sell_stock.SellStockViewModel;
@@ -38,6 +40,9 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.profit_loss.ProfitLossInputBoundary;
+import use_case.profit_loss.ProfitLossInteractor;
+import use_case.profit_loss.ProfitLossOutputBoundary;
 import use_case.sell_stock.SellStockInputBoundary;
 import use_case.sell_stock.SellStockInteractor;
 import use_case.sell_stock.SellStockOutputBoundary;
@@ -216,6 +221,22 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the ProfitLoss Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addProfitLossUseCase() {
+        final ProfitLossOutputBoundary profitLossPresenter = new ProfitLossPresenter(loggedInViewModel, viewManagerModel);
+        final ProfitLossInputBoundary profitLossInteractor = new ProfitLossInteractor(userDataAccessObject, profitLossPresenter);
+        final ProfitLossController profitLossController = new ProfitLossController(profitLossInteractor);
+
+        loggedInView.setProfitLossController(profitLossController);
+
+
+        return this;
+    }
+
+
+    /**
      * Creates the JFrame and the first view is the signup view.
      * Tells the viewManager what view is currently shown to the user.
      * @return application
@@ -232,6 +253,7 @@ public class AppBuilder {
         return application;
 
     }
+
 
 
 }

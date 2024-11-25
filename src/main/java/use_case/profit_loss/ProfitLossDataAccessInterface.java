@@ -1,6 +1,7 @@
 package use_case.profit_loss;
 
 import entity.Portfolio;
+import entity.User;
 
 /**
  * Data Access Interface for the Profit Loss use case.
@@ -9,10 +10,9 @@ import entity.Portfolio;
 public interface ProfitLossDataAccessInterface {
 
     /**
-     * Retrieves the portfolio of a user by their ID.
-     *
-     * @param username the unique ID of the user
-     * @return the user's portfolio
+     * Returns the current user of the application.
+     * @return the current user; null indicates that no one is logged into the application.
      */
-    Portfolio getCurrentUser(String username);
+    User getCurrentUser();
+
 }
