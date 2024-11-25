@@ -209,10 +209,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     }
 
-    private void triggerProfitLossCalculation() {
-        // Mock data for stock prices; replace with actual data source
-        profitLossController.calculateTotalProfitLoss(username, Map.of("AAPL", 150.0, "GOOG", 2800.0));
-    }
 
     /**
      * Updates the balance label dynamically.
