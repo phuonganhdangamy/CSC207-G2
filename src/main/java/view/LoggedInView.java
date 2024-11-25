@@ -6,6 +6,7 @@ import interface_adapter.LoggedInViewModel;
 import interface_adapter.find_stock.FindStockController;
 import interface_adapter.login.LoginState;
 import interface_adapter.logout.LogoutController;
+import interface_adapter.profit_loss.ProfitLossController;
 import interface_adapter.sell_stock.SellStockController;
 import interface_adapter.view_owned_stock.ViewOwnedStockController;
 
@@ -39,6 +40,8 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private BuyStockController buyStockController;
     private SellStockController sellStockController;
     private ViewOwnedStockController viewOwnedStockController;
+    private ProfitLossController profitLossController;
+
 
     private String username = "<username>";
     private double balance = 0.0;
@@ -257,6 +260,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setBuyStockController(BuyStockController buyStockController) {
         this.buyStockController = buyStockController;
+    }
+
+    public void setProfitLossController(ProfitLossController profitLossController) {
+        this.profitLossController = profitLossController;
     }
 
     public JPanel getFindStockPanel() {

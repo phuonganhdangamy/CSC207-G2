@@ -24,6 +24,7 @@ public class Main {
                 .addLogoutUseCase()
                 .addFindStockUseCase()
                 .addSellStockUseCase()
+                .addProfitLossUseCase()
                 .build();
 
         // Makes the application visible
