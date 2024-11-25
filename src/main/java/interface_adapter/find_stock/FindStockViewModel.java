@@ -14,7 +14,7 @@ public class FindStockViewModel extends ViewModel<FindStockState> {
     private String tickerSymbol;
     private String success;
     private String error;
-    private String findStockSuccess; // Tracks whether the operation succeeded
+    private String findStockState; // Tracks whether the operation succeeded
 
     public FindStockViewModel() {
         super("find stock");
@@ -69,12 +69,12 @@ public class FindStockViewModel extends ViewModel<FindStockState> {
         this.error = error;
     }
 
-    public String getFindStockSuccess() {
-        return findStockSuccess;
+    public String getFindStockState() {
+        return findStockState;
     }
 
-    public void setFindStockSuccess(String findStockSuccess) {
-        support.firePropertyChange("findStockSuccess", this.findStockSuccess, findStockSuccess);
-        this.findStockSuccess = findStockSuccess;
+    public void setFindStockState(String findStockState) {
+        support.firePropertyChange("findStockState", this.findStockState, findStockState);
+        this.findStockState = findStockState;
     }
 }

@@ -4,6 +4,7 @@ public class FindStockState {
     private String message;
     private String tickerSymbol = "";
     private String success = "";
+    private String error = "";
 
     public FindStockState(String message, String tickerSymbol, String success) {
         this.message = message;
@@ -24,4 +25,8 @@ public class FindStockState {
     public void setTickerSymbol(String tickerSymbol) {this.tickerSymbol = tickerSymbol;}
 
     public void setSuccess(String success) {this.success = success;}
+
+    public String getError() {return error;}
+
+    public void setError(String error) {this.error = error;}
 }
