@@ -12,7 +12,7 @@ public class FindStockViewModel extends ViewModel<FindStockState> {
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private String tickerSymbol;
-    private String success;
+    private String message;
     private String error;
     private String findStockState; // Tracks whether the operation succeeded
 
@@ -38,14 +38,14 @@ public class FindStockViewModel extends ViewModel<FindStockState> {
         this.tickerSymbol = tickerSymbol;
     }
 
-    public String getSuccess() {
-        return success;
+    public String getMessage() {
+        return message;
     }
 
-    public void setSuccess(String success) {
-        getState().setSuccess(success);
-        support.firePropertyChange("success", this.success, success);
-        this.success = success;
+    public void setMessage(String message) {
+        getState().setMessage(message);
+        support.firePropertyChange("success", this.message, message);
+        this.message = message;
     }
 
     public String getError() {
