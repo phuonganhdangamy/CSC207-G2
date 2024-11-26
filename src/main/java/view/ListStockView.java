@@ -116,3 +116,4 @@ public class ListStockView extends JPanel implements ListStocksOutputBoundary {
     }
 }
 
+
