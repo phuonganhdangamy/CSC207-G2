@@ -2,61 +2,80 @@ package use_case.buy_stock;
 
 import entity.*;
 import data_access.*;
+import use_case.list_stocks.ListStocksInputBoundary;
+import use_case.list_stocks.ListStocksInputData;
+import use_case.list_stocks.ListStocksInteractor;
+import use_case.profit_loss.ProfitLossInputBoundary;
+import use_case.profit_loss.ProfitLossInputData;
 
 /**
  * Interactor for buy stock use case.
  */
 public class BuyStockInteractor implements BuyStockInputBoundary {
 
-    private final BuyStockOutputBoundary outputBoundary;
-    private final BuyStockUserDataAccessInterface userDAO;
-    private final DBStockDataAccessObject stockDAO;
+    private final BuyStockOutputBoundary buyStockPresenter;
+    private final BuyStockUserDataAccessInterface database;
+    private final DBStockDataAccessObject stockDatabase;
 
-    public BuyStockInteractor(BuyStockOutputBoundary outputBoundary, BuyStockUserDataAccessInterface userDAO,
-                              DBStockDataAccessObject stockDAO) {
-        this.outputBoundary = outputBoundary;
-        this.userDAO = userDAO;
-        this.stockDAO = stockDAO;
+    // Need access to the view stock use case interactor and profit loss interactor to update UI
+    private final ListStocksInputBoundary viewOwnedStockInteractor;
+    private final ProfitLossInputBoundary profitLossInteractor;
+
+    public BuyStockInteractor(BuyStockOutputBoundary buyStockPresenter, BuyStockUserDataAccessInterface database,
+                              DBStockDataAccessObject stockDatabase, ListStocksInteractor viewOwnedStockInteractor, ProfitLossInputBoundary profitLossInteractor) {
+        this.buyStockPresenter = buyStockPresenter;
+        this.database = database;
+        this.stockDatabase = stockDatabase;
+        this.viewOwnedStockInteractor = viewOwnedStockInteractor;
+        this.profitLossInteractor = profitLossInteractor;
     }
 
     @Override
     public void execute(BuyStockInputData inputData) {
-        String username = inputData.getUsername();
-        User user = userDAO.get(username);
+        String ticker = inputData.getTickerSymbol();
+        int quantity = inputData.getQuantity();
+        User user = database.getCurrentUser();
+        Portfolio userPortfolio = user.getPortfolio();
 
-        if (user == null) {
-            outputBoundary.prepareFailView(username + ": Account does not exist.");
-            return;
-        }
-
-        String tickerSymbol = inputData.getTickerSymbol();
-        double stockCost = stockDAO.getCost(tickerSymbol);
-        int numberOfShares = inputData.getNumberOfShares();
-        double totalCost = stockCost * numberOfShares;
-        double balance = user.getBalance();
+        // Checking the number of shares already owned by the user
+        int numberOfShares = userPortfolio.getShareCount(ticker);
 
         // Check if the stock exists
-        if (stockCost == 0) {
-            outputBoundary.prepareFailView("Stock does not exist.");
+        if (!stockDatabase.isStockExist(ticker)) {
+            buyStockPresenter.prepareFailView("The ticker does not exist.");
             return;
         }
+
+        // Getting price of the stocks according to the number of the stocks and their current price
+        double stockCost = stockDatabase.getCost(ticker);
+        double totalCost = stockCost * quantity;
+        double balance = user.getBalance();
+
 
         // Check if the user has sufficient balance to buy the stock
         if (balance < totalCost) {
-            outputBoundary.prepareFailView("Insufficient balance.");
+            buyStockPresenter.prepareFailView("Insufficient balance.");
             return;
+        } else {
+            // Update user balance and portfolio
+            user.setBalance(balance - totalCost);
+
+            for (int i = 0; i < quantity; i++) {
+                user.getPortfolio().addStock(new Stock(ticker, stockCost));
+            }
+
+            // Save the updated user info
+            database.saveUserInfo(user);
+
+            // Update UI
+            viewOwnedStockInteractor.execute(new ListStocksInputData(user.getName()));
+            profitLossInteractor.execute();
+
+            // Prepare success view with updated data
+            buyStockPresenter.prepareSuccessView(new BuyStockOutputData(balance, ticker, numberOfShares));
         }
 
-        // Update user balance and portfolio
-        user.setBalance(balance - totalCost);
-        for (int i = 0; i < numberOfShares; i++) {
-            user.getPortfolio().addStock(new Stock(tickerSymbol, stockCost));
-        }
 
-        // Save updated user info
-        userDAO.saveUserInfo(user);
-
-        // Prepare success view with updated data
-        outputBoundary.prepareSuccessView(new BuyStockOutputData(balance, tickerSymbol, numberOfShares));
     }
 }
+

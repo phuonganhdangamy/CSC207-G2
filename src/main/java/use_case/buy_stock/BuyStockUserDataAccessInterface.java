@@ -17,4 +17,10 @@ public interface BuyStockUserDataAccessInterface {
      * @param user the user object to save
      */
     void saveUserInfo(User user);
+
+    /**
+     * Gives back the current user information.
+     *
+     */
+    User getCurrentUser();
 }
