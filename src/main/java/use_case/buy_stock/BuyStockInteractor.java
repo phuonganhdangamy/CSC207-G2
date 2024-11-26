@@ -67,8 +67,9 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
             // Save the updated user info
             database.saveUserInfo(user);
 
+            // Update UI
             viewOwnedStockInteractor.execute(new ListStocksInputData(user.getName()));
-            profitLossInteractor.calculateTotalProfitLoss(new ProfitLossInputData(user.getName()));
+            profitLossInteractor.execute();
 
             // Prepare success view with updated data
             buyStockPresenter.prepareSuccessView(new BuyStockOutputData(balance, ticker, numberOfShares));

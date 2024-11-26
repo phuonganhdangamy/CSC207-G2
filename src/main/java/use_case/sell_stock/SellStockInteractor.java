@@ -78,7 +78,7 @@ public class SellStockInteractor implements SellStockInputBoundary {
             // selling shares
 
             viewOwnedStockInteractor.execute(new ListStocksInputData(user.getName()));
-            profitLossInteractor.calculateTotalProfitLoss(new ProfitLossInputData(user.getName()));
+            profitLossInteractor.execute();
 
         } else {
             sellStockPresenter.prepareFailView(user.getName() + ", you don't have enough shares of this company to sell.");
