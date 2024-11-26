@@ -23,6 +23,7 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
     public void execute(BuyStockInputData inputData) {
         String username = inputData.getUsername();
         User user = userDAO.get(username);
+
         if (user == null) {
             outputBoundary.prepareFailView(username + ": Account does not exist.");
             return;
@@ -34,21 +35,28 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
         double totalCost = stockCost * numberOfShares;
         double balance = user.getBalance();
 
-        // TODO: Have to check if the stock exists? We implicitly agreed that Stock DNE => cost = 0.
-        // TODO: Also have to check if the Find Stock is executed (successfully) before click the Buy Stock.
+        // Check if the stock exists
+        if (stockCost == 0) {
+            outputBoundary.prepareFailView("Stock does not exist.");
+            return;
+        }
 
+        // Check if the user has sufficient balance to buy the stock
         if (balance < totalCost) {
             outputBoundary.prepareFailView("Insufficient balance.");
             return;
         }
 
+        // Update user balance and portfolio
         user.setBalance(balance - totalCost);
         for (int i = 0; i < numberOfShares; i++) {
             user.getPortfolio().addStock(new Stock(tickerSymbol, stockCost));
         }
 
+        // Save updated user info
         userDAO.saveUserInfo(user);
-        outputBoundary.prepareSuccessView(new BuyStockOutputData(balance, tickerSymbol,
-                numberOfShares));
+
+        // Prepare success view with updated data
+        outputBoundary.prepareSuccessView(new BuyStockOutputData(balance, tickerSymbol, numberOfShares));
     }
 }
