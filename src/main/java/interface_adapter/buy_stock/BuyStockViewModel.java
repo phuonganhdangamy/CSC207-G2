@@ -8,7 +8,7 @@ import interface_adapter.ViewModel;
 public class BuyStockViewModel extends ViewModel<BuyStockState> {
 
     public BuyStockViewModel() {
-        super("buyStock");
+        super("buy stock");
         this.setState(new BuyStockState("", 0, 0.0)); // Initialize with default values
     }
 }

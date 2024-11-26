@@ -12,6 +12,7 @@ import entity.StockFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.LoggedInViewModel;
+import interface_adapter.buy_stock.BuyStockViewModel;
 import interface_adapter.find_stock.FindStockController;
 import interface_adapter.find_stock.FindStockPresenter;
 import interface_adapter.find_stock.FindStockViewModel;
@@ -20,8 +21,11 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.profit_loss.ProfitLossController;
+import interface_adapter.profit_loss.ProfitLossPresenter;
 import interface_adapter.sell_stock.SellStockController;
 import interface_adapter.sell_stock.SellStockPresenter;
+import interface_adapter.sell_stock.SellStockViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -36,6 +40,9 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.profit_loss.ProfitLossInputBoundary;
+import use_case.profit_loss.ProfitLossInteractor;
+import use_case.profit_loss.ProfitLossOutputBoundary;
 import use_case.sell_stock.SellStockInputBoundary;
 import use_case.sell_stock.SellStockInteractor;
 import use_case.sell_stock.SellStockOutputBoundary;
@@ -73,6 +80,10 @@ public class AppBuilder {
     private FindStockViewModel findStockViewModel;
     private FindStockView findStockView;
 
+    private BuyStockViewModel buyStockViewModel;
+    private SellStockViewModel sellStockViewModel;
+    private BuySellStockView buySellStockView;
+
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -109,8 +120,9 @@ public class AppBuilder {
 
         findStockViewModel = new FindStockViewModel(); // Initialize FindStockViewModel
         findStockView = new FindStockView(findStockViewModel);
+        buySellStockView = new BuySellStockView(findStockView);
 
-        loggedInView = new LoggedInView(loggedInViewModel, findStockView);
+        loggedInView = new LoggedInView(loggedInViewModel, findStockView, buySellStockView);
         cardPanel.add(loggedInView, loggedInView.getViewName());
         return this;
     }
@@ -210,6 +222,22 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the ProfitLoss Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addProfitLossUseCase() {
+        final ProfitLossOutputBoundary profitLossPresenter = new ProfitLossPresenter(loggedInViewModel, viewManagerModel);
+        final ProfitLossInputBoundary profitLossInteractor = new ProfitLossInteractor(userDataAccessObject, profitLossPresenter);
+        final ProfitLossController profitLossController = new ProfitLossController(profitLossInteractor);
+
+        loggedInView.setProfitLossController(profitLossController);
+
+
+        return this;
+    }
+
+
+    /**
      * Creates the JFrame and the first view is the signup view.
      * Tells the viewManager what view is currently shown to the user.
      * @return application
@@ -226,6 +254,7 @@ public class AppBuilder {
         return application;
 
     }
+
 
 
 }
