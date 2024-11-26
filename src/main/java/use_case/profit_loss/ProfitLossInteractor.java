@@ -22,13 +22,13 @@ public class ProfitLossInteractor implements ProfitLossInputBoundary {
     }
 
     @Override
-    public void calculateTotalProfitLoss(ProfitLossInputData inputData, Map<String, Double> stockPrices) {
+    public void calculateTotalProfitLoss(ProfitLossInputData inputData) {
         // Fetch the user's portfolio
         Portfolio portfolio = dataAccess.getCurrentUser().getPortfolio();
 
         // Use the calculator to calculate total profit/loss
         ProfitLossCalculator calculator = new ProfitLossCalculator(portfolio);
-        double totalProfitLoss = calculator.calculateTotalProfitLoss(stockPrices);
+        double totalProfitLoss = calculator.calculateTotalProfitLoss();
 
         // Create output data and send to the output boundary
         ProfitLossOutputData outputData = new ProfitLossOutputData(totalProfitLoss);

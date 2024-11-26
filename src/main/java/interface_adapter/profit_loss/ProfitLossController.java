@@ -18,7 +18,7 @@ public class ProfitLossController {
         ProfitLossInputData inputData = new ProfitLossInputData(username);
 
         // Call the interactor with the input data and stock prices
-        profitLossInteractor.calculateTotalProfitLoss(inputData, stockPrices);
+        profitLossInteractor.calculateTotalProfitLoss(inputData);
     }
 
     // Method to calculate profit/loss for a specific stock

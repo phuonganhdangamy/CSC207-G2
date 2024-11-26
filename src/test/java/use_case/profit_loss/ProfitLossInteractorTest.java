@@ -28,11 +28,8 @@ class ProfitLossInteractorTest {
         // Arrange: Input data for user
         ProfitLossInputData inputData = new ProfitLossInputData("user123");
 
-        // Fetch mock current stock prices
-        Map<String, Double> stockPrices = getMockCurrentPrices();
-
         // Act: Call the interactor method
-        profitLossInteractor.calculateTotalProfitLoss(inputData, stockPrices);
+        profitLossInteractor.calculateTotalProfitLoss(inputData);
 
         // Expected total profit/loss
         double expectedProfitLoss =

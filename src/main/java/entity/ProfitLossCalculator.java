@@ -1,5 +1,7 @@
 package entity;
 
+import data_access.DBStockDataAccessObject;
+
 import java.util.Map;
 
 /**
@@ -13,12 +15,12 @@ public class ProfitLossCalculator {
     }
 
     // Calculate total profit/loss for the portfolio
-    public double calculateTotalProfitLoss(Map<String, Double> stockPrices) {
+    public double calculateTotalProfitLoss() {
         double totalProfitLoss = 0.0;
 
         for (Stock stock : portfolio.getStocks()) {
             String tickerSymbol = stock.getTickerSymbol();
-            double currentPrice = stockPrices.getOrDefault(tickerSymbol, 0.0);
+            double currentPrice = new DBStockDataAccessObject().getCost(tickerSymbol);
             double purchasePrice = stock.getCost();
             int shareCount = portfolio.getShareCount(tickerSymbol);
 
