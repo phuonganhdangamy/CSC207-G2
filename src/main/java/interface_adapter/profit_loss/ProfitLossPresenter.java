@@ -17,15 +17,23 @@ public class ProfitLossPresenter implements ProfitLossOutputBoundary {
     }
 
     @Override
-    public void presentTotalProfitLoss(ProfitLossOutputData outputData) {
-        // Update the state with the new profit/loss value
-        double totalProfitLoss = outputData.getProfitLoss();
-        loggedInViewModel.getState().setTotalProfitLoss(totalProfitLoss);
-    }
+    public void presentProfitLoss(ProfitLossOutputData outputData) {
+        // Retrieve the current state from the ViewModel
+        LoggedInState state = loggedInViewModel.getState();
 
-    @Override
-    public void presentStockProfitLoss(ProfitLossOutputData outputData, String tickerSymbol) {
-        // This can remain unimplemented if not needed for LoggedInView
-        // Or update the state for stock-specific profit/loss if required
+        // Update the state with total profit/loss
+        state.setTotalProfitLoss(outputData.getTotalProfitLoss());
+
+        // If a specific ticker is provided, update stock table
+        String tickerSymbol = outputData.getTickerSymbol();
+        if (tickerSymbol != null) {
+            state.getStockTable().computeIfPresent(tickerSymbol, (ticker, values) -> {
+                values.set(1, outputData.getStockProfitLoss()); // Update profit/loss index
+                return values;
+            });
+        }
+
+        // Notify the ViewModel of the updated state
+        loggedInViewModel.setState(state);
     }
 }

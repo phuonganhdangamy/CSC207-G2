@@ -5,24 +5,26 @@ package use_case.profit_loss;
  * Encapsulates the profit/loss calculation results.
  */
 public class ProfitLossOutputData {
+    private final double totalProfitLoss;
+    private final double stockProfitLoss;
+    private final String tickerSymbol;
 
-    private final double profitLoss;
-
-    /**
-     * Creates a new ProfitLossOutputData object.
-     *
-     * @param profitLoss the calculated profit/loss
-     */
-    public ProfitLossOutputData(double profitLoss) {
-        this.profitLoss = profitLoss;
+    public ProfitLossOutputData(double totalProfitLoss, double stockProfitLoss, String tickerSymbol) {
+        this.totalProfitLoss = totalProfitLoss;
+        this.stockProfitLoss = stockProfitLoss;
+        this.tickerSymbol = tickerSymbol;
     }
 
-    /**
-     * Gets the calculated profit/loss.
-     *
-     * @return the profit/loss value
-     */
-    public double getProfitLoss() {
-        return profitLoss;
+    // Getters for totalProfitLoss, stockProfitLoss, and tickerSymbol
+    public double getTotalProfitLoss() {
+        return totalProfitLoss;
+    }
+
+    public double getStockProfitLoss() {
+        return stockProfitLoss;
+    }
+
+    public String getTickerSymbol() {
+        return tickerSymbol;
     }
 }

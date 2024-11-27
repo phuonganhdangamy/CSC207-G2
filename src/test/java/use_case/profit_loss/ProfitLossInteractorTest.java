@@ -31,8 +31,8 @@ class ProfitLossInteractorTest {
         // Fetch mock current stock prices
         Map<String, Double> stockPrices = getMockCurrentPrices();
 
-        // Act: Call the interactor method
-        profitLossInteractor.calculateTotalProfitLoss(inputData, stockPrices);
+        // Act: Call the interactor execute method for total profit/loss
+        profitLossInteractor.execute(inputData, stockPrices, null);
 
         // Expected total profit/loss
         double expectedProfitLoss =
@@ -51,10 +51,10 @@ class ProfitLossInteractorTest {
         ProfitLossInputData inputData = new ProfitLossInputData("user123");
 
         // Mock current price for the specific stock
-        double currentPrice = 160.0; // Current price of AAPL
+        double currentPrice = 160.0;
 
-        // Act: Call the interactor method
-        profitLossInteractor.calculateStockProfitLoss(inputData, "AAPL", currentPrice);
+        // Act: Call the interactor method for specific stock
+        profitLossInteractor.execute(inputData, getMockCurrentPrices(), "AAPL");
 
         // Expected profit/loss for AAPL
         double expectedProfitLoss = (160.0 - 150.0) * 5; // (current price - cost price) * quantity
@@ -81,12 +81,13 @@ class ProfitLossInteractorTest {
             User user = new User(username, "password"); // Create a User object
             Portfolio portfolio = user.getPortfolio();
 
+            portfolio.addStock(new Stock("AAPL", 150.0)); // 5 shares of AAPL
             portfolio.addStock(new Stock("AAPL", 150.0));
             portfolio.addStock(new Stock("AAPL", 150.0));
             portfolio.addStock(new Stock("AAPL", 150.0));
             portfolio.addStock(new Stock("AAPL", 150.0));
-            portfolio.addStock(new Stock("AAPL", 150.0)); // 5 shares
 
+            portfolio.addStock(new Stock("GOOGL", 200.0)); // 10 shares of GOOGL
             portfolio.addStock(new Stock("GOOGL", 200.0));
             portfolio.addStock(new Stock("GOOGL", 200.0));
             portfolio.addStock(new Stock("GOOGL", 200.0));
@@ -96,8 +97,8 @@ class ProfitLossInteractorTest {
             portfolio.addStock(new Stock("GOOGL", 200.0));
             portfolio.addStock(new Stock("GOOGL", 200.0));
             portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0)); // 10 shares
 
+            portfolio.addStock(new Stock("TSLA", 300.0)); // 15 shares of TSLA
             portfolio.addStock(new Stock("TSLA", 300.0));
             portfolio.addStock(new Stock("TSLA", 300.0));
             portfolio.addStock(new Stock("TSLA", 300.0));
@@ -112,9 +113,13 @@ class ProfitLossInteractorTest {
             portfolio.addStock(new Stock("TSLA", 300.0));
             portfolio.addStock(new Stock("TSLA", 300.0));
             portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0)); // 15 shares
 
             return portfolio;
+        }
+
+        @Override
+        public User getCurrentUser() {
+            return null;
         }
     }
 
@@ -126,14 +131,10 @@ class ProfitLossInteractorTest {
         String stockTicker = null;
 
         @Override
-        public void presentTotalProfitLoss(ProfitLossOutputData outputData) {
-            this.totalProfitLoss = outputData.getProfitLoss();
-        }
-
-        @Override
-        public void presentStockProfitLoss(ProfitLossOutputData outputData, String tickerSymbol) {
-            this.stockProfitLoss = outputData.getProfitLoss();
-            this.stockTicker = tickerSymbol;
+        public void presentProfitLoss(ProfitLossOutputData outputData) {
+            this.totalProfitLoss = outputData.getTotalProfitLoss();
+            this.stockProfitLoss = outputData.getStockProfitLoss();
+            this.stockTicker = outputData.getTickerSymbol();
         }
     }
 }

@@ -9,15 +9,8 @@ public interface ProfitLossOutputBoundary {
     /**
      * Presents the total profit/loss for the user's portfolio.
      *
-     * @param outputData the data containing the total profit/loss
+     * @param outputData the data containing profit/loss
      */
-    void presentTotalProfitLoss(ProfitLossOutputData outputData);
 
-    /**
-     * Presents the profit/loss for a specific stock in the user's portfolio.
-     *
-     * @param outputData    the data containing the profit/loss
-     * @param tickerSymbol the ticker symbol of the stock
-     */
-    void presentStockProfitLoss(ProfitLossOutputData outputData, String tickerSymbol);
+    void presentProfitLoss(ProfitLossOutputData outputData);
 }

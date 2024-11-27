@@ -9,6 +9,8 @@ import entity.User;
  */
 public interface ProfitLossDataAccessInterface {
 
+    Portfolio getCurrentUser(String username);
+
     /**
      * Returns the current user of the application.
      * @return the current user; null indicates that no one is logged into the application.
