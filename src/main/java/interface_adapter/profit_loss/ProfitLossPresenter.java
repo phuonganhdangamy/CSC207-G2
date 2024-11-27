@@ -11,29 +11,51 @@ public class ProfitLossPresenter implements ProfitLossOutputBoundary {
     private final LoggedInViewModel loggedInViewModel;
     private final ViewManagerModel viewManagerModel;
 
+    /**
+     * Creates a new ProfitLossPresenter.
+     *
+     * @param loggedInViewModel the view model representing the logged-in user's state
+     * @param viewManagerModel  the view manager model to control UI updates
+     */
     public ProfitLossPresenter(LoggedInViewModel loggedInViewModel, ViewManagerModel viewManagerModel) {
         this.loggedInViewModel = loggedInViewModel;
         this.viewManagerModel = viewManagerModel;
     }
 
+    /**
+     * Presents the combined profit/loss results to the user interface.
+     *
+     * @param outputData the combined profit/loss data
+     */
     @Override
-    public void presentProfitLoss(ProfitLossOutputData outputData) {
-        // Retrieve the current state from the ViewModel
-        LoggedInState state = loggedInViewModel.getState();
-
-        // Update the state with total profit/loss
-        state.setTotalProfitLoss(outputData.getTotalProfitLoss());
-
-        // If a specific ticker is provided, update stock table
+    public void presentCombinedProfitLoss(ProfitLossOutputData outputData) {
+        double totalProfitLoss = outputData.getTotalProfitLoss();
+        double stockProfitLoss = outputData.getStockProfitLoss();
         String tickerSymbol = outputData.getTickerSymbol();
-        if (tickerSymbol != null) {
-            state.getStockTable().computeIfPresent(tickerSymbol, (ticker, values) -> {
-                values.set(1, outputData.getStockProfitLoss()); // Update profit/loss index
-                return values;
-            });
+
+        // Update the view model with the total profit/loss
+        loggedInViewModel.getState().setTotalProfitLoss(totalProfitLoss);
+
+        // Update the view model with stock profit/loss
+        if (tickerSymbol != null && !tickerSymbol.isEmpty()) {
+            loggedInViewModel.getState().setStockProfitLoss(tickerSymbol, stockProfitLoss);
         }
 
-        // Notify the ViewModel of the updated state
-        loggedInViewModel.setState(state);
+        // display the results for debugging/UI
+        System.out.println("Total Profit/Loss: " + totalProfitLoss);
+        System.out.println("Stock [" + tickerSymbol + "] Profit/Loss: " + stockProfitLoss);
+
+        /// Notify the view manager to refresh the display by updating its state property
+        viewManagerModel.setState("updatedState");
+    }
+
+    // display the results for debugging when changing code
+    public void presentTotalProfitLoss(ProfitLossOutputData outputData) {
+        throw new UnsupportedOperationException("Use presentCombinedProfitLoss instead.");
+    }
+
+    @Override
+    public void presentStockProfitLoss(ProfitLossOutputData outputData, String tickerSymbol) {
+        throw new UnsupportedOperationException("Use presentCombinedProfitLoss instead.");
     }
 }

@@ -13,7 +13,15 @@ public interface ProfitLossInputBoundary {
      *
      * @param inputData    the input data containing the user's ID
      * @param stockPrices  a map of ticker symbols to their current prices
-     * @param tickerSymbol a stock name
      */
-    void execute(ProfitLossInputData inputData, Map<String, Double> stockPrices, String tickerSymbol);
+    void calculateTotalProfitLoss(ProfitLossInputData inputData, Map<String, Double> stockPrices);
+
+    /**
+     * Calculates the profit/loss for a specific stock in the user's portfolio using the current price.
+     *
+     * @param inputData    the input data containing the user's ID
+     * @param tickerSymbol the ticker symbol of the stock to calculate profit/loss for
+     * @param currentPrice the current price of the stock
+     */
+    void calculateStockProfitLoss(ProfitLossInputData inputData, String tickerSymbol, double currentPrice);
 }

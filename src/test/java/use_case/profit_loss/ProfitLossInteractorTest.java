@@ -24,15 +24,13 @@ class ProfitLossInteractorTest {
     }
 
     @Test
-    void calculateTotalProfitLossSuccessTest() {
-        // Arrange: Input data for user
-        ProfitLossInputData inputData = new ProfitLossInputData("user123");
-
-        // Fetch mock current stock prices
-        Map<String, Double> stockPrices = getMockCurrentPrices();
+    void executeTotalProfitLossSuccessTest() {
+        // Arrange: Mock current prices and a ticker symbol
+        String tickerSymbol = "AAPL";
+        double currentPrice = 160.0;
 
         // Act: Call the interactor execute method for total profit/loss
-        profitLossInteractor.execute(inputData, stockPrices, null);
+        profitLossInteractor.execute(tickerSymbol, currentPrice);
 
         // Expected total profit/loss
         double expectedProfitLoss =
@@ -46,15 +44,13 @@ class ProfitLossInteractorTest {
     }
 
     @Test
-    void calculateStockProfitLossSuccessTest() {
-        // Arrange: Input data for user
-        ProfitLossInputData inputData = new ProfitLossInputData("user123");
-
-        // Mock current price for the specific stock
+    void executeStockProfitLossSuccessTest() {
+        // Arrange: Mock current prices and a ticker symbol
+        String tickerSymbol = "AAPL";
         double currentPrice = 160.0;
 
         // Act: Call the interactor method for specific stock
-        profitLossInteractor.execute(inputData, getMockCurrentPrices(), "AAPL");
+        profitLossInteractor.execute(tickerSymbol, currentPrice);
 
         // Expected profit/loss for AAPL
         double expectedProfitLoss = (160.0 - 150.0) * 5; // (current price - cost price) * quantity
@@ -77,12 +73,13 @@ class ProfitLossInteractorTest {
     // Mock data access class for testing
     private static class TestProfitLossDataAccess implements ProfitLossDataAccessInterface {
         @Override
-        public Portfolio getCurrentUser(String username) {
+        public User getCurrentUser() {
             // Mock user and portfolio creation
-            User user = new User(username, "password");dd
+            User user = new User("user123", "password");
             user.setBalance(10000.0); // Set an initial balance
 
             Portfolio portfolio = user.getPortfolio();
+
 
             portfolio.addStock(new Stock("AAPL", 150.0));
             portfolio.addStock(new Stock("AAPL", 150.0));
@@ -117,11 +114,11 @@ class ProfitLossInteractorTest {
             portfolio.addStock(new Stock("TSLA", 300.0));
             portfolio.addStock(new Stock("TSLA", 300.0)); // 15 shares
 
-            return portfolio;
+            return user;
         }
     }
 
-    // Mock output boundary class for testing
+    /// Mock output boundary class for testing
     private static class TestProfitLossOutputBoundary implements ProfitLossOutputBoundary {
         boolean useCaseFailed = false;
         double totalProfitLoss = 0.0;
@@ -129,7 +126,7 @@ class ProfitLossInteractorTest {
         String stockTicker = null;
 
         @Override
-        public void presentProfitLoss(ProfitLossOutputData outputData) {
+        public void presentCombinedProfitLoss(ProfitLossOutputData outputData) {
             this.totalProfitLoss = outputData.getTotalProfitLoss();
             this.stockProfitLoss = outputData.getStockProfitLoss();
             this.stockTicker = outputData.getTickerSymbol();

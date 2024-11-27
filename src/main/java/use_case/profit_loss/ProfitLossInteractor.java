@@ -24,48 +24,43 @@ public class ProfitLossInteractor implements ProfitLossInputBoundary {
     }
 
     /**
-     * Execute the Profit/Loss calculation for both total portfolio and a specific stock.
-     *
-     * @param inputData    The input data containing the username and ticker (optional).
-     * @param stockPrices  The current prices of stocks mapped by ticker.
-     * @param tickerSymbol The specific stock ticker to calculate, or null for only total.
+     * New execute method to calculate both total and stock-specific profit/loss,
+     * and pass one unified result to the presenter.
      */
-    public void execute(ProfitLossInputData inputData, Map<String, Double> stockPrices, String tickerSymbol) {
+    public void execute(String tickerSymbol, double currentPrice) {
         // Fetch the user's portfolio
         Portfolio portfolio = dataAccess.getCurrentUser().getPortfolio();
 
-        // Create/complete the stockPrices map
-        Map<String, Double> completeStockPrices = new HashMap<>();
-        if (stockPrices != null) {
-            completeStockPrices.putAll(stockPrices); // Start with the provided map
-        }
-
-        // Add missing stock prices using the DataAccess
+        // Build the stock prices map dynamically from the portfolio
+        Map<String, Double> stockPrices = new HashMap<>();
         for (Stock stock : portfolio.getStocks()) {
-            String ticker = stock.getTickerSymbol();
-            if (!completeStockPrices.containsKey(ticker)) {
-                // Retrieve current price using the DataAccess interface
-                double currentPrice = dataAccess.getCost(ticker);
-                completeStockPrices.put(ticker, currentPrice);
-            }
+            stockPrices.put(stock.getTickerSymbol(), stock.getCost()); // Assuming 'getCost()' gives purchase price
         }
+        stockPrices.put(tickerSymbol, currentPrice); // Include the specific stock price
 
-        // Use the calculator for profit/loss
+        // Use the ProfitLossCalculator to calculate results
         ProfitLossCalculator calculator = new ProfitLossCalculator(portfolio);
-
-        // Calculate total profit/loss
         double totalProfitLoss = calculator.calculateTotalProfitLoss(stockPrices);
+        double stockProfitLoss = calculator.calculateStockProfitLoss(tickerSymbol, currentPrice);
 
-        // Calculate specific stock profit/loss if ticker is provided
-        double stockProfitLoss = 0.0;
-        if (tickerSymbol != null && stockPrices.containsKey(tickerSymbol)) {
-            stockProfitLoss = calculator.calculateStockProfitLoss(
-                    tickerSymbol, stockPrices.get(tickerSymbol)
-            );
-        }
-
-        // Create output data and send to the output boundary
+        // Combine results into a single output data object
         ProfitLossOutputData outputData = new ProfitLossOutputData(totalProfitLoss, stockProfitLoss, tickerSymbol);
-        outputBoundary.presentProfitLoss(outputData);
+
+        // Send the unified result to the presenter
+        outputBoundary.presentCombinedProfitLoss(outputData);
+    }
+
+    @Override
+    @Deprecated
+    public void calculateTotalProfitLoss(ProfitLossInputData inputData, Map<String, Double> stockPrices) {
+        // display the results for debugging when changing code
+        throw new UnsupportedOperationException("Use execute() instead.");
+    }
+
+    @Override
+    @Deprecated
+    public void calculateStockProfitLoss(ProfitLossInputData inputData, String tickerSymbol, double currentPrice) {
+        // display the results for debugging when changing code
+        throw new UnsupportedOperationException("Use execute() instead.");
     }
 }

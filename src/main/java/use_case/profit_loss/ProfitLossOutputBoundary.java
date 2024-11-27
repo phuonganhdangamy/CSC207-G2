@@ -7,10 +7,19 @@ package use_case.profit_loss;
 public interface ProfitLossOutputBoundary {
 
     /**
-     * Presents the total profit/loss for the user's portfolio.
+     * Presents the combined profit/loss results for the user's portfolio and a specific stock.
      *
-     * @param outputData the data containing profit/loss
+     * @param outputData the combined profit/loss data
      */
+    void presentCombinedProfitLoss(ProfitLossOutputData outputData);
 
-    void presentProfitLoss(ProfitLossOutputData outputData);
+    // display the results for debugging when changing code
+    default void presentTotalProfitLoss(ProfitLossOutputData outputData) {
+        throw new UnsupportedOperationException("Use presentCombinedProfitLoss instead.");
+    }
+
+    // display the results for debugging when changing code
+    default void presentStockProfitLoss(ProfitLossOutputData outputData, String tickerSymbol) {
+        throw new UnsupportedOperationException("Use presentCombinedProfitLoss instead.");
+    }
 }

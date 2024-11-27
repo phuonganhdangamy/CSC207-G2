@@ -99,5 +99,19 @@ public class LoggedInState {
     public LoggedInState() {
 
     }
-
+    /**
+     * Updates the stock-specific profit/loss in the stock table.
+     * If the stock doesn't exist in the table, it initializes it.
+     *
+     * @param tickerSymbol    the stock ticker symbol
+     * @param stockProfitLoss the profit/loss value for the specific stock
+     */
+    public void setStockProfitLoss(String tickerSymbol, double stockProfitLoss) {
+        if (stockTable.containsKey(tickerSymbol)) {
+            stockTable.get(tickerSymbol).set(1, stockProfitLoss); // Update profit/loss at index 1
+        } else {
+            // Initialize with 0 shares and the given profit/loss
+            stockTable.put(tickerSymbol, List.of(0.0, stockProfitLoss));
+        }
+    }
 }

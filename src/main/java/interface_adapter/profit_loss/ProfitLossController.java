@@ -12,32 +12,21 @@ public class ProfitLossController {
         this.profitLossInteractor = profitLossInteractor;
     }
 
-    /**
-     * Calculates the total profit/loss for the user's portfolio.
-     *
-     * @param username    the user's username
-     * @param stockPrices a map of ticker symbols to their current prices
-     */
+    // Method to calculate total profit/loss
     public void calculateTotalProfitLoss(String username, Map<String, Double> stockPrices) {
         // Create input data for the interactor
         ProfitLossInputData inputData = new ProfitLossInputData(username);
 
-        // Call the interactor with input data and stock prices (tickerSymbol is null for total profit/loss)
-        profitLossInteractor.execute(inputData, stockPrices, null);
+        // Call the interactor with the input data and stock prices
+        profitLossInteractor.calculateTotalProfitLoss(inputData, stockPrices);
     }
 
-    /**
-     * Calculates the profit/loss for a specific stock.
-     *
-     * @param username      the user's username
-     * @param tickerSymbol  the ticker symbol of the stock
-     * @param stockPrices   a map of ticker symbols to their current prices
-     */
-    public void calculateStockProfitLoss(String username, String tickerSymbol, Map<String, Double> stockPrices) {
+    // Method to calculate profit/loss for a specific stock
+    public void calculateStockProfitLoss(String username, String tickerSymbol, double currentPrice) {
         // Create input data for the interactor
         ProfitLossInputData inputData = new ProfitLossInputData(username);
 
-        // Call the interactor with input data, stock prices, and the specific ticker symbol
-        profitLossInteractor.execute(inputData, stockPrices, tickerSymbol);
+        // Call the interactor with the input data, stock ticker, and current price
+        profitLossInteractor.calculateStockProfitLoss(inputData, tickerSymbol, currentPrice);
     }
 }
