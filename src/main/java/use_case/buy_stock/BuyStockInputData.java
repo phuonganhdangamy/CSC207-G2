@@ -6,12 +6,12 @@ package use_case.buy_stock;
 public class BuyStockInputData {
     private final String username;
     private final String tickerSymbol;
-    private final int numberOfShares;
+    private final int quantity;
 
-    public BuyStockInputData(String username, String tickerSymbol, int numberOfShares) {
+    public BuyStockInputData(String username, String tickerSymbol, int quantity) {
         this.username = username;
         this.tickerSymbol = tickerSymbol;
-        this.numberOfShares = numberOfShares;
+        this.quantity = quantity;
     }
 
     public String getUsername() {
@@ -22,7 +22,8 @@ public class BuyStockInputData {
         return tickerSymbol;
     }
 
-    public int getNumberOfShares() {
-        return numberOfShares;
+    public int getQuantity() {
+        return quantity;
     }
 }
+

@@ -5,30 +5,35 @@ import entity.Portfolio;
 import entity.Stock;
 import entity.User;
 import use_case.find_stock.FindStockDataAccessInterface;
+import use_case.list_stocks.ListStocksInputBoundary;
+import use_case.list_stocks.ListStocksInputData;
+import use_case.list_stocks.ListStocksInteractor;
+import use_case.profit_loss.ProfitLossInputBoundary;
+import use_case.profit_loss.ProfitLossInputData;
+import use_case.profit_loss.ProfitLossInteractor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SellStockInteractor implements SellStockInputBoundary{
+public class SellStockInteractor implements SellStockInputBoundary {
     // Needs access to the database
     // Needs to send results to the view
-    SellStockUserDataAccessInterface database;
-    SellStockOutputBoundary sellStockPresenter;
-    FindStockDataAccessInterface stockDatabase;
+    private final SellStockUserDataAccessInterface database;
+    private final SellStockOutputBoundary sellStockPresenter;
+    private final FindStockDataAccessInterface stockDatabase;
 
 
     // Need access to the view stock use case interactor and profit loss interactor to update UI
-    // ViewOwnedStockInputBoundary viewOwnedStockInteractor;
-    // ProfitLossInputBoundary profitLossInteractor;
+    private final ListStocksInputBoundary viewOwnedStockInteractor;
+    private final ProfitLossInputBoundary profitLossInteractor;
 
     public SellStockInteractor(SellStockOutputBoundary sellStockPresenter, SellStockUserDataAccessInterface database,
-                               FindStockDataAccessInterface stockDatabase) {
-       // Add to parameters: ViewOwnedStockInputBoundary viewOwnedStockInteractor,  ProfitLossInputBoundary profitLossInteractor
+                               FindStockDataAccessInterface stockDatabase, ListStocksInteractor viewOwnedStockInteractor,  ProfitLossInputBoundary profitLossInteractor){
         this.sellStockPresenter = sellStockPresenter;
         this.database = database;
         this.stockDatabase = stockDatabase;
-        // this.viewOwnedStockInteractor = viewOwnedStockInteractor;
-        // this.profitLossInteractor = profitLossInteractor
+        this.viewOwnedStockInteractor = viewOwnedStockInteractor;
+        this.profitLossInteractor = profitLossInteractor;
     }
 
     @Override
@@ -45,18 +50,18 @@ public class SellStockInteractor implements SellStockInputBoundary{
         //Check if the company exists.
 
         if (!stockDatabase.isStockExist(ticker)) {
-            sellStockPresenter.prepareFailView( "This ticker does not exist.");
-
+            sellStockPresenter.prepareFailView("This ticker does not exist.");
+            return;
         }
 
 
         // If we own more than the number of shares that the user wishes to sell,
         // this can be executed
-        else if (numSharesOwned >= quantity){
+        else if (numSharesOwned >= quantity) {
             //Get current market price for the stock
             double marketPrice = stockDatabase.getCost(ticker);
             // removes the stock and updates the balance
-            for(int i = 0; i < quantity; i++){
+            for (int i = 0; i < quantity; i++) {
                 userPortfolio.removeStock(ticker, marketPrice);
             }
 
@@ -72,11 +77,11 @@ public class SellStockInteractor implements SellStockInputBoundary{
             // Update UI by calling the view owned stock use case and profit loss use case after
             // selling shares
 
-            // viewOwnedStockInteractor.execute();
-            // profitLossInteractor.execute();
+            viewOwnedStockInteractor.execute(new ListStocksInputData(user.getName()));
+            profitLossInteractor.execute();
 
-        }else{
-            sellStockPresenter.prepareFailView(user.getName()+ ", you don't have enough shares of this company to sell.");
+        } else {
+            sellStockPresenter.prepareFailView(user.getName() + ", you don't have enough shares of this company to sell.");
 
         }
 

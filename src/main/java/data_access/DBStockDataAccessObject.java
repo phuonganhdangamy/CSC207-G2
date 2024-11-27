@@ -84,12 +84,12 @@ public class DBStockDataAccessObject implements FindStockDataAccessInterface {
 
         DBStockDataAccessObject stockDataAccess = new DBStockDataAccessObject();
 
-        String testTicker = "AAPL";
+        String testTicker = "IBM";
 
         // Test getCost method
         System.out.println("Testing getCost method:");
         double cost = stockDataAccess.getCost(testTicker);
-        if (cost != -1) {
+        if (cost != 0) {
             System.out.println("The cost of " + testTicker + " is: $" + cost);
         } else {
             System.out.println("Failed to retrieve the cost for " + testTicker);
@@ -104,4 +104,5 @@ public class DBStockDataAccessObject implements FindStockDataAccessInterface {
             System.out.println("The stock " + testTicker + " does not exist.");
         }
     }
+
 }
