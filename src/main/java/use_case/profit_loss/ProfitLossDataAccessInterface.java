@@ -16,4 +16,12 @@ public interface ProfitLossDataAccessInterface {
      * @return the current user; null indicates that no one is logged into the application.
      */
     User getCurrentUser();
+
+    /**
+     * Retrieve the cost of a stock given its ticker symbol.
+     *
+     * @param ticker The ticker symbol of the stock.
+     * @return The cost of the stock.
+     */
+    double getCost(String ticker);
 }

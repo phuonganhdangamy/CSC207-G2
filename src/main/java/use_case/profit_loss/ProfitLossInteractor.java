@@ -2,6 +2,7 @@ package use_case.profit_loss;
 
 import entity.Portfolio;
 import entity.ProfitLossCalculator;
+import entity.Stock;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +30,25 @@ public class ProfitLossInteractor implements ProfitLossInputBoundary {
      * @param stockPrices  The current prices of stocks mapped by ticker.
      * @param tickerSymbol The specific stock ticker to calculate, or null for only total.
      */
-
-    @Override
     public void execute(ProfitLossInputData inputData, Map<String, Double> stockPrices, String tickerSymbol) {
         // Fetch the user's portfolio
         Portfolio portfolio = dataAccess.getCurrentUser().getPortfolio();
+
+        // Create/complete the stockPrices map
+        Map<String, Double> completeStockPrices = new HashMap<>();
+        if (stockPrices != null) {
+            completeStockPrices.putAll(stockPrices); // Start with the provided map
+        }
+
+        // Add missing stock prices using the DataAccess
+        for (Stock stock : portfolio.getStocks()) {
+            String ticker = stock.getTickerSymbol();
+            if (!completeStockPrices.containsKey(ticker)) {
+                // Retrieve current price using the DataAccess interface
+                double currentPrice = dataAccess.getCost(ticker);
+                completeStockPrices.put(ticker, currentPrice);
+            }
+        }
 
         // Use the calculator for profit/loss
         ProfitLossCalculator calculator = new ProfitLossCalculator(portfolio);
