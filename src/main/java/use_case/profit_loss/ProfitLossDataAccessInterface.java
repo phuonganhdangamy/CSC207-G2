@@ -16,5 +16,4 @@ public interface ProfitLossDataAccessInterface {
      * @return the current user; null indicates that no one is logged into the application.
      */
     User getCurrentUser();
-
 }

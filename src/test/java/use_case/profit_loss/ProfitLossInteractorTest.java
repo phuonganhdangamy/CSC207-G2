@@ -78,16 +78,18 @@ class ProfitLossInteractorTest {
     private static class TestProfitLossDataAccess implements ProfitLossDataAccessInterface {
         @Override
         public Portfolio getCurrentUser(String username) {
-            User user = new User(username, "password"); // Create a User object
+            // Mock user and portfolio creation
+            User user = new User(username, "password");dd
+            user.setBalance(10000.0); // Set an initial balance
+
             Portfolio portfolio = user.getPortfolio();
 
-            portfolio.addStock(new Stock("AAPL", 150.0)); // 5 shares of AAPL
             portfolio.addStock(new Stock("AAPL", 150.0));
             portfolio.addStock(new Stock("AAPL", 150.0));
             portfolio.addStock(new Stock("AAPL", 150.0));
             portfolio.addStock(new Stock("AAPL", 150.0));
+            portfolio.addStock(new Stock("AAPL", 150.0)); // 5 shares
 
-            portfolio.addStock(new Stock("GOOGL", 200.0)); // 10 shares of GOOGL
             portfolio.addStock(new Stock("GOOGL", 200.0));
             portfolio.addStock(new Stock("GOOGL", 200.0));
             portfolio.addStock(new Stock("GOOGL", 200.0));
@@ -97,8 +99,8 @@ class ProfitLossInteractorTest {
             portfolio.addStock(new Stock("GOOGL", 200.0));
             portfolio.addStock(new Stock("GOOGL", 200.0));
             portfolio.addStock(new Stock("GOOGL", 200.0));
+            portfolio.addStock(new Stock("GOOGL", 200.0)); // 10 shares
 
-            portfolio.addStock(new Stock("TSLA", 300.0)); // 15 shares of TSLA
             portfolio.addStock(new Stock("TSLA", 300.0));
             portfolio.addStock(new Stock("TSLA", 300.0));
             portfolio.addStock(new Stock("TSLA", 300.0));
@@ -113,13 +115,9 @@ class ProfitLossInteractorTest {
             portfolio.addStock(new Stock("TSLA", 300.0));
             portfolio.addStock(new Stock("TSLA", 300.0));
             portfolio.addStock(new Stock("TSLA", 300.0));
+            portfolio.addStock(new Stock("TSLA", 300.0)); // 15 shares
 
             return portfolio;
-        }
-
-        @Override
-        public User getCurrentUser() {
-            return null;
         }
     }
 
