@@ -2,6 +2,7 @@ package use_case.buy_stock;
 
 import entity.*;
 import data_access.*;
+import use_case.find_stock.FindStockDataAccessInterface;
 import use_case.list_stocks.ListStocksInputBoundary;
 import use_case.list_stocks.ListStocksInputData;
 import use_case.list_stocks.ListStocksInteractor;
@@ -15,19 +16,26 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
 
     private final BuyStockOutputBoundary buyStockPresenter;
     private final BuyStockUserDataAccessInterface database;
-    private final DBStockDataAccessObject stockDatabase;
+    private final FindStockDataAccessInterface stockDatabase;
 
     // Need access to the view stock use case interactor and profit loss interactor to update UI
-    private final ListStocksInputBoundary viewOwnedStockInteractor;
-    private final ProfitLossInputBoundary profitLossInteractor;
+    private ListStocksInputBoundary viewOwnedStockInteractor;
+    private ProfitLossInputBoundary profitLossInteractor;
 
     public BuyStockInteractor(BuyStockOutputBoundary buyStockPresenter, BuyStockUserDataAccessInterface database,
-                              DBStockDataAccessObject stockDatabase, ListStocksInputBoundary viewOwnedStockInteractor, ProfitLossInputBoundary profitLossInteractor) {
+                              FindStockDataAccessInterface stockDatabase) {
+
         this.buyStockPresenter = buyStockPresenter;
         this.database = database;
         this.stockDatabase = stockDatabase;
-        this.viewOwnedStockInteractor = viewOwnedStockInteractor;
+    }
+
+    public void setProfitLossInteractor(ProfitLossInputBoundary profitLossInteractor) {
         this.profitLossInteractor = profitLossInteractor;
+    }
+
+    public void setViewOwnedStockInteractor(ListStocksInputBoundary viewOwnedStockInteractor) {
+        this.viewOwnedStockInteractor = viewOwnedStockInteractor;
     }
 
     @Override
@@ -67,7 +75,9 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
 
             // Update UI
             viewOwnedStockInteractor.execute(new ListStocksInputData(user.getName()));
-            // profitLossInteractor.execute();
+
+           // profitLossInteractor.execute();
+
 
             // Prepare success view with updated data
             buyStockPresenter.prepareSuccessView(new BuyStockOutputData(user.getBalance(), ticker, numberOfShares));

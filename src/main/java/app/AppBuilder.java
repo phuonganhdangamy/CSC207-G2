@@ -246,6 +246,28 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the buyStock Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addBuyStockUseCase() {
+        final BuyStockOutputBoundary buyStockPresenter = new BuyStockPresenter(loggedInViewModel,viewManagerModel);
+
+        //Create new stockDatabase for the sellStockUseCase
+        final FindStockDataAccessInterface stockDatabase = new DBStockDataAccessObject();
+
+        final BuyStockInteractor buyStockInteractor = new BuyStockInteractor(buyStockPresenter,
+                userDataAccessObject, stockDatabase);
+        buyStockInteractor.setViewOwnedStockInteractor(listStocksInteractor);
+        buyStockInteractor.setProfitLossInteractor(profitLossInteractor);
+
+        final BuyStockController buyStockController = new BuyStockController(buyStockInteractor);
+
+        loggedInView.setBuyStockController(buyStockController);
+        return this;
+
+    }
+
+    /**
      * Adds the ProfitLoss Use Case to the application.
      * @return this builder
      */
@@ -279,18 +301,4 @@ public class AppBuilder {
 
     }
 
-
-    public AppBuilder addBuyStockUseCase() {
-        final BuyStockOutputBoundary buyStockPresenter = new BuyStockPresenter(loggedInViewModel,viewManagerModel);
-
-        //Create new stockDatabase for the sellStockUseCase
-        final DBStockDataAccessObject stockDatabase = new DBStockDataAccessObject();
-
-        final BuyStockInputBoundary buyStockInteractor = new BuyStockInteractor(buyStockPresenter,
-                userDataAccessObject, stockDatabase, listStocksInteractor, profitLossInteractor);
-        final BuyStockController buyStockController = new BuyStockController(buyStockInteractor);
-
-        loggedInView.setBuyStockController(buyStockController);
-        return this;
-    }
 }
