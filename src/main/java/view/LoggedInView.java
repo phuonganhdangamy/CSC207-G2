@@ -194,7 +194,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
 
     }
-
     private void setFields(LoggedInState state) {
         // Update balance and username
         setBalance(state.getBalance());
@@ -202,16 +201,19 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         setUsername(state.getUsername());
 
         // Update stock table with data from LoggedInState
-        Map<String, List<Double>> stockTableData = state.getStockTable();
-        if (stockTableData != null) {
-            // Convert stockTableData to a 2D array for the JTable
-            Object[][] tableData = new Object[stockTableData.size()][3];
+        Map<String, Integer> stockOwnership = state.getStockOwnership();
+        Map<String, Double> stockProfitLoss = state.getStockProfitLoss();
+
+        if (stockOwnership != null && stockProfitLoss != null) {
+            // Convert data to a 2D array for the JTable
+            Object[][] tableData = new Object[stockOwnership.size()][3];
             int index = 0;
-            for (Map.Entry<String, List<Double>> entry : stockTableData.entrySet()) {
+
+            for (Map.Entry<String, Integer> entry : stockOwnership.entrySet()) {
                 String ticker = entry.getKey();
-                List<Double> details = entry.getValue();
-                int shares = details.get(0).intValue();
-                double profitLoss = details.get(1);
+                int shares = entry.getValue();
+                double profitLoss = stockProfitLoss.getOrDefault(ticker, 0.0); // Default to 0.0 if not found
+
                 tableData[index++] = new Object[]{ticker, shares, String.format("%.2f", profitLoss)};
             }
 
