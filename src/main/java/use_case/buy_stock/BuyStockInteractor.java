@@ -67,7 +67,7 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
 
             // Update UI
             viewOwnedStockInteractor.execute(new ListStocksInputData(user.getName()));
-           // profitLossInteractor.execute();
+            // profitLossInteractor.execute();
 
             // Prepare success view with updated data
             buyStockPresenter.prepareSuccessView(new BuyStockOutputData(user.getBalance(), ticker, numberOfShares));

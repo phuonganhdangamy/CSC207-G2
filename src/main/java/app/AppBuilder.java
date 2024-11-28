@@ -175,6 +175,8 @@ public class AppBuilder {
                 loggedInViewModel, loginViewModel, signupViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);
+        loginInteractor.setProfitLossInteractor(profitLossInteractor);
+        loginInteractor.setViewOwnedStockInteractor(listStocksInteractor);
 
         final LoginController loginController = new LoginController(loginInteractor);
         loginView.setLoginController(loginController);
