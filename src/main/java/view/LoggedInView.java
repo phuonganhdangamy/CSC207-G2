@@ -200,15 +200,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         setUsername(state.getUsername());
         setUsername(state.getUsername());
 
-        //The below part were existed, but I'm not sure whether we meant to remove it or it lost during conflict
-        //since my change on label was lost during conflict too, so I include it as comment just in case:)
         // Clear error messages
-        //tickerErrorLabel.setVisible(false);
-        //tickerErrorLabel.repaint();
-        //tickerErrorLabel.revalidate();
+        tickerErrorLabel.setVisible(false);
+        tickerErrorLabel.repaint();
+        tickerErrorLabel.revalidate();
 
         // Update profit/loss summary
-        //profitLossLabel.setText(String.format("Total Profit/Loss: %.2f%%", state.getTotalProfitLoss()));
+        profitLossLabel.setText(String.format("Total Profit/Loss: %.2f%%", state.getTotalProfitLoss()));
 
 
         // Update stock table with data from LoggedInState
