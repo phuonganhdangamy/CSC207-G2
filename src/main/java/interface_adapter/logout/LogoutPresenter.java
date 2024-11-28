@@ -9,13 +9,16 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.logout.LogoutOutputBoundary;
 import use_case.logout.LogoutOutputData;
 
+/**
+ * The Presenter for the Logout Use Case.
+ */
 public class LogoutPresenter implements LogoutOutputBoundary {
     private final LoginViewModel loginViewModel;
     private final LoggedInViewModel loggedInViewModel;
     private final ViewManagerModel viewManagerModel;
 
-
-    public LogoutPresenter(LoginViewModel loginViewModel, LoggedInViewModel loggedInViewModel, ViewManagerModel viewManagerModel) {
+    public LogoutPresenter(LoginViewModel loginViewModel, LoggedInViewModel loggedInViewModel,
+                           ViewManagerModel viewManagerModel) {
         this.loginViewModel = loginViewModel;
         this.loggedInViewModel = loggedInViewModel;
         this.viewManagerModel = viewManagerModel;
@@ -30,15 +33,12 @@ public class LogoutPresenter implements LogoutOutputBoundary {
         loginViewModel.setState(loginState);
         loginViewModel.firePropertyChanged();
 
-
         this.viewManagerModel.setState(loginViewModel.getViewName());
         this.viewManagerModel.firePropertyChanged();
 
         final LoggedInState loggedInState = new LoggedInState();
         loggedInViewModel.setState(loggedInState);
         loggedInViewModel.firePropertyChanged();
-
-
     }
 
     @Override

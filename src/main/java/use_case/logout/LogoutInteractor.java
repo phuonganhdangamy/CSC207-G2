@@ -15,16 +15,19 @@ public class LogoutInteractor implements LogoutInputBoundary {
 
     @Override
     public void execute(LogoutInputData logoutInputData) {
-        String username = logoutInputData.getUsername();
+        final String username = logoutInputData.getUsername();
 
         // Perform logout operation - clearing session or updating status in data layer
-        boolean success = userDataAccess.logoutUser(username); // Method in data access interface
+        // Method in data access interface
+        final boolean success = userDataAccess.logoutUser(username);
 
         // Notify presenter of the result
         if (success) {
-            LogoutOutputData outputData = new LogoutOutputData(true, "Logout successful", username);
+            final LogoutOutputData outputData = new LogoutOutputData(true, "Logout successful",
+                    username);
             logoutPresenter.prepareSuccessView(outputData);
-        } else {
+        }
+        else {
             logoutPresenter.prepareFailView("Logout failed, please try again");
         }
     }

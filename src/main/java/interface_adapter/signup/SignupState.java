@@ -12,14 +12,13 @@ public class SignupState {
         return username;
     }
 
-
     public String getPassword() {
         return password;
     }
+
     public String getError() {
         return error;
     }
-
 
     public void setUsername(String username) {
         this.username = username;
@@ -32,8 +31,6 @@ public class SignupState {
     public void setPassword(String password) {
         this.password = password;
     }
-
-
 
     @Override
     public String toString() {

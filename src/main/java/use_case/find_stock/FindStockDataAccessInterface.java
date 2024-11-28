@@ -1,5 +1,8 @@
 package use_case.find_stock;
 
+/**
+ * DAO for the Find Stock Use Case.
+ */
 public interface FindStockDataAccessInterface {
     /**
      * Retrieves the current cost of a stock by its ticker symbol.

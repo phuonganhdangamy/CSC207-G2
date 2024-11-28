@@ -1,13 +1,13 @@
 package use_case.login;
 
-import entity.Stock;
-import entity.User;
-import use_case.UserDataAccessInterface;
-
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import entity.Stock;
+import entity.User;
+import use_case.UserDataAccessInterface;
 
 /**
  * Interactor for login use case.
@@ -25,11 +25,11 @@ public class LoginInteractor implements LoginInputBoundary {
     @Override
     public void execute(LoginInputData loginInputData) {
         // Get the username and password entered by the user
-        String username = loginInputData.getUsername();
-        String password = loginInputData.getPassword();
+        final String username = loginInputData.getUsername();
+        final String password = loginInputData.getPassword();
 
         // Check if the username exists in the database
-        if (!userDataAccess.existsByName(username) || username.equals("") || password.equals("")) {
+        if (!userDataAccess.existsByName(username) || "".equals(username) || password.equals("")) {
             loginPresenter.prepareFailView( username + ": Account does not exist.");
         }
         else {

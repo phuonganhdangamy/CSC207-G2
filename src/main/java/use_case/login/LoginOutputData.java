@@ -11,12 +11,10 @@ public class LoginOutputData {
     // Keys for this map are of a ticker and the value is the number of shares owned
     private Map<String, Integer> portfolioData;
 
-
     public LoginOutputData(String username, double balance, Map<String, Integer> portfolioData) {
         this.username = username;
         this.balance = balance;
         this.portfolioData = portfolioData;
-
     }
 
     public String getUsername() {

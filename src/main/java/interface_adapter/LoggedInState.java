@@ -1,6 +1,5 @@
 package interface_adapter;
 
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +7,7 @@ import java.util.Map;
  * The State information representing the logged-in user.
  */
 public class LoggedInState {
-    //set the loggedInState after the user logs in
+    // set the loggedInState after the user logs in
     private String username = "";
     private String tickerField;
     private String numShares;
@@ -20,6 +19,10 @@ public class LoggedInState {
     private double balance;
     // First index is number of shares; second index is profit/loss
     private Map<String, List<Double>> stockTable;
+
+    // Because of the previous copy constructor, the default constructor must be explicit.
+    public LoggedInState() {
+    }
 
     public Map<String, List<Double>> getStockTable() {
         return stockTable;
@@ -85,7 +88,6 @@ public class LoggedInState {
         this.username = username;
     }
 
-
     public void setError(String error) {
         this.error = error;
     }
@@ -93,11 +95,4 @@ public class LoggedInState {
     public String getError() {
         return error;
     }
-
-
-    // Because of the previous copy constructor, the default constructor must be explicit.
-    public LoggedInState() {
-
-    }
-
 }

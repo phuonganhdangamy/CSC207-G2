@@ -18,5 +18,8 @@ public interface LoginOutputBoundary {
      */
     void prepareFailView(String errorMessage);
 
+    /**
+     * Switches to the signup view for the Login Use Case.
+     */
     void switchToSignUpView();
 }
