@@ -35,7 +35,7 @@ public class ListStocksInteractor implements ListStocksInputBoundary {
      */
     @Override
     public void execute(ListStocksInputData inputData) {
-        final User user = userDataAccess.getUserByUsername(inputData.getUsername());
+        final User user = userDataAccess.getCurrentUser();
         if (user == null) {
             throw new IllegalArgumentException("User not found.");
         }

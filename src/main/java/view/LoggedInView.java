@@ -232,7 +232,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     }
 
     public void setBuyStockController(BuyStockController buyStockController) {
-        this.setBuyStockController(buyStockController);
+        buySellStockView.setBuyStockController(buyStockController);
     }
 
     public void setProfitLossController(ProfitLossController profitLossController) {
