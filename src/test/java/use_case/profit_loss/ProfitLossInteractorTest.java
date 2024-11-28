@@ -109,42 +109,6 @@ class ProfitLossInteractorTest {
             // Mock user and portfolio creation
             User user = new User("user123", "password");
             user.setBalance(10000.0); // Set an initial balance
-
-            Portfolio portfolio = user.getPortfolio();
-
-            portfolio.addStock(new Stock("AAPL", 150.0));
-            portfolio.addStock(new Stock("AAPL", 150.0));
-            portfolio.addStock(new Stock("AAPL", 150.0));
-            portfolio.addStock(new Stock("AAPL", 150.0));
-            portfolio.addStock(new Stock("AAPL", 150.0)); // 5 shares
-
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0)); // 10 shares
-
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0)); // 15 shares
-
             return user;
         }
     }
