@@ -16,6 +16,7 @@ import okhttp3.Response;
 import use_case.DataAccessException;
 import use_case.UserDataAccessInterface;
 import use_case.buy_stock.BuyStockUserDataAccessInterface;
+import use_case.list_stocks.ListStocksUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.profit_loss.ProfitLossDataAccessInterface;
@@ -23,7 +24,8 @@ import use_case.sell_stock.SellStockUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class DBUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface,
-        LogoutUserDataAccessInterface, SellStockUserDataAccessInterface, BuyStockUserDataAccessInterface, ProfitLossDataAccessInterface {
+        LogoutUserDataAccessInterface, SellStockUserDataAccessInterface, BuyStockUserDataAccessInterface, ProfitLossDataAccessInterface,
+        ListStocksUserDataAccessInterface {
     private static final int SUCCESS_CODE = 200;
     private static final int CREDENTIAL_ERROR = 401;
     private static final String CONTENT_TYPE_LABEL = "Content-Type";

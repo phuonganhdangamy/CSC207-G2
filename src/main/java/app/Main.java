@@ -20,11 +20,12 @@ public class Main {
                 .addFindStockView()
                 .addLoggedInView()
                 .addSignupUseCase()
+                .addProfitLossUseCase()
                 .addLoginUseCase()
                 .addLogoutUseCase()
                 .addFindStockUseCase()
                 .addSellStockUseCase()
-                .addProfitLossUseCase()
+                .addBuyStockUseCase()
                 .build();
 
         // Makes the application visible

@@ -23,17 +23,26 @@ public class SellStockInteractor implements SellStockInputBoundary {
     private final FindStockDataAccessInterface stockDatabase;
 
 
+
     // Need access to the view stock use case interactor and profit loss interactor to update UI
-    private final ListStocksInputBoundary viewOwnedStockInteractor;
-    private final ProfitLossInputBoundary profitLossInteractor;
+    private ListStocksInputBoundary viewOwnedStockInteractor;
+    private ProfitLossInputBoundary profitLossInteractor;
 
     public SellStockInteractor(SellStockOutputBoundary sellStockPresenter, SellStockUserDataAccessInterface database,
-                               FindStockDataAccessInterface stockDatabase, ListStocksInteractor viewOwnedStockInteractor,  ProfitLossInputBoundary profitLossInteractor){
+                               FindStockDataAccessInterface stockDatabase){
         this.sellStockPresenter = sellStockPresenter;
         this.database = database;
         this.stockDatabase = stockDatabase;
-        this.viewOwnedStockInteractor = viewOwnedStockInteractor;
+
+    }
+
+
+    public void setProfitLossInteractor(ProfitLossInputBoundary profitLossInteractor) {
         this.profitLossInteractor = profitLossInteractor;
+    }
+
+    public void setViewOwnedStockInteractor(ListStocksInputBoundary viewOwnedStockInteractor) {
+        this.viewOwnedStockInteractor = viewOwnedStockInteractor;
     }
 
     @Override
@@ -78,7 +87,7 @@ public class SellStockInteractor implements SellStockInputBoundary {
             // selling shares
 
             viewOwnedStockInteractor.execute(new ListStocksInputData(user.getName()));
-            profitLossInteractor.execute();
+            // profitLossInteractor.execute();
 
         } else {
             sellStockPresenter.prepareFailView(user.getName() + ", you don't have enough shares of this company to sell.");

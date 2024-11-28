@@ -132,6 +132,19 @@ public class BuySellStockView extends JPanel implements ActionListener, Property
             }
         });
 
+        buyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String ticker = findStockView.getTickerField();
+                int quantity = Integer.parseInt(sharesInputField.getText());
+
+                buyStockController.execute(username, ticker, quantity);
+                sharesInputField.setText("");
+                findStockView.setTickerField("");
+            }
+        });
+
+
 
 
 

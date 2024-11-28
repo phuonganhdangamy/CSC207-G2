@@ -22,7 +22,7 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
     private final ProfitLossInputBoundary profitLossInteractor;
 
     public BuyStockInteractor(BuyStockOutputBoundary buyStockPresenter, BuyStockUserDataAccessInterface database,
-                              DBStockDataAccessObject stockDatabase, ListStocksInteractor viewOwnedStockInteractor, ProfitLossInputBoundary profitLossInteractor) {
+                              DBStockDataAccessObject stockDatabase, ListStocksInputBoundary viewOwnedStockInteractor, ProfitLossInputBoundary profitLossInteractor) {
         this.buyStockPresenter = buyStockPresenter;
         this.database = database;
         this.stockDatabase = stockDatabase;
@@ -57,8 +57,6 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
             buyStockPresenter.prepareFailView("Insufficient balance.");
             return;
         } else {
-            // Update user balance and portfolio
-            user.setBalance(balance - totalCost);
 
             for (int i = 0; i < quantity; i++) {
                 user.getPortfolio().addStock(new Stock(ticker, stockCost));
@@ -69,10 +67,10 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
 
             // Update UI
             viewOwnedStockInteractor.execute(new ListStocksInputData(user.getName()));
-            profitLossInteractor.execute();
+           // profitLossInteractor.execute();
 
             // Prepare success view with updated data
-            buyStockPresenter.prepareSuccessView(new BuyStockOutputData(balance, ticker, numberOfShares));
+            buyStockPresenter.prepareSuccessView(new BuyStockOutputData(user.getBalance(), ticker, numberOfShares));
         }
 
 

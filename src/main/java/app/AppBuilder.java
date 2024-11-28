@@ -12,6 +12,8 @@ import entity.StockFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.LoggedInViewModel;
+import interface_adapter.buy_stock.BuyStockController;
+import interface_adapter.buy_stock.BuyStockPresenter;
 import interface_adapter.buy_stock.BuyStockViewModel;
 import interface_adapter.find_stock.FindStockController;
 import interface_adapter.find_stock.FindStockPresenter;
@@ -29,10 +31,17 @@ import interface_adapter.sell_stock.SellStockViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.view_owned_stock.ViewOwnedStockPresenter;
+import use_case.buy_stock.BuyStockInputBoundary;
+import use_case.buy_stock.BuyStockInteractor;
+import use_case.buy_stock.BuyStockOutputBoundary;
 import use_case.find_stock.FindStockDataAccessInterface;
 import use_case.find_stock.FindStockInputBoundary;
 import use_case.find_stock.FindStockInteractor;
 import use_case.find_stock.FindStockOutputBoundary;
+import use_case.list_stocks.ListStocksInputBoundary;
+import use_case.list_stocks.ListStocksInteractor;
+import use_case.list_stocks.ListStocksOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -70,6 +79,8 @@ public class AppBuilder {
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(stockFactory, userFactory);
     private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
 
+
+
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoggedInViewModel loggedInViewModel;
@@ -83,6 +94,14 @@ public class AppBuilder {
     private BuyStockViewModel buyStockViewModel;
     private SellStockViewModel sellStockViewModel;
     private BuySellStockView buySellStockView;
+
+
+    private ListStocksOutputBoundary listStocksOutputBoundary = new ViewOwnedStockPresenter();
+    private ListStocksInputBoundary listStocksInteractor= new ListStocksInteractor(listStocksOutputBoundary, userDataAccessObject);
+
+    private ProfitLossOutputBoundary profitLossPresenter;
+    private ProfitLossInputBoundary profitLossInteractor;
+
 
 
     public AppBuilder() {
@@ -213,8 +232,11 @@ public class AppBuilder {
 
         //Create new stockDatabase for the sellStockUseCase
         final FindStockDataAccessInterface stockDatabase = new DBStockDataAccessObject();
+
         final SellStockInputBoundary sellStockInteractor = new SellStockInteractor(sellStockPresenter,
                 userDataAccessObject, stockDatabase);
+        sellStockInteractor.setViewOwnedStockInteractor(listStocksInteractor);
+        sellStockInteractor.setProfitLossInteractor(profitLossInteractor);
         final SellStockController sellStockController = new SellStockController(sellStockInteractor);
 
         loggedInView.setSellStockController(sellStockController);
@@ -226,8 +248,8 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addProfitLossUseCase() {
-        final ProfitLossOutputBoundary profitLossPresenter = new ProfitLossPresenter(loggedInViewModel, viewManagerModel);
-        final ProfitLossInputBoundary profitLossInteractor = new ProfitLossInteractor(userDataAccessObject, profitLossPresenter);
+        profitLossPresenter = new ProfitLossPresenter(loggedInViewModel, viewManagerModel);
+        profitLossInteractor = new ProfitLossInteractor(userDataAccessObject, profitLossPresenter);
         final ProfitLossController profitLossController = new ProfitLossController(profitLossInteractor);
 
         loggedInView.setProfitLossController(profitLossController);
@@ -256,5 +278,17 @@ public class AppBuilder {
     }
 
 
+    public AppBuilder addBuyStockUseCase() {
+        final BuyStockOutputBoundary buyStockPresenter = new BuyStockPresenter(loggedInViewModel,viewManagerModel);
 
+        //Create new stockDatabase for the sellStockUseCase
+        final DBStockDataAccessObject stockDatabase = new DBStockDataAccessObject();
+
+        final BuyStockInputBoundary buyStockInteractor = new BuyStockInteractor(buyStockPresenter,
+                userDataAccessObject, stockDatabase, listStocksInteractor, profitLossInteractor);
+        final BuyStockController buyStockController = new BuyStockController(buyStockInteractor);
+
+        loggedInView.setBuyStockController(buyStockController);
+        return this;
+    }
 }
