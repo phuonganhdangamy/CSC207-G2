@@ -22,12 +22,12 @@ public class FindStockPresenter implements FindStockOutputBoundary {
 
         // Reset the state so that the label can appear again
         findStockViewModel.setFindStockState("");
-        findStockViewModel.setSuccess("");
+        findStockViewModel.setMessage("");
         findStockViewModel.setError("");
 
         String successMessage = "The current price of " + response.getTickerSymbol() + " is $" +
                 response.getCurrentCost() + ".";
-        findStockViewModel.setSuccess(successMessage);
+        findStockViewModel.setMessage(successMessage);
         // System.out.println(successMessage);
 
         findStockViewModel.setFindStockState("true");
@@ -41,7 +41,7 @@ public class FindStockPresenter implements FindStockOutputBoundary {
 
         // Reset the state so that the label can appear again
         findStockViewModel.setFindStockState("");
-        findStockViewModel.setSuccess("");
+        findStockViewModel.setMessage("");
         findStockViewModel.setError("");
 
         System.out.println(errorMessage);

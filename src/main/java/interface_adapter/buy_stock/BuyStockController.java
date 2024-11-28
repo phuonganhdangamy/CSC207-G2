@@ -12,8 +12,10 @@ public class BuyStockController {
         this.interactor = interactor;
     }
 
-    public void buyStock(String username, String tickerSymbol, int numberOfShares) {
+
+    public void execute(String username, String tickerSymbol, int numberOfShares) {
         BuyStockInputData inputData = new BuyStockInputData(username, tickerSymbol, numberOfShares);
         interactor.execute(inputData);
     }
+
 }

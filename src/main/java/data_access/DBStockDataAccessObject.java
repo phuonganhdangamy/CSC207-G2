@@ -27,7 +27,7 @@ public class DBStockDataAccessObject implements FindStockDataAccessInterface {
             int responseCode = conn.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {
                 System.out.println("Error: API request failed with response code " + responseCode);
-                return -1;
+                return 0;
             }
 
             // Read the response
@@ -46,7 +46,7 @@ public class DBStockDataAccessObject implements FindStockDataAccessInterface {
             JSONObject json = new JSONObject(content.toString());
             if (!json.has("Time Series (Daily)")) {
                 System.out.println("Error: No Time Series (Daily) data available.");
-                return -1;
+                return 0;
             }
 
             JSONObject timeSeries = json.getJSONObject("Time Series (Daily)");
@@ -72,7 +72,7 @@ public class DBStockDataAccessObject implements FindStockDataAccessInterface {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return -1; // Return a special value for error or no data
+        return 0; // Return a special value for error or no data
     }
 
     @Override
@@ -84,12 +84,12 @@ public class DBStockDataAccessObject implements FindStockDataAccessInterface {
 
         DBStockDataAccessObject stockDataAccess = new DBStockDataAccessObject();
 
-        String testTicker = "AAPL";
+        String testTicker = "IBM";
 
         // Test getCost method
         System.out.println("Testing getCost method:");
         double cost = stockDataAccess.getCost(testTicker);
-        if (cost != -1) {
+        if (cost != 0) {
             System.out.println("The cost of " + testTicker + " is: $" + cost);
         } else {
             System.out.println("Failed to retrieve the cost for " + testTicker);
@@ -104,4 +104,5 @@ public class DBStockDataAccessObject implements FindStockDataAccessInterface {
             System.out.println("The stock " + testTicker + " does not exist.");
         }
     }
+
 }
