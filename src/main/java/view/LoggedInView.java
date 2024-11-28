@@ -20,6 +20,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
+import java.util.Map;
 
 public class LoggedInView extends JPanel implements PropertyChangeListener {
 
@@ -84,7 +86,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         tickerErrorLabel.setForeground(Color.RED);
         tickerErrorLabel.setVisible(false);
 
-  //      transactionPanel.add(tickerPanel);
+        //      transactionPanel.add(tickerPanel);
         transactionPanel.add(tickerErrorLabel);
 //        transactionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
@@ -94,19 +96,19 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
 
         // Buy/Sell Stock Panel
-       buySellStockPanel = new JPanel(new BorderLayout());
-       this.buySellStockView = buySellStockView;
-       buySellStockPanel.add(buySellStockView, BorderLayout.CENTER);
-       transactionPanel.add(buySellStockPanel, BorderLayout.CENTER);
+        buySellStockPanel = new JPanel(new BorderLayout());
+        this.buySellStockView = buySellStockView;
+        buySellStockPanel.add(buySellStockView, BorderLayout.CENTER);
+        transactionPanel.add(buySellStockPanel, BorderLayout.CENTER);
 
 
-       // sharesPanel.add(sharesLabel, BorderLayout.NORTH);
-       // sharesPanel.add(sharesInputField, BorderLayout.CENTER);
+        // sharesPanel.add(sharesLabel, BorderLayout.NORTH);
+        // sharesPanel.add(sharesInputField, BorderLayout.CENTER);
 
 
 
-     //   transactionPanel.add(sharesPanel);
-      //  transactionPanel.add(sharesErrorLabel);
+        //   transactionPanel.add(sharesPanel);
+        //  transactionPanel.add(sharesErrorLabel);
         transactionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // Buttons
@@ -185,7 +187,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 //        //HANDLES ERROR CASE
         if (state.getError() != null && !state.getError().isEmpty()){
             JOptionPane.showMessageDialog(this, state.getError(),
-                "Error", JOptionPane.ERROR_MESSAGE);
+                    "Error", JOptionPane.ERROR_MESSAGE);
 
             state.setError("");
         }
@@ -193,16 +195,30 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     }
 
-    //Needs implementation
-
     private void setFields(LoggedInState state) {
+        // Update balance and username
         setBalance(state.getBalance());
         updateBalanceLabel();
-
-        setUsername(state.getUsername());
         setUsername(state.getUsername());
 
+        // Update stock table with data from LoggedInState
+        Map<String, List<Double>> stockTableData = state.getStockTable();
+        if (stockTableData != null) {
+            // Convert stockTableData to a 2D array for the JTable
+            Object[][] tableData = new Object[stockTableData.size()][3];
+            int index = 0;
+            for (Map.Entry<String, List<Double>> entry : stockTableData.entrySet()) {
+                String ticker = entry.getKey();
+                List<Double> details = entry.getValue();
+                int shares = details.get(0).intValue();
+                double profitLoss = details.get(1);
+                tableData[index++] = new Object[]{ticker, shares, String.format("%.2f", profitLoss)};
+            }
 
+            // Update the JTable with the new data
+            String[] columnNames = {"Ticker", "Shares", "Profit/Loss"};
+            stockTable.setModel(new javax.swing.table.DefaultTableModel(tableData, columnNames));
+        }
     }
 
     //Adding the logout use case to make the logout button functional.
@@ -227,5 +243,3 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         return findStockPanel;
     }
 }
-
-
