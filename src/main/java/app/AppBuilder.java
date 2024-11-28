@@ -98,8 +98,9 @@ public class AppBuilder {
     private BuySellStockView buySellStockView;
 
     // Updated initialization of listStocksOutputBoundary
-    private ListStocksOutputBoundary listStocksOutputBoundary = new ViewOwnedStockPresenter(loggedInState);
+    private ListStocksOutputBoundary listStocksOutputBoundary = new ViewOwnedStockPresenter(loggedInViewModel);
     private ListStocksInputBoundary listStocksInteractor = new ListStocksInteractor(listStocksOutputBoundary, userDataAccessObject);
+
 
     private ProfitLossOutputBoundary profitLossPresenter;
     private ProfitLossInputBoundary profitLossInteractor;
