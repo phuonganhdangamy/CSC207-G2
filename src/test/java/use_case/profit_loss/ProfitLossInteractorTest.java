@@ -62,16 +62,16 @@ class ProfitLossInteractorTest {
 
     @Test
     void executeTotalProfitLossTest() {
-        // Arrange: Mock current stock prices
+        // Arrange/inject mock current prices
         Map<String, Double> mockCurrentPrices = getMockCurrentPrices();
-        dataAccess.setMockCurrentPrices(mockCurrentPrices); // Inject mock prices into the data access layer
+        dataAccess.setMockStockPrices(mockCurrentPrices);
 
         // Act
         profitLossInteractor.execute();
 
         // Expected total profit/loss calculation
         double expectedTotalProfitLoss =
-                (160.0 - 150.0) * 5 +  // AAPL: (current price - purchase price) * quantity
+                (160.0 - 150.0) * 5 +  // AAPL
                         (210.0 - 200.0) * 10 + // GOOGL
                         (310.0 - 300.0) * 15;  // TSLA
 
@@ -82,13 +82,9 @@ class ProfitLossInteractorTest {
 
     @Test
     void executeEachStockProfitLossTest() {
-        // Arrange: Mock current stock prices
+        // Arrange/inject mock current prices
         Map<String, Double> mockCurrentPrices = getMockCurrentPrices();
-        dataAccess.setMockCurrentPrices(mockCurrentPrices); // Inject mock prices into the data access layer
-
-        // Fetch the updated portfolio to ensure current prices are reflected
-        User user = dataAccess.getCurrentUser();
-        Portfolio portfolio = user.getPortfolio();
+        dataAccess.setMockStockPrices(mockCurrentPrices); // Directly inject mock prices
 
         // Act
         profitLossInteractor.execute();
@@ -105,8 +101,7 @@ class ProfitLossInteractorTest {
         assertEquals(expectedStockProfitLosses, presenter.stockProfitLosses);
     }
 
-
-    // Helper method to simulate fetching mock current stock prices
+    // Mock current prices for the test
     private Map<String, Double> getMockCurrentPrices() {
         Map<String, Double> stockPrices = new HashMap<>();
         stockPrices.put("AAPL", 160.0); // Current price of AAPL
@@ -118,11 +113,10 @@ class ProfitLossInteractorTest {
     // Mock data access class for testing
     private static class TestProfitLossDataAccess implements ProfitLossDataAccessInterface {
         private final User user;
-        private Map<String, Double> mockCurrentPrices;
+        private Map<String, Double> mockCurrentPrices = new HashMap<>();
 
         public TestProfitLossDataAccess() {
             this.user = new User("user123", "password");
-            this.mockCurrentPrices = new HashMap<>();
         }
 
         @Override
@@ -130,13 +124,14 @@ class ProfitLossInteractorTest {
             return user;
         }
 
-        // Simulate fetching current stock prices
-        public Map<String, Double> getCurrentPrices() {
-            return mockCurrentPrices;
+        // Set mock prices for testing
+        public void setMockStockPrices(Map<String, Double> mockCurrentPrices) {
+            this.mockCurrentPrices = mockCurrentPrices;
         }
 
-        public void setMockCurrentPrices(Map<String, Double> mockCurrentPrices) {
-            this.mockCurrentPrices = mockCurrentPrices;
+        // Provide mock prices during execution
+        public Map<String, Double> getMockStockPrices() {
+            return this.mockCurrentPrices;
         }
     }
 
