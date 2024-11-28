@@ -18,14 +18,18 @@ public class StockTest {
 
     @Test
     void testGetTickerSymbol() {
+        assertEquals("AAPL", stock.getTickerSymbol());
     }
 
     @Test
     void testGetCost() {
+        assertEquals(150.0, stock.getCost());
     }
 
     @Test
     void testSetCost() {
+        stock.setCost(350.0);
+        assertEquals(350.0, stock.getCost());
     }
 
     @Test
