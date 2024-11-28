@@ -12,6 +12,7 @@ import entity.StockFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.LoggedInViewModel;
+import interface_adapter.LoggedInState;
 import interface_adapter.buy_stock.BuyStockController;
 import interface_adapter.buy_stock.BuyStockPresenter;
 import interface_adapter.buy_stock.BuyStockViewModel;
@@ -79,7 +80,8 @@ public class AppBuilder {
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(stockFactory, userFactory);
     private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
 
-
+    // New field for LoggedInState
+    private final LoggedInState loggedInState = new LoggedInState();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -95,14 +97,13 @@ public class AppBuilder {
     private SellStockViewModel sellStockViewModel;
     private BuySellStockView buySellStockView;
 
+    // Updated initialization of listStocksOutputBoundary
+    private ListStocksOutputBoundary listStocksOutputBoundary = new ViewOwnedStockPresenter(loggedInViewModel);
+    private ListStocksInputBoundary listStocksInteractor = new ListStocksInteractor(listStocksOutputBoundary, userDataAccessObject);
 
-    private ListStocksOutputBoundary listStocksOutputBoundary = new ViewOwnedStockPresenter();
-    private ListStocksInputBoundary listStocksInteractor= new ListStocksInteractor(listStocksOutputBoundary, userDataAccessObject);
 
     private ProfitLossOutputBoundary profitLossPresenter;
     private ProfitLossInputBoundary profitLossInteractor;
-
-
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -151,17 +152,13 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addSignupUseCase() {
-        // Build presenter
         SignupOutputBoundary signUpPresenter = new SignupPresenter(viewManagerModel,
                 signupViewModel, loginViewModel);
 
-        //Build Interactor which requires database, presenter and userFactory objects
         SignupInputBoundary signUpInteractor = new SignupInteractor(userDataAccessObject, signUpPresenter, userFactory);
 
-        //Build Controller which requires the Interactor
         SignupController signupController = new SignupController(signUpInteractor);
 
-        // Add controller to view
         signupView.setSignupController(signupController);
         return this;
     }
@@ -185,15 +182,14 @@ public class AppBuilder {
      * Adds the Logout Use Case to the application.
      * @return this builder
      */
-    public AppBuilder addLogoutUseCase(){
+    public AppBuilder addLogoutUseCase() {
         final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(loginViewModel,
-                loggedInViewModel,viewManagerModel);
+                loggedInViewModel, viewManagerModel);
         final LogoutInputBoundary logoutInteractor = new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
         final LogoutController logoutController = new LogoutController(logoutInteractor);
-        loggedInView.setLogoutController (logoutController);
+        loggedInView.setLogoutController(logoutController);
 
         return this;
-
     }
 
     /**
@@ -228,9 +224,8 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addSellStockUseCase() {
-        final SellStockOutputBoundary sellStockPresenter = new SellStockPresenter(loggedInViewModel,viewManagerModel);
+        final SellStockOutputBoundary sellStockPresenter = new SellStockPresenter(loggedInViewModel, viewManagerModel);
 
-        //Create new stockDatabase for the sellStockUseCase
         final FindStockDataAccessInterface stockDatabase = new DBStockDataAccessObject();
 
         final SellStockInputBoundary sellStockInteractor = new SellStockInteractor(sellStockPresenter,
@@ -276,10 +271,8 @@ public class AppBuilder {
 
         loggedInView.setProfitLossController(profitLossController);
 
-
         return this;
     }
-
 
     /**
      * Creates the JFrame and the first view is the signup view.
@@ -296,7 +289,5 @@ public class AppBuilder {
         viewManagerModel.firePropertyChanged();
 
         return application;
-
     }
-
 }
