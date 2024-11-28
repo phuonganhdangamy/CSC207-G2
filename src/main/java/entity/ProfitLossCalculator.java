@@ -16,14 +16,15 @@ public class ProfitLossCalculator {
     public double calculateTotalProfitLoss(Map<String, Double> stockPrices) {
         double totalProfitLoss = 0.0;
 
-        for (Stock stock : portfolio.getStocks()) {
-            String tickerSymbol = stock.getTickerSymbol();
-            double currentPrice = stockPrices.getOrDefault(tickerSymbol, 0.0);
-            double purchasePrice = stock.getCost();
+        // Iterate through stocks in the portfolio
+        for (String tickerSymbol : stockPrices.keySet()) {
             int shareCount = portfolio.getShareCount(tickerSymbol);
+            if (shareCount > 0) {
+                double currentPrice = stockPrices.get(tickerSymbol);
+                double averageCost = calculateAverageCost(tickerSymbol);
 
-            double profitLossPerStock = (currentPrice - purchasePrice) * shareCount;
-            totalProfitLoss += profitLossPerStock;
+                totalProfitLoss += (currentPrice - averageCost) * shareCount;
+            }
         }
 
         return totalProfitLoss;
@@ -31,18 +32,32 @@ public class ProfitLossCalculator {
 
     // Calculate profit/loss for a specific stock
     public double calculateStockProfitLoss(String tickerSymbol, double currentPrice) {
-        double totalProfitLossForStock = 0.0;
+        int shareCount = portfolio.getShareCount(tickerSymbol);
+        if (shareCount == 0) {
+            throw new IllegalArgumentException("No shares of " + tickerSymbol + " found in the portfolio.");
+        }
+
+        double averageCost = calculateAverageCost(tickerSymbol);
+
+        return (currentPrice - averageCost) * shareCount;
+    }
+
+    // Helper method to calculate the average cost of stocks for a specific ticker symbol
+    private double calculateAverageCost(String tickerSymbol) {
+        double totalCost = 0.0;
+        int count = 0;
 
         for (Stock stock : portfolio.getStocks()) {
-            if (stock.getTickerSymbol().equalsIgnoreCase(tickerSymbol)) {
-                double purchasePrice = stock.getCost();
-                int shareCount = portfolio.getShareCount(tickerSymbol);
-
-                totalProfitLossForStock = (currentPrice - purchasePrice) * shareCount;
-                break;
+            if (stock.getTickerSymbol().equals(tickerSymbol)) {
+                totalCost += stock.getCost();
+                count++;
             }
         }
 
-        return totalProfitLossForStock;
+        if (count == 0) {
+            throw new IllegalArgumentException("No stocks with ticker symbol " + tickerSymbol + " found.");
+        }
+
+        return totalCost / count;
     }
 }
