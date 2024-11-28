@@ -27,7 +27,8 @@ public class ProfitLossInteractor implements ProfitLossInputBoundary {
      * New execute method to calculate both total and stock-specific profit/loss,
      * and pass one unified result to the presenter.
      */
-    public void execute(String tickerSymbol, double currentPrice) {
+    @Override
+    public void execute() {
         // Fetch the user's portfolio
         Portfolio portfolio = dataAccess.getCurrentUser().getPortfolio();
 
@@ -36,31 +37,21 @@ public class ProfitLossInteractor implements ProfitLossInputBoundary {
         for (Stock stock : portfolio.getStocks()) {
             stockPrices.put(stock.getTickerSymbol(), stock.getCost()); // Assuming 'getCost()' gives purchase price
         }
-        stockPrices.put(tickerSymbol, currentPrice); // Include the specific stock price
 
         // Use the ProfitLossCalculator to calculate results
         ProfitLossCalculator calculator = new ProfitLossCalculator(portfolio);
         double totalProfitLoss = calculator.calculateTotalProfitLoss(stockPrices);
-        double stockProfitLoss = calculator.calculateStockProfitLoss(tickerSymbol, currentPrice);
+
+        // Calculate stock-specific profit/loss
+        Map<String, Double> stockProfitLosses = new HashMap<>();
+        for (String ticker : stockPrices.keySet()) {
+            stockProfitLosses.put(ticker, calculator.calculateStockProfitLoss(ticker, stockPrices.get(ticker)));
+        }
 
         // Combine results into a single output data object
-        ProfitLossOutputData outputData = new ProfitLossOutputData(totalProfitLoss, stockProfitLoss, tickerSymbol);
+        ProfitLossOutputData outputData = new ProfitLossOutputData(totalProfitLoss, stockProfitLosses);
 
         // Send the unified result to the presenter
         outputBoundary.presentCombinedProfitLoss(outputData);
-    }
-
-    @Override
-    @Deprecated
-    public void calculateTotalProfitLoss(ProfitLossInputData inputData, Map<String, Double> stockPrices) {
-        // display the results for debugging when changing code
-        throw new UnsupportedOperationException("Use execute() instead.");
-    }
-
-    @Override
-    @Deprecated
-    public void calculateStockProfitLoss(ProfitLossInputData inputData, String tickerSymbol, double currentPrice) {
-        // display the results for debugging when changing code
-        throw new UnsupportedOperationException("Use execute() instead.");
     }
 }

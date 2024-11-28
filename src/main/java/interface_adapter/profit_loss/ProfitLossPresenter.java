@@ -7,6 +7,8 @@ import interface_adapter.LoggedInState;
 import use_case.profit_loss.ProfitLossOutputBoundary;
 import use_case.profit_loss.ProfitLossOutputData;
 
+import java.util.Map;
+
 public class ProfitLossPresenter implements ProfitLossOutputBoundary {
     private final LoggedInViewModel loggedInViewModel;
     private final ViewManagerModel viewManagerModel;
@@ -30,32 +32,24 @@ public class ProfitLossPresenter implements ProfitLossOutputBoundary {
     @Override
     public void presentCombinedProfitLoss(ProfitLossOutputData outputData) {
         double totalProfitLoss = outputData.getTotalProfitLoss();
-        double stockProfitLoss = outputData.getStockProfitLoss();
-        String tickerSymbol = outputData.getTickerSymbol();
+        Map<String, Double> stockProfitLosses = outputData.getStockProfitLosses();
 
-        // Update the view model with the total profit/loss
-        loggedInViewModel.getState().setTotalProfitLoss(totalProfitLoss);
+        LoggedInState state = loggedInViewModel.getState();
+        state.setTotalProfitLoss(totalProfitLoss);
+        state.setStockProfitLoss(stockProfitLosses);
 
-        // Update the view model with stock profit/loss
-        if (tickerSymbol != null && !tickerSymbol.isEmpty()) {
-            loggedInViewModel.getState().setStockProfitLoss(tickerSymbol, stockProfitLoss);
+        System.out.println("Total Profit/Loss: " + totalProfitLoss);
+        for (String ticker : stockProfitLosses.keySet()) {
+            System.out.println("Stock [" + ticker + "] Profit/Loss: " + stockProfitLosses.get(ticker));
         }
 
-        // display the results for debugging/UI
-        System.out.println("Total Profit/Loss: " + totalProfitLoss);
-        System.out.println("Stock [" + tickerSymbol + "] Profit/Loss: " + stockProfitLoss);
-
-        /// Notify the view manager to refresh the display by updating its state property
         viewManagerModel.setState("updatedState");
     }
 
-    // display the results for debugging when changing code
-    public void presentTotalProfitLoss(ProfitLossOutputData outputData) {
-        throw new UnsupportedOperationException("Use presentCombinedProfitLoss instead.");
-    }
-
-    @Override
-    public void presentStockProfitLoss(ProfitLossOutputData outputData, String tickerSymbol) {
-        throw new UnsupportedOperationException("Use presentCombinedProfitLoss instead.");
+    public void success(double totalProfitLoss, Map<String, Double> stockProfitLosses) {
+        LoggedInState state = loggedInViewModel.getState();
+        state.setTotalProfitLoss(totalProfitLoss);
+        state.setStockProfitLoss(stockProfitLosses);
     }
 }
+

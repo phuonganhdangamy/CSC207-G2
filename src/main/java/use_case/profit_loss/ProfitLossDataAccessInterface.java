@@ -3,6 +3,8 @@ package use_case.profit_loss;
 import entity.Portfolio;
 import entity.User;
 
+import java.util.Map;
+
 /**
  * Data Access Interface for the Profit Loss use case.
  * Declares methods for retrieving portfolio data.
