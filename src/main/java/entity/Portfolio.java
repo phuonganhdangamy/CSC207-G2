@@ -1,6 +1,7 @@
 package entity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Portfolio {
@@ -47,6 +48,15 @@ public class Portfolio {
             }
         }
         return count;
+    }
+
+    // TODO: I just implemented a new method to retrieve unique ticker symbols -> save time and space!
+    public HashSet<String> getTickerSymbols() {
+        HashSet<String> symbols = new HashSet<>();
+        for (Stock stock : stocks) {
+            symbols.add(stock.getTickerSymbol());
+        }
+        return symbols;
     }
 }
 

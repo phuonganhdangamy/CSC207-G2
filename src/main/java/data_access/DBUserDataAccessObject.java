@@ -24,8 +24,8 @@ import use_case.sell_stock.SellStockUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class DBUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface,
-        LogoutUserDataAccessInterface, SellStockUserDataAccessInterface, BuyStockUserDataAccessInterface, ProfitLossDataAccessInterface,
-        ListStocksUserDataAccessInterface {
+        LogoutUserDataAccessInterface, SellStockUserDataAccessInterface, BuyStockUserDataAccessInterface,
+        ListStocksUserDataAccessInterface, ProfitLossDataAccessInterface {
     private static final int SUCCESS_CODE = 200;
     private static final int CREDENTIAL_ERROR = 401;
     private static final String CONTENT_TYPE_LABEL = "Content-Type";

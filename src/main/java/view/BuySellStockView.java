@@ -44,27 +44,36 @@ public class BuySellStockView extends JPanel implements ActionListener, Property
         //this.sellStockViewModel = sellStockViewModel;
         this.findStockView = findStockView;
 
-       // this.buyStockViewModel.addPropertyChangeListener(this);
-        //this.sellStockViewModel.addPropertyChangeListener(this);
+        // this.buyStockViewModel.addPropertyChangeListener(this);
+        // this.sellStockViewModel.addPropertyChangeListener(this);
 
         // Set layout for the panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         final JLabel title = new JLabel("Make Transaction");
+        title.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the label
+
+        JSeparator topSeparator = new JSeparator(SwingConstants.HORIZONTAL);
+        JSeparator bottomSeparator = new JSeparator(SwingConstants.HORIZONTAL);
+        topSeparator.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the separator
+        bottomSeparator.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the separator
+
 
         errorLabel.setForeground(Color.RED);
         errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         errorLabel.setVisible(false);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 20, 50));
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         buyButton = new JButton("Buy");
         sellButton = new JButton("Sell");
         logoutButton = new JButton("Log out");
 
-        Dimension buttonSize = new Dimension(150, 60);
-        buyButton.setPreferredSize(buttonSize);
-        sellButton.setPreferredSize(buttonSize);
-        logoutButton.setPreferredSize(buttonSize);
+        buyButton.setSize(300, 50);
+        sellButton.setSize(300, 50);
+        logoutButton.setSize(300, 50);
 
 
         buttonPanel.add(buyButton);
@@ -80,9 +89,8 @@ public class BuySellStockView extends JPanel implements ActionListener, Property
 
         // Shares Input Field
         JPanel sharesPanel = new JPanel(new BorderLayout());
-        JLabel sharesLabel = new JLabel("Shares:");
         sharesInputField = new JTextField(15);
-        sharesInputField.setPreferredSize(new Dimension(200, 20));
+        LabelTextPanel sharesLabel = new LabelTextPanel(new JLabel("Number of Shares:"), sharesInputField);
         sharesPanel.add(sharesLabel, BorderLayout.NORTH);
         sharesPanel.add(sharesInputField, BorderLayout.CENTER);
 
@@ -101,12 +109,12 @@ public class BuySellStockView extends JPanel implements ActionListener, Property
             }
         });
 
-        this.add(title);
+        this.add(topSeparator);       // Add separator above the title
+        this.add(title);              // Add the centered title
+        this.add(bottomSeparator);
         this.add(sharesPanel);
         this.add(errorLabel);
-        this.add(buyButton);
-        this.add(sellButton);
-        this.add(logoutButton);
+        this.add(buttonPanel);
 
 
 
@@ -143,10 +151,6 @@ public class BuySellStockView extends JPanel implements ActionListener, Property
                 findStockView.setTickerField("");
             }
         });
-
-
-
-
 
     }
 

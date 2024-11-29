@@ -1,6 +1,5 @@
 package use_case.profit_loss;
 
-import entity.Portfolio;
 import entity.User;
 
 /**
@@ -14,5 +13,4 @@ public interface ProfitLossDataAccessInterface {
      * @return the current user; null indicates that no one is logged into the application.
      */
     User getCurrentUser();
-
 }
