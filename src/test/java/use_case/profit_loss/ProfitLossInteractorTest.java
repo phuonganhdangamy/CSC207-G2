@@ -12,14 +12,22 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit test class for ProfitLossInteractor.
+ * Validates total and individual stock profit/loss calculations.
+ */
 class ProfitLossInteractorTest {
     private TestProfitLossDataAccess dataAccess;
     private TestProfitLossOutputBoundary presenter;
     private ProfitLossInteractor profitLossInteractor;
     private InMemoryStockDataAccessObject stockDataAccess;
 
+    /**
+     * Sets up the test environment, including mock data access objects and sample portfolio data.
+     */
     @BeforeEach
     void setUp() {
+        // Initialize mocks and the interactor
         dataAccess = new TestProfitLossDataAccess();
         presenter = new TestProfitLossOutputBoundary();
         stockDataAccess = new InMemoryStockDataAccessObject();
@@ -62,11 +70,16 @@ class ProfitLossInteractorTest {
         portfolio.addStock(new Stock("TSLA", 300.0));
         portfolio.addStock(new Stock("TSLA", 300.0)); // 15 shares
 
+        // Save stock current prices in the mock stock database
         stockDataAccess.saveStock(new Stock("TSLA", 310.0));
         stockDataAccess.saveStock(new Stock("GOOGL", 210.0));
         stockDataAccess.saveStock(new Stock("AAPL", 160.0));
     }
 
+    /**
+     * Tests the calculation of the total profit/loss for all stocks in the portfolio.
+     * Verifies that the expected total matches the calculated total.
+     */
     @Test
     void executeTotalProfitLossTest() {
         // Arrange/inject mock current prices
@@ -87,6 +100,10 @@ class ProfitLossInteractorTest {
         assertEquals(expectedTotalProfitLoss, presenter.totalProfitLoss, 0.01);
     }
 
+    /**
+     * Tests the calculation of profit/loss for each individual stock in the portfolio.
+     * Verifies that the expected profit/loss for each stock matches the calculated values.
+     */
     @Test
     void executeEachStockProfitLossTest() {
         // Arrange/inject mock current prices
@@ -150,6 +167,12 @@ class ProfitLossInteractorTest {
 
         @Override
         public void presentCombinedProfitLoss(ProfitLossOutputData outputData) {
+            this.totalProfitLoss = outputData.getTotalProfitLoss();
+            this.stockProfitLosses = outputData.getStockProfitLosses();
+        }
+
+        @Override
+        public void success(ProfitLossOutputData outputData) {
             this.totalProfitLoss = outputData.getTotalProfitLoss();
             this.stockProfitLosses = outputData.getStockProfitLosses();
         }

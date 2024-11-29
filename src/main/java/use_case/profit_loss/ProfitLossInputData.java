@@ -25,4 +25,5 @@ public class ProfitLossInputData {
     public String getUsername() {
         return username;
     }
+    
 }

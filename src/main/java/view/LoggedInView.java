@@ -125,7 +125,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 //        transactionPanel.add(buttonPanel);
 
         // Summary Panel: Profit/Loss
-        profitLossLabel = new JLabel("Total Profit/Loss: +XX.XX%");
+        profitLossLabel = new JLabel("Total Profit/Loss: +XX.XX");
         profitLossLabel.setHorizontalAlignment(SwingConstants.CENTER);
         profitLossLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 
@@ -192,6 +192,12 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
 
     }
+
+    /**
+     * Updates the UI fields based on the state.
+     *
+     * @param state the updated logged-in state.
+     */
     private void setFields(LoggedInState state) {
         // Update balance and username
         setBalance(state.getBalance());
@@ -205,7 +211,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         tickerErrorLabel.revalidate();
 
         // Update profit/loss summary
-        profitLossLabel.setText(String.format("Total Profit/Loss: %.2f%%", state.getTotalProfitLoss()));
+        profitLossLabel.setText(String.format("Total Profit/Loss: %.2f", state.getTotalProfitLoss()));
 
 
         // Update stock table with data from LoggedInState
