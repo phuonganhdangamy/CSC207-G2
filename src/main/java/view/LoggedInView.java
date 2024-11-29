@@ -124,15 +124,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 //        buttonPanel.add(logoutButton);
 //        transactionPanel.add(buttonPanel);
 
-        // Summary
-        JLabel purchasePriceLabel = new JLabel("Total Purchase Price: XXXXX.XX");
-        JLabel currentPriceLabel = new JLabel("Total Current Price: XXXXX.XX");
-        JLabel profitLossLabel = new JLabel("Total Profit/Loss: +XX.XX%");
+        // Summary Panel: Profit/Loss
+        profitLossLabel = new JLabel("Total Profit/Loss: +XX.XX%");
+        profitLossLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        profitLossLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 
         JPanel summaryPanel = new JPanel(new GridLayout(1, 3));
         summaryPanel.setBorder(BorderFactory.createTitledBorder("Summary"));
-        summaryPanel.add(purchasePriceLabel);
-        summaryPanel.add(currentPriceLabel);
         summaryPanel.add(profitLossLabel);
 
         // Adding Sections to Main Layout
@@ -199,6 +197,16 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         setBalance(state.getBalance());
         updateBalanceLabel();
         setUsername(state.getUsername());
+        setUsername(state.getUsername());
+
+        // Clear error messages
+        tickerErrorLabel.setVisible(false);
+        tickerErrorLabel.repaint();
+        tickerErrorLabel.revalidate();
+
+        // Update profit/loss summary
+        profitLossLabel.setText(String.format("Total Profit/Loss: %.2f%%", state.getTotalProfitLoss()));
+
 
         // Update stock table with data from LoggedInState
         Map<String, Integer> stockOwnership = state.getStockOwnership();
