@@ -37,6 +37,8 @@ public class ViewOwnedStockPresenter implements ListStocksOutputBoundary {
 
             // Notify the ViewModel about the state change
             loggedInViewModel.setState(currentState);
+            loggedInViewModel.firePropertyChanged();
+
         }
     }
 }
