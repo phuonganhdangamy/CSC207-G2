@@ -13,6 +13,13 @@ public interface ProfitLossOutputBoundary {
      */
     void presentCombinedProfitLoss(ProfitLossOutputData outputData);
 
+    /**
+     * Sends the unified profit/loss results to the presenter.
+     *
+     * @param outputData the profit/loss calculation results.
+     */
+    void success(ProfitLossOutputData outputData);
+
     // display the results for debugging when changing code
     default void presentTotalProfitLoss(ProfitLossOutputData outputData) {
         throw new UnsupportedOperationException("Use presentCombinedProfitLoss instead.");

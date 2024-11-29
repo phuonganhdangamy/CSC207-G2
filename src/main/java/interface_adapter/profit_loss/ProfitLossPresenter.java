@@ -34,19 +34,19 @@ public class ProfitLossPresenter implements ProfitLossOutputBoundary {
      *
      * @param outputData the combined profit/loss data
      */
-//    @Override
-//    public void success(ProfitLossOutputData outputData) {
-//        double totalProfitLoss = outputData.getTotalProfitLoss();
-//        Map<String, Double> stockProfitLosses = outputData.getStockProfitLosses();
-//
-//        LoggedInState state = loggedInViewModel.getState();
-//        state.setTotalProfitLoss(totalProfitLoss);
-//        state.setStockProfitLoss(stockProfitLosses);
-//
-//        loggedInViewModel.setState(currentState);
-//        loggedInViewModel.firePropertyChanged();
-//
-//    }
+    @Override
+    public void success(ProfitLossOutputData outputData) {
+        double totalProfitLoss = outputData.getTotalProfitLoss();
+        Map<String, Double> stockProfitLosses = outputData.getStockProfitLosses();
+
+        LoggedInState state = loggedInViewModel.getState();
+        state.setTotalProfitLoss(totalProfitLoss);
+        state.setStockProfitLoss(stockProfitLosses);
+
+        loggedInViewModel.setState(new LoggedInState());
+        loggedInViewModel.firePropertyChanged();
+
+    }
 
 }
 
