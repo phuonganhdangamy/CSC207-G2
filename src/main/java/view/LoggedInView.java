@@ -124,15 +124,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 //        buttonPanel.add(logoutButton);
 //        transactionPanel.add(buttonPanel);
 
-        // Summary
-        JLabel purchasePriceLabel = new JLabel("Total Purchase Price: XXXXX.XX");
-        JLabel currentPriceLabel = new JLabel("Total Current Price: XXXXX.XX");
-        JLabel profitLossLabel = new JLabel("Total Profit/Loss: +XX.XX%");
+        // Summary Panel: Profit/Loss
+        profitLossLabel = new JLabel("Total Profit/Loss: +XX.XX");
+        profitLossLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        profitLossLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 
         JPanel summaryPanel = new JPanel(new GridLayout(1, 3));
         summaryPanel.setBorder(BorderFactory.createTitledBorder("Summary"));
-        summaryPanel.add(purchasePriceLabel);
-        summaryPanel.add(currentPriceLabel);
         summaryPanel.add(profitLossLabel);
 
         // Adding Sections to Main Layout
@@ -195,23 +193,41 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     }
 
+    /**
+     * Updates the UI fields based on the state.
+     *
+     * @param state the updated logged-in state.
+     */
     private void setFields(LoggedInState state) {
         // Update balance and username
         setBalance(state.getBalance());
         updateBalanceLabel();
         setUsername(state.getUsername());
+        setUsername(state.getUsername());
+
+        // Clear error messages
+        tickerErrorLabel.setVisible(false);
+        tickerErrorLabel.repaint();
+        tickerErrorLabel.revalidate();
+
+        // Update profit/loss summary
+        profitLossLabel.setText(String.format("Total Profit/Loss: %.2f", state.getTotalProfitLoss()));
+
 
         // Update stock table with data from LoggedInState
-        Map<String, List<Double>> stockTableData = state.getStockTable();
-        if (stockTableData != null) {
-            // Convert stockTableData to a 2D array for the JTable
-            Object[][] tableData = new Object[stockTableData.size()][3];
+        Map<String, Integer> stockOwnership = state.getStockOwnership();
+        Map<String, Double> stockProfitLoss = state.getStockProfitLoss();
+
+        if (stockOwnership != null && stockProfitLoss != null) {
+            // Convert data to a 2D array for the JTable
+            Object[][] tableData = new Object[stockOwnership.size()][3];
             int index = 0;
-            for (Map.Entry<String, List<Double>> entry : stockTableData.entrySet()) {
+
+            for (Map.Entry<String, Integer> entry : stockOwnership.entrySet()) {
                 String ticker = entry.getKey();
-                List<Double> details = entry.getValue();
-                int shares = details.get(0).intValue();
-                double profitLoss = details.get(1);
+                int shares = entry.getValue();
+                double profitLoss = stockProfitLoss.getOrDefault(ticker, 0.0); // Default to 0.0 if not found
+
                 tableData[index++] = new Object[]{ticker, shares, String.format("%.2f", profitLoss)};
             }
 

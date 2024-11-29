@@ -1,5 +1,6 @@
 package use_case.profit_loss;
 
+import data_access.InMemoryStockDataAccessObject;
 import entity.Portfolio;
 import entity.Stock;
 import entity.User;
@@ -11,61 +12,120 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit test class for ProfitLossInteractor.
+ * Validates total and individual stock profit/loss calculations.
+ */
 class ProfitLossInteractorTest {
     private TestProfitLossDataAccess dataAccess;
     private TestProfitLossOutputBoundary presenter;
     private ProfitLossInteractor profitLossInteractor;
+    private InMemoryStockDataAccessObject stockDataAccess;
 
+    /**
+     * Sets up the test environment, including mock data access objects and sample portfolio data.
+     */
     @BeforeEach
     void setUp() {
+        // Initialize mocks and the interactor
         dataAccess = new TestProfitLossDataAccess();
         presenter = new TestProfitLossOutputBoundary();
-        profitLossInteractor = new ProfitLossInteractor(dataAccess, presenter);
+        stockDataAccess = new InMemoryStockDataAccessObject();
+        profitLossInteractor = new ProfitLossInteractor(dataAccess, presenter, stockDataAccess);
+
+        // Set up user portfolio
+        User user = dataAccess.getCurrentUser();
+        Portfolio portfolio = user.getPortfolio();
+
+        portfolio.addStock(new Stock("AAPL", 150.0));
+        portfolio.addStock(new Stock("AAPL", 150.0));
+        portfolio.addStock(new Stock("AAPL", 150.0));
+        portfolio.addStock(new Stock("AAPL", 150.0));
+        portfolio.addStock(new Stock("AAPL", 150.0)); // 5 shares
+
+        portfolio.addStock(new Stock("GOOGL", 200.0));
+        portfolio.addStock(new Stock("GOOGL", 200.0));
+        portfolio.addStock(new Stock("GOOGL", 200.0));
+        portfolio.addStock(new Stock("GOOGL", 200.0));
+        portfolio.addStock(new Stock("GOOGL", 200.0));
+        portfolio.addStock(new Stock("GOOGL", 200.0));
+        portfolio.addStock(new Stock("GOOGL", 200.0));
+        portfolio.addStock(new Stock("GOOGL", 200.0));
+        portfolio.addStock(new Stock("GOOGL", 200.0));
+        portfolio.addStock(new Stock("GOOGL", 200.0)); // 10 shares
+
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0));
+        portfolio.addStock(new Stock("TSLA", 300.0)); // 15 shares
+
+        // Save stock current prices in the mock stock database
+        stockDataAccess.saveStock(new Stock("TSLA", 310.0));
+        stockDataAccess.saveStock(new Stock("GOOGL", 210.0));
+        stockDataAccess.saveStock(new Stock("AAPL", 160.0));
     }
 
+    /**
+     * Tests the calculation of the total profit/loss for all stocks in the portfolio.
+     * Verifies that the expected total matches the calculated total.
+     */
     @Test
-    void calculateTotalProfitLossSuccessTest() {
-        // Arrange: Input data for user
-        ProfitLossInputData inputData = new ProfitLossInputData("user123");
+    void executeTotalProfitLossTest() {
+        // Arrange/inject mock current prices
+        Map<String, Double> mockCurrentPrices = getMockCurrentPrices();
+        dataAccess.setMockStockPrices(mockCurrentPrices);
 
-        // Fetch mock current stock prices
-        Map<String, Double> stockPrices = getMockCurrentPrices();
+        // Act
+        profitLossInteractor.execute();
 
-        // Act: Call the interactor method
-        profitLossInteractor.calculateTotalProfitLoss(inputData, stockPrices);
+        // Expected total profit/loss calculation
+        double expectedTotalProfitLoss =
+                (160.0 - 150.0) * 5 +  // AAPL
+                        (210.0 - 200.0) * 10 + // GOOGL
+                        (310.0 - 300.0) * 15;  // TSLA
 
-        // Expected total profit/loss
-        double expectedProfitLoss =
-                (160.0 - 150.0) * 5 +  // AAPL: (current price - cost price) * quantity
-                        (210.0 - 200.0) * 10 + // GOOGL: (current price - cost price) * quantity
-                        (310.0 - 300.0) * 15;  // TSLA: (current price - cost price) * quantity
-
-        // Assert: Verify the results
+        // Assert
         assertFalse(presenter.useCaseFailed);
-        assertEquals(expectedProfitLoss, presenter.totalProfitLoss, 0.01);
+        assertEquals(expectedTotalProfitLoss, presenter.totalProfitLoss, 0.01);
     }
 
+    /**
+     * Tests the calculation of profit/loss for each individual stock in the portfolio.
+     * Verifies that the expected profit/loss for each stock matches the calculated values.
+     */
     @Test
-    void calculateStockProfitLossSuccessTest() {
-        // Arrange: Input data for user
-        ProfitLossInputData inputData = new ProfitLossInputData("user123");
+    void executeEachStockProfitLossTest() {
+        // Arrange/inject mock current prices
+        Map<String, Double> mockCurrentPrices = getMockCurrentPrices();
+        dataAccess.setMockStockPrices(mockCurrentPrices); // Directly inject mock prices
 
-        // Mock current price for the specific stock
-        double currentPrice = 160.0; // Current price of AAPL
+        // Act
+        profitLossInteractor.execute();
 
-        // Act: Call the interactor method
-        profitLossInteractor.calculateStockProfitLoss(inputData, "AAPL", currentPrice);
+        // Expected per-stock profit/loss calculation
+        Map<String, Double> expectedStockProfitLosses = Map.of(
+                "AAPL", (160.0 - 150.0) * 5,
+                "GOOGL", (210.0 - 200.0) * 10,
+                "TSLA", (310.0 - 300.0) * 15
+        );
 
-        // Expected profit/loss for AAPL
-        double expectedProfitLoss = (160.0 - 150.0) * 5; // (current price - cost price) * quantity
-
-        // Assert: Verify the results
+        // Assert
         assertFalse(presenter.useCaseFailed);
-        assertEquals(expectedProfitLoss, presenter.stockProfitLoss, 0.01);
-        assertEquals("AAPL", presenter.stockTicker);
+        assertEquals(expectedStockProfitLosses, presenter.stockProfitLosses);
     }
 
-    // Helper method to fetch mock current stock prices
+    // Mock current prices for the test
     private Map<String, Double> getMockCurrentPrices() {
         Map<String, Double> stockPrices = new HashMap<>();
         stockPrices.put("AAPL", 160.0); // Current price of AAPL
@@ -76,45 +136,26 @@ class ProfitLossInteractorTest {
 
     // Mock data access class for testing
     private static class TestProfitLossDataAccess implements ProfitLossDataAccessInterface {
+        private final User user;
+        private Map<String, Double> mockCurrentPrices = new HashMap<>();
+
+        public TestProfitLossDataAccess() {
+            this.user = new User("user123", "password");
+        }
+
         @Override
-        public Portfolio getCurrentUser(String username) {
-            User user = new User(username, "password"); // Create a User object
-            Portfolio portfolio = user.getPortfolio();
+        public User getCurrentUser() {
+            return user;
+        }
 
-            portfolio.addStock(new Stock("AAPL", 150.0));
-            portfolio.addStock(new Stock("AAPL", 150.0));
-            portfolio.addStock(new Stock("AAPL", 150.0));
-            portfolio.addStock(new Stock("AAPL", 150.0));
-            portfolio.addStock(new Stock("AAPL", 150.0)); // 5 shares
+        // Set mock prices for testing
+        public void setMockStockPrices(Map<String, Double> mockCurrentPrices) {
+            this.mockCurrentPrices = mockCurrentPrices;
+        }
 
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0));
-            portfolio.addStock(new Stock("GOOGL", 200.0)); // 10 shares
-
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0));
-            portfolio.addStock(new Stock("TSLA", 300.0)); // 15 shares
-
-            return portfolio;
+        // Provide mock prices during execution
+        public Map<String, Double> getMockStockPrices() {
+            return this.mockCurrentPrices;
         }
     }
 
@@ -122,18 +163,18 @@ class ProfitLossInteractorTest {
     private static class TestProfitLossOutputBoundary implements ProfitLossOutputBoundary {
         boolean useCaseFailed = false;
         double totalProfitLoss = 0.0;
-        double stockProfitLoss = 0.0;
-        String stockTicker = null;
+        Map<String, Double> stockProfitLosses = new HashMap<>();
 
         @Override
-        public void presentTotalProfitLoss(ProfitLossOutputData outputData) {
-            this.totalProfitLoss = outputData.getProfitLoss();
+        public void presentCombinedProfitLoss(ProfitLossOutputData outputData) {
+            this.totalProfitLoss = outputData.getTotalProfitLoss();
+            this.stockProfitLosses = outputData.getStockProfitLosses();
         }
 
         @Override
-        public void presentStockProfitLoss(ProfitLossOutputData outputData, String tickerSymbol) {
-            this.stockProfitLoss = outputData.getProfitLoss();
-            this.stockTicker = tickerSymbol;
+        public void success(ProfitLossOutputData outputData) {
+            this.totalProfitLoss = outputData.getTotalProfitLoss();
+            this.stockProfitLosses = outputData.getStockProfitLosses();
         }
     }
 }

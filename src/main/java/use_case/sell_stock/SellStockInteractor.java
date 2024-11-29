@@ -86,7 +86,7 @@ public class SellStockInteractor implements SellStockInputBoundary {
             // Update UI by calling the view owned stock use case and profit loss use case after
             // selling shares
 
-            viewOwnedStockInteractor.execute(new ListStocksInputData(user.getName()));
+            //viewOwnedStockInteractor.execute(new ListStocksInputData(user.getName()));
             // profitLossInteractor.execute();
 
         } else {

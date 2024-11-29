@@ -1,143 +1,133 @@
 package use_case.buy_stock;
 
-import data_access.DBStockDataAccessObject;
 import data_access.InMemoryStockDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
+import entity.Portfolio;
 import entity.Stock;
 import entity.User;
 import entity.UserFactory;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import use_case.find_stock.FindStockDataAccessInterface;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+import java.util.List;
 
-class BuyStockInteractorTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
-    private InMemoryStockDataAccessObject stockRepository;
-    private InMemoryUserDataAccessObject userRepository;
-    private BuyStockOutputBoundary successPresenter;
+public class BuyStockInteractorTest {
+    User testUser;
+    BuyStockUserDataAccessInterface database;
+    // FindStockDataAccessInterface findStockDatabase;
+    InMemoryStockDataAccessObject stockDatabase;
+    private InMemoryUserDataAccessObject userDatabase;
 
     @BeforeEach
-    void setUp() {
-        // Initialize repositories
-        stockRepository = new InMemoryStockDataAccessObject();
-        userRepository = new InMemoryUserDataAccessObject();
+    public void setUp() throws Exception {
+        // Setting up a user and database
+        testUser = new User("Name", "Password");
 
-        // Initialize success presenter
-        successPresenter = new BuyStockOutputBoundary() {
+        database = new BuyStockUserDataAccessInterface() {
+            private User user;
+
             @Override
-            public void prepareSuccessView(BuyStockOutputData outputData) {
-                assertNotNull(outputData);
-                assertEquals(950.0, outputData.getRemainingBalance(), 0.01); // After buying 5 shares of AAPL
-                assertEquals("AAPL", outputData.getTickerSymbol());
-                assertEquals(5, outputData.getNumberOfShares());
+            public User get(String username) {
+                return null;
             }
+
+            @Override
+            public void saveUserInfo(User user) {
+                this.user = user;
+            }
+
+            @Override
+            public User getCurrentUser() {
+                return user;
+            }
+        };
+
+        database.saveUserInfo(testUser);
+    }
+
+    @Test
+    public void tickerDoesNotExist() {
+        BuyStockInputData buyStockInputData = new BuyStockInputData("testUser", "Test", 3);
+
+        BuyStockOutputBoundary testPresenter = new BuyStockOutputBoundary() {
+            @Override
+            public void prepareSuccessView(BuyStockOutputData outputData) {fail("Use case success is unexpected.");}
 
             @Override
             public void prepareFailView(String errorMessage) {
-                fail("Unexpected failure: " + errorMessage);
+                assertEquals("This ticker does not exist.", errorMessage);
+
             }
         };
 
-        // Initialize failure presenter
-        failPresenter = new BuyStockOutputBoundary() {
+        // Initializing the interactor for executing the use case
+        BuyStockInteractor buyStockInteractor = new BuyStockInteractor(testPresenter, database, stockDatabase);
+        buyStockInteractor.execute(buyStockInputData);
+    }
+
+    @Test
+    public void notEnoughBalance() {
+
+        BuyStockInputData buyStockInputData = new BuyStockInputData("testUser", "IBM", 3);
+
+        Stock stock = new Stock("IBM", 100.0);  // Stock price of 100
+        UserFactory userFactory = new UserFactory();
+        User user = userFactory.create("testUser", "654321");
+        user.setBalance(10000.0);  // User has insufficient balance for 15 shares
+        userDatabase.save(user);
+        stockDatabase.saveStock(stock);
+
+        // Presenter for testing insufficient balance
+        BuyStockOutputBoundary testPresenter = new BuyStockOutputBoundary() {
+
             @Override
-            public void prepareSuccessView(BuyStockOutputData outputData) {
-                fail("Unexpected success: " + outputData.getTickerSymbol());
-            }
+            public void prepareSuccessView(BuyStockOutputData outputData) {fail("Use case success is unexpected.");}
 
             @Override
             public void prepareFailView(String errorMessage) {
-                assertNotNull(errorMessage);
+                assertEquals("The balance is not sufficient.", errorMessage);
+
             }
         };
+
+        // Initializing the interactor for executing the use case
+        BuyStockInteractor buyStockInteractor = new BuyStockInteractor(testPresenter, database, stockDatabase);
+        buyStockInteractor.execute(buyStockInputData);
     }
 
     @Test
-    void successTest() {
-        // Prepare input data
-        BuyStockInputData inputData = new BuyStockInputData("testUser", "AAPL", 5);
-        Stock stock = new Stock("AAPL", 100.0);  // Stock price of 100
-        UserFactory userFactory = new UserFactory();
-        User user = userFactory.create("testUser", "password");
-        user.setBalance(1000.0);  // User has enough balance
-        userRepository.save(user);
-        stockRepository.saveStock(stock);
-
-        // Interactor for executing the use case
-        BuyStockInputBoundary interactor = new BuyStockInteractor(successPresenter, (BuyStockUserDataAccessInterface)userRepository, stockRepository);
-        interactor.execute(inputData);
-    }
-
-    @Test
-    void insufficientBalanceTest() {
-        // Prepare input data
-        BuyStockInputData inputData = new BuyStockInputData("testUser", "AAPL", 15);
-        Stock stock = new Stock("AAPL", 100.0);  // Stock price of 100
-        UserFactory userFactory = new UserFactory();
-        User user = userFactory.create("testUser", "password");
-        user.setBalance(1000.0);  // User has insufficient balance for 15 shares
-        userRepository.save(user);
-        stockRepository.saveStock(stock);
-
-        // Failure presenter for testing insufficient balance
-        BuyStockOutputBoundary failPresenter = new BuyStockOutputBoundary() {
-            @Override
-            public void prepareSuccessView(BuyStockOutputData outputData) {
-                fail("Unexpected success: The user should not have enough balance.");
-            }
-
-        };
-
-        // Interactor for executing the use case
-        BuyStockInputBoundary interactor = new BuyStockInteractor(failPresenter, (BuyStockUserDataAccessInterface)userRepository, stockRepository);
-        interactor.execute(inputData);
-    }
-
-    @Test
-    void stockDoesNotExistTest() {
-        // Prepare input data
-        BuyStockInputData inputData = new BuyStockInputData("testUser", "XYZ", 5);  // XYZ is an invalid stock ticker
-        Stock stock = new Stock("AAPL", 100.0);  // Only AAPL exists
-        UserFactory userFactory = new UserFactory();
-        User user = userFactory.create("testUser", "password");
-        user.setBalance(1000.0);  // User has enough balance
-        userRepository.save(user);
-        stockRepository.saveStock(stock);
-
-        // Failure presenter for testing non-existing stock ticker
-        BuyStockOutputBoundary failPresenter = new BuyStockOutputBoundary() {
-            @Override
-            public void prepareSuccessView(BuyStockOutputData outputData) {
-                fail("Unexpected success: Stock does not exist.");
-            }
-
-        };
-
-        // Interactor for executing the use case
-        BuyStockInputBoundary interactor = new BuyStockInteractor(failPresenter, (BuyStockUserDataAccessInterface)userRepository, stockRepository);
-        interactor.execute(inputData);
-    }
-
-    @Test
-    void userDoesNotExistTest() {
-        // Prepare input data
-        BuyStockInputData inputData = new BuyStockInputData("nonExistentUser", "AAPL", 5);  // Non-existent user
-        Stock stock = new Stock("AAPL", 100.0);
-        stockRepository.saveStock(stock);
+     public void notExistingUser() {
+        // Preparing input data
+        BuyStockInputData buyStockInputData = new BuyStockInputData("nonExistentUser", "IBM", 5);  // Non-existent user
+        Stock stock = new Stock("IBM", 100.0);
+        stockDatabase.saveStock(stock);
 
         // Failure presenter for testing non-existing user
-        BuyStockOutputBoundary failPresenter = new BuyStockOutputBoundary() {
+        BuyStockOutputBoundary testPresenter = new BuyStockOutputBoundary() {
+
             @Override
             public void prepareSuccessView(BuyStockOutputData outputData) {
-                fail("Unexpected success: User does not exist.");
+                fail("Use case success is unexpected.");
             }
 
+            @Override
+            public void prepareFailView(String errorMessage) {
+                assertEquals("This user does not exist.", errorMessage);
+
+            }
         };
 
-        // Interactor for executing the use case
-        BuyStockInputBoundary interactor = new BuyStockInteractor(failPresenter, (BuyStockUserDataAccessInterface)userRepository, stockRepository);
-        interactor.execute(inputData);
+        //  Initializing the interactor for executing the use case
+        BuyStockInteractor buyStockInteractor = new BuyStockInteractor(testPresenter, database, stockDatabase);
+        buyStockInteractor.execute(buyStockInputData);
     }
 }
+
+

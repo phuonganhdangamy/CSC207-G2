@@ -8,7 +8,9 @@ import java.util.Map;
  */
 public class LoggedInState {
     // set the loggedInState after the user logs in
+    // Basic user information
     private String username = "";
+    private double balance;
     private String tickerField;
     private String numShares;
     private double totalPurchasePrice;
@@ -16,7 +18,10 @@ public class LoggedInState {
     private double totalProfitLoss;
     private String error;
 
-    private double balance;
+    // Refactored stock data
+    private Map<String, Integer> stockOwnership; // Ticker -> Number of Shares
+    private Map<String, Double> stockProfitLoss; // Ticker -> Profit/Loss
+
     // First index is number of shares; second index is profit/loss
     private Map<String, List<Double>> stockTable;
 
@@ -24,14 +29,16 @@ public class LoggedInState {
     public LoggedInState() {
     }
 
-    public Map<String, List<Double>> getStockTable() {
-        return stockTable;
+    // Getters and Setters for Username
+    public String getUsername() {
+        return username;
     }
 
-    public void setStockTable(Map<String, List<Double>> stockTable) {
-        this.stockTable = stockTable;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
+    // Getters and Setters for Balance
     public double getBalance() {
         return balance;
     }
@@ -40,28 +47,40 @@ public class LoggedInState {
         this.balance = balance;
     }
 
-    public double getTotalProfitLoss() {
-        return totalProfitLoss;
+    // Getters and Setters for Stock Ownership (Refactored)
+    public Map<String, Integer> getStockOwnership() {
+        return stockOwnership;
     }
 
-    public void setTotalProfitLoss(double totalProfitLoss) {
-        this.totalProfitLoss = totalProfitLoss;
+    public void setStockOwnership(Map<String, Integer> stockOwnership) {
+        this.stockOwnership = stockOwnership;
     }
 
-    public double getTotalCurrentPrice() {
-        return totalCurrentPrice;
+    // Getters and Setters for Stock Profit/Loss (Refactored)
+    public Map<String, Double> getStockProfitLoss() {
+        return stockProfitLoss;
     }
 
-    public void setTotalCurrentPrice(double totalCurrentPrice) {
-        this.totalCurrentPrice = totalCurrentPrice;
+    public void setStockProfitLoss(Map<String, Double> stockProfitLoss) {
+        this.stockProfitLoss = stockProfitLoss;
     }
 
-    public double getTotalPurchasePrice() {
-        return totalPurchasePrice;
+    // Getters and Setters for Stock Table (Legacy)
+    public Map<String, List<Double>> getStockTable() {
+        return stockTable;
     }
 
-    public void setTotalPurchasePrice(double totalPurchasePrice) {
-        this.totalPurchasePrice = totalPurchasePrice;
+    public void setStockTable(Map<String, List<Double>> stockTable) {
+        this.stockTable = stockTable;
+    }
+
+    // Getters and Setters for Ticker Field and Number of Shares
+    public String getTickerField() {
+        return tickerField;
+    }
+
+    public void setTickerField(String tickerField) {
+        this.tickerField = tickerField;
     }
 
     public String getNumShares() {
@@ -72,27 +91,39 @@ public class LoggedInState {
         this.numShares = numShares;
     }
 
-    public String getTickerField() {
-        return tickerField;
+    // Getters and Setters for Total Purchase Price
+    public double getTotalPurchasePrice() {
+        return totalPurchasePrice;
     }
 
-    public void setTickerField(String tickerField) {
-        this.tickerField = tickerField;
+    public void setTotalPurchasePrice(double totalPurchasePrice) {
+        this.totalPurchasePrice = totalPurchasePrice;
     }
 
-    public String getUsername() {
-        return username;
+    // Getters and Setters for Total Current Price
+    public double getTotalCurrentPrice() {
+        return totalCurrentPrice;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setTotalCurrentPrice(double totalCurrentPrice) {
+        this.totalCurrentPrice = totalCurrentPrice;
+    }
+
+    // Getters and Setters for Total Profit/Loss
+    public double getTotalProfitLoss() {
+        return totalProfitLoss;
+    }
+
+    public void setTotalProfitLoss(double totalProfitLoss) {
+        this.totalProfitLoss = totalProfitLoss;
+    }
+
+    // Getters and Setters for Error
+    public String getError() {
+        return error;
     }
 
     public void setError(String error) {
         this.error = error;
-    }
-
-    public String getError() {
-        return error;
     }
 }

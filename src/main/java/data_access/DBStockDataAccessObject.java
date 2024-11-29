@@ -2,6 +2,7 @@ package data_access;
 
 import org.json.JSONObject;
 import use_case.find_stock.FindStockDataAccessInterface;
+import use_case.profit_loss.ProfitLossDataAccessInterface;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
