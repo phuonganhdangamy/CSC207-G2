@@ -13,7 +13,7 @@ class LoginInteractorTest {
 
     @Test
     void successTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
+        LoginInputData inputData = new LoginInputData("anhdang", "anhdang");
         LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(), new UserFactory());
 
         // For the success test, we need to add Paul to the data access repository before we log in.
@@ -25,7 +25,7 @@ class LoginInteractorTest {
         LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
-                assertEquals("Paul", user.getUsername());
+                assertEquals("anhdang", user.getUsername());
             }
 
             @Override
@@ -78,7 +78,7 @@ class LoginInteractorTest {
 
     @Test
     void successUserLoggedInTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
+        LoginInputData inputData = new LoginInputData("anhdang", "anhdang");
         LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(), new UserFactory());
 
         // For the success test, we need to add Paul to the data access repository before we log in.
@@ -90,7 +90,7 @@ class LoginInteractorTest {
         LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
-                assertEquals("Paul", userRepository.getCurrentUsername());
+                assertEquals("anhdang", userRepository.getCurrentUsername());
             }
 
             @Override
@@ -146,7 +146,7 @@ class LoginInteractorTest {
 
     @Test
     void failurePasswordMismatchTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "wrong");
+        LoginInputData inputData = new LoginInputData("anhdang", "wrong");
         LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(), new UserFactory());
 
         // For this failure test, we need to add Paul to the data access repository before we log in, and
@@ -165,7 +165,7 @@ class LoginInteractorTest {
 
             @Override
             public void prepareFailView(String error) {
-                assertEquals("Incorrect password for \"Paul\".", error);
+                assertEquals("Incorrect password for \"anhdang\".", error);
             }
 
             @Override
