@@ -3,6 +3,9 @@ package use_case.login;
 import entity.Stock;
 import entity.User;
 import use_case.UserDataAccessInterface;
+import use_case.list_stocks.ListStocksInputBoundary;
+import use_case.list_stocks.ListStocksInputData;
+import use_case.profit_loss.ProfitLossInputBoundary;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -16,12 +19,24 @@ public class LoginInteractor implements LoginInputBoundary {
     private final LoginOutputBoundary loginPresenter;
     private LoginUserDataAccessInterface userDataAccess;
 
+    // Need access to the view stock use case interactor and profit loss interactor to update UI
+    private ListStocksInputBoundary viewOwnedStockInteractor;
+    private ProfitLossInputBoundary profitLossInteractor;
+
+
     //Interactor requires access to the database and needs to pass the result to the presenter.
     public LoginInteractor(LoginUserDataAccessInterface userDataAccessInterface, LoginOutputBoundary outputBoundary) {
         this.userDataAccess = userDataAccessInterface;
         this.loginPresenter = outputBoundary;
     }
 
+    public void setProfitLossInteractor(ProfitLossInputBoundary profitLossInteractor) {
+        this.profitLossInteractor = profitLossInteractor;
+    }
+
+    public void setViewOwnedStockInteractor(ListStocksInputBoundary viewOwnedStockInteractor) {
+        this.viewOwnedStockInteractor = viewOwnedStockInteractor;
+    }
     @Override
     public void execute(LoginInputData loginInputData) {
         // Get the username and password entered by the user
@@ -41,23 +56,12 @@ public class LoginInteractor implements LoginInputBoundary {
             else {
                 userDataAccess.setCurrentUsername(username);
                 userDataAccess.setCurrentUser(userFound);
-                // Transform the portfolio data from the entity class to match what is required of the
-                // LoginOutputData class. Portfolio data needs to be converted to a map where each key is a
-                // ticker and the value is the number of shares owned
-                List<Stock> portfolio = userFound.getPortfolio().getStocks();
-                Map<String, Integer> portfolioData = new HashMap<>();
-                for (Stock stock : portfolio) {
-                    String ticker = stock.getTickerSymbol();
-                    if(portfolioData.containsKey(ticker)){
-                        Integer oldValue = portfolioData.get(ticker);
-                        portfolioData.replace(ticker, oldValue+1);
-                    }
-                    else{
-                        portfolioData.put(ticker, 1);
-                    }
-                }
+
+                viewOwnedStockInteractor.execute(new ListStocksInputData(username));
+               // profitLossInteractor.execute();
+
                 //If the password is correct, indicate success
-                LoginOutputData output = new LoginOutputData(username, userFound.getBalance(), portfolioData);
+                LoginOutputData output = new LoginOutputData(username, userFound.getBalance());
                 loginPresenter.prepareSuccessView(output);
 
             }

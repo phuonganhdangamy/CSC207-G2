@@ -24,6 +24,7 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
 
     public BuyStockInteractor(BuyStockOutputBoundary buyStockPresenter, BuyStockUserDataAccessInterface database,
                               FindStockDataAccessInterface stockDatabase) {
+
         this.buyStockPresenter = buyStockPresenter;
         this.database = database;
         this.stockDatabase = stockDatabase;
@@ -74,7 +75,9 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
 
             // Update UI
             viewOwnedStockInteractor.execute(new ListStocksInputData(user.getName()));
+
            // profitLossInteractor.execute();
+
 
             // Prepare success view with updated data
             buyStockPresenter.prepareSuccessView(new BuyStockOutputData(user.getBalance(), ticker, numberOfShares));
