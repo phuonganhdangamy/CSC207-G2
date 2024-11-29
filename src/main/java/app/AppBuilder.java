@@ -80,8 +80,6 @@ public class AppBuilder {
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(stockFactory, userFactory);
     private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
 
-    // New field for LoggedInState
-    private final LoggedInState loggedInState = new LoggedInState();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -98,9 +96,8 @@ public class AppBuilder {
     private BuySellStockView buySellStockView;
 
     // Updated initialization of listStocksOutputBoundary
-    private ListStocksOutputBoundary listStocksOutputBoundary = new ViewOwnedStockPresenter(loggedInViewModel);
-    private ListStocksInputBoundary listStocksInteractor = new ListStocksInteractor(listStocksOutputBoundary, userDataAccessObject);
-
+    private ListStocksOutputBoundary listStocksOutputBoundary;
+    private ListStocksInputBoundary listStocksInteractor;
 
     private ProfitLossOutputBoundary profitLossPresenter;
     private ProfitLossInputBoundary profitLossInteractor;
@@ -272,6 +269,12 @@ public class AppBuilder {
         final ProfitLossController profitLossController = new ProfitLossController(profitLossInteractor);
 
         loggedInView.setProfitLossController(profitLossController);
+
+        return this;
+    }
+    public AppBuilder addViewStocksUseCase() {
+        listStocksOutputBoundary = new ViewOwnedStockPresenter(loggedInViewModel);
+        listStocksInteractor = new ListStocksInteractor(listStocksOutputBoundary, userDataAccessObject);
 
         return this;
     }
