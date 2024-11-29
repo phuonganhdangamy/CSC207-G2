@@ -7,9 +7,15 @@ import entity.User;
 import org.junit.Before;
 import org.junit.Test;
 import use_case.find_stock.FindStockDataAccessInterface;
+import use_case.list_stocks.ListStocksInputBoundary;
+import use_case.list_stocks.ListStocksInputData;
+import use_case.profit_loss.ProfitLossInputBoundary;
+import use_case.profit_loss.ProfitLossInputData;
+import use_case.profit_loss.ProfitLossInteractor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -119,6 +125,23 @@ public class SellStockInteractorTest {
             public void prepareFailView(String errorMessage) {fail("Use case failure is unexpected.");}
         };
         SellStockInteractor sellStockInteractor = new SellStockInteractor(testPresenter, database, stockDatabase);
+        sellStockInteractor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
+            @Override
+            public void execute(ListStocksInputData inputData) {
+
+            }
+        });
+        sellStockInteractor.setProfitLossInteractor(new ProfitLossInputBoundary() {
+            @Override
+            public void execute() {
+
+            }
+
+            @Override
+            public void calculateStockProfitLoss(ProfitLossInputData inputData, String tickerSymbol, double currentPrice) {
+
+            }
+        });
         sellStockInteractor.execute(sellStockInputData);
     }
 }

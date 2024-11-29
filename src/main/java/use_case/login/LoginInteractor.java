@@ -58,7 +58,7 @@ public class LoginInteractor implements LoginInputBoundary {
                 userDataAccess.setCurrentUser(userFound);
 
                 viewOwnedStockInteractor.execute(new ListStocksInputData(username));
-               // profitLossInteractor.execute();
+                profitLossInteractor.execute();
 
                 //If the password is correct, indicate success
                 LoginOutputData output = new LoginOutputData(username, userFound.getBalance());
