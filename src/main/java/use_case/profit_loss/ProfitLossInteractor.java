@@ -52,6 +52,6 @@ public class ProfitLossInteractor implements ProfitLossInputBoundary {
         ProfitLossOutputData outputData = new ProfitLossOutputData(totalProfitLoss, stockProfitLosses);
 
         // Send the unified result to the presenter
-        outputBoundary.presentCombinedProfitLoss(outputData);
+        outputBoundary.success(outputData);
     }
 }
