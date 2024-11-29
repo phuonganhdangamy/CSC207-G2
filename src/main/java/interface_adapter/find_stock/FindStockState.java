@@ -1,5 +1,8 @@
 package interface_adapter.find_stock;
 
+/**
+ * The state for the Find Stock View Model.
+ */
 public class FindStockState {
     private String message;
     private String tickerSymbol = "";
@@ -12,21 +15,35 @@ public class FindStockState {
         this.success = success;
     }
 
-    public String getMessage() {return message;}
+    public String getMessage() {
+        return message;
+    }
 
-    public void setMessage(String message) {this.message = message;}
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-    public String getTickerSymbol() {return tickerSymbol;}
+    public String getTickerSymbol() {
+        return tickerSymbol;
+    }
 
     public String getSuccess() {
         return success;
     }
 
-    public void setTickerSymbol(String tickerSymbol) {this.tickerSymbol = tickerSymbol;}
+    public void setTickerSymbol(String tickerSymbol) {
+        this.tickerSymbol = tickerSymbol;
+    }
 
-    public void setSuccess(String success) {this.success = success;}
+    public void setSuccess(String success) {
+        this.success = success;
+    }
 
-    public String getError() {return error;}
+    public String getError() {
+        return error;
+    }
 
-    public void setError(String error) {this.error = error;}
+    public void setError(String error) {
+        this.error = error;
+    }
 }

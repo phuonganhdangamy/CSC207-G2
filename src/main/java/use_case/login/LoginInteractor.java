@@ -40,11 +40,11 @@ public class LoginInteractor implements LoginInputBoundary {
     @Override
     public void execute(LoginInputData loginInputData) {
         // Get the username and password entered by the user
-        String username = loginInputData.getUsername();
-        String password = loginInputData.getPassword();
+        final String username = loginInputData.getUsername();
+        final String password = loginInputData.getPassword();
 
         // Check if the username exists in the database
-        if (!userDataAccess.existsByName(username) || username.equals("") || password.equals("")) {
+        if (!userDataAccess.existsByName(username) || "".equals(username) || password.equals("")) {
             loginPresenter.prepareFailView( username + ": Account does not exist.");
         }
         else {

@@ -7,6 +7,7 @@ import java.util.Map;
  * The State information representing the logged-in user.
  */
 public class LoggedInState {
+    // set the loggedInState after the user logs in
     // Basic user information
     private String username = "";
     private double balance;
@@ -24,6 +25,7 @@ public class LoggedInState {
     // First index is number of shares; second index is profit/loss
     private Map<String, List<Double>> stockTable;
 
+    // Because of the previous copy constructor, the default constructor must be explicit.
     public LoggedInState() {
     }
 

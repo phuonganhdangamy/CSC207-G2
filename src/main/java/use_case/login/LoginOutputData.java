@@ -9,11 +9,9 @@ public class LoginOutputData {
     private String username;
     private double balance;
 
-
     public LoginOutputData(String username, double balance) {
         this.username = username;
         this.balance = balance;
-
     }
 
     public String getUsername() {

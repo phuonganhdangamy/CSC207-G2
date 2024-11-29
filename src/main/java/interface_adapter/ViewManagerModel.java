@@ -9,13 +9,13 @@ import java.util.Map;
  */
 public class ViewManagerModel extends ViewModel<String> {
 
+    private final Map<String, ViewModel<?>> viewModels = new HashMap<>();
+    private ViewModel<?> activeViewModel;
+
     public ViewManagerModel() {
         super("view manager");
         this.setState("");
     }
-
-    private final Map<String, ViewModel<?>> viewModels = new HashMap<>();
-    private ViewModel<?> activeViewModel;
 
     /**
      * Adds a ViewModel to the manager.
@@ -36,7 +36,8 @@ public class ViewManagerModel extends ViewModel<String> {
         if (viewModels.containsKey(name)) {
             activeViewModel = viewModels.get(name);
             System.out.println("Switched to ViewModel: " + name);
-        } else {
+        }
+        else {
             System.out.println("ViewModel not found: " + name);
         }
     }
@@ -49,5 +50,4 @@ public class ViewManagerModel extends ViewModel<String> {
     public ViewModel getActiveViewModel() {
         return activeViewModel;
     }
-
 }

@@ -1,8 +1,11 @@
 package use_case;
+
 import entity.User;
 
+/**
+ * Interface defining the contract for user-related data access operations.
+ */
 public interface UserDataAccessInterface {
-
 
     /**
      * Checks if the given username exists.
@@ -16,6 +19,7 @@ public interface UserDataAccessInterface {
      * Saves the user.
      *
      * @param user the user to save
+     * @throws DataAccessException if an error occurs during the save operation
      */
     void save(User user) throws DataAccessException;
 
@@ -32,8 +36,13 @@ public interface UserDataAccessInterface {
      * @param username the username to look up
      * @return the user object with the given username
      */
-
     User get(String username);
 
+    /**
+     * Logs out the user with the specified username.
+     *
+     * @param username the username of the user to log out
+     * @return true if the user was successfully logged out; false otherwise
+     */
     boolean logoutUser(String username);
 }

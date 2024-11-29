@@ -10,5 +10,7 @@ public class FindStockInputData {
         this.tickerSymbol = tickerSymbol;
     }
 
-    public String getTickerSymbol() {return tickerSymbol;}
+    public String getTickerSymbol() {
+        return tickerSymbol;
+    }
 }
