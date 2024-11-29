@@ -265,7 +265,8 @@ public class AppBuilder {
      */
     public AppBuilder addProfitLossUseCase() {
         profitLossPresenter = new ProfitLossPresenter(loggedInViewModel, viewManagerModel);
-        profitLossInteractor = new ProfitLossInteractor(userDataAccessObject, profitLossPresenter);
+        final FindStockDataAccessInterface stockDatabase = new DBStockDataAccessObject();
+        profitLossInteractor = new ProfitLossInteractor(userDataAccessObject, profitLossPresenter, stockDatabase);
         final ProfitLossController profitLossController = new ProfitLossController(profitLossInteractor);
 
         loggedInView.setProfitLossController(profitLossController);

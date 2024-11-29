@@ -1,5 +1,6 @@
 package use_case.profit_loss;
 
+import data_access.InMemoryStockDataAccessObject;
 import entity.Portfolio;
 import entity.Stock;
 import entity.User;
@@ -15,12 +16,14 @@ class ProfitLossInteractorTest {
     private TestProfitLossDataAccess dataAccess;
     private TestProfitLossOutputBoundary presenter;
     private ProfitLossInteractor profitLossInteractor;
+    private InMemoryStockDataAccessObject stockDataAccess;
 
     @BeforeEach
     void setUp() {
         dataAccess = new TestProfitLossDataAccess();
         presenter = new TestProfitLossOutputBoundary();
-        profitLossInteractor = new ProfitLossInteractor(dataAccess, presenter);
+        stockDataAccess = new InMemoryStockDataAccessObject();
+        profitLossInteractor = new ProfitLossInteractor(dataAccess, presenter, stockDataAccess);
 
         // Set up user portfolio
         User user = dataAccess.getCurrentUser();
@@ -58,6 +61,10 @@ class ProfitLossInteractorTest {
         portfolio.addStock(new Stock("TSLA", 300.0));
         portfolio.addStock(new Stock("TSLA", 300.0));
         portfolio.addStock(new Stock("TSLA", 300.0)); // 15 shares
+
+        stockDataAccess.saveStock(new Stock("TSLA", 310.0));
+        stockDataAccess.saveStock(new Stock("GOOGL", 210.0));
+        stockDataAccess.saveStock(new Stock("AAPL", 160.0));
     }
 
     @Test
