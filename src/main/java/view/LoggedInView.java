@@ -86,9 +86,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         tickerErrorLabel.setForeground(Color.RED);
         tickerErrorLabel.setVisible(false);
 
-        //      transactionPanel.add(tickerPanel);
         transactionPanel.add(tickerErrorLabel);
-//        transactionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         findStockPanel = new JPanel(new BorderLayout());
         findStockPanel.add(findStockView, BorderLayout.CENTER);
@@ -102,37 +100,18 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         transactionPanel.add(buySellStockPanel, BorderLayout.CENTER);
 
 
-        // sharesPanel.add(sharesLabel, BorderLayout.NORTH);
-        // sharesPanel.add(sharesInputField, BorderLayout.CENTER);
-
-
-
-        //   transactionPanel.add(sharesPanel);
-        //  transactionPanel.add(sharesErrorLabel);
         transactionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // Buttons
 
 
         Dimension buttonSize = new Dimension(150, 60);
-//        buyButton.setPreferredSize(buttonSize);
-//        sellButton.setPreferredSize(buttonSize);
-//        logoutButton.setPreferredSize(buttonSize);
-//
-//        buttonPanel.add(buyButton);
-//        buttonPanel.add(sellButton);
-//        buttonPanel.add(logoutButton);
-//        transactionPanel.add(buttonPanel);
 
         // Summary
-        JLabel purchasePriceLabel = new JLabel("Total Purchase Price: XXXXX.XX");
-        JLabel currentPriceLabel = new JLabel("Total Current Price: XXXXX.XX");
         JLabel profitLossLabel = new JLabel("Total Profit/Loss: +XX.XX%");
 
         JPanel summaryPanel = new JPanel(new GridLayout(1, 3));
         summaryPanel.setBorder(BorderFactory.createTitledBorder("Summary"));
-        summaryPanel.add(purchasePriceLabel);
-        summaryPanel.add(currentPriceLabel);
         summaryPanel.add(profitLossLabel);
 
         // Adding Sections to Main Layout
