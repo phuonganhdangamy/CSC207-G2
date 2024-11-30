@@ -36,14 +36,31 @@ public class DBStockDataAccessObject implements FindStockDataAccessInterface {
      * @param tickerSymbol The ticker symbol of the stock to get the price for.
      * @return The current cost of the stock, or 0 if an error occurs or the stock data is unavailable.
      */
+    private int counter;
+
+    public String getURL(String tickerSymbol) {
+        String urlString = "";
+        if (counter < 25) {
+            String apiKey = "1CX4GCRV5S3FVJ6V"; // Your API key
+            urlString = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + tickerSymbol + "&apikey=" + apiKey;
+        } else if (counter > 50) {
+            String apiKey = "RV9GTKXWJ0WB0003"; // Your API key
+            urlString = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + tickerSymbol + "&apikey=" + apiKey;
+        } else {
+            String apiKey = "BL80U2MTPUM1P7XW"; // Your API key
+            urlString = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + tickerSymbol + "&apikey=" + apiKey;
+        }
+
+        System.out.println(urlString);
+        counter += 1;
+
+        return urlString;
+    }
 
     @Override
     public double getCost(String tickerSymbol) {
-        String apiKey = "ID8RVT9J10LA48HD"; // Your API key
-        String urlString = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + tickerSymbol + "&apikey=" + apiKey;
-
         try {
-            URL url = new URL(urlString);
+            URL url = new URL(getURL(tickerSymbol));
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
