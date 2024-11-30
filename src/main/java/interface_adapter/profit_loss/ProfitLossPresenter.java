@@ -47,32 +47,6 @@ public class ProfitLossPresenter implements ProfitLossOutputBoundary {
     }
 
     /**
-     * Default implementation to display the total profit/loss.
-     *
-     * @param outputData the profit/loss calculation results.
-     */
-    @Override
-    public void presentTotalProfitLoss(ProfitLossOutputData outputData) {
-        System.out.println("Total Profit/Loss: " + outputData.getTotalProfitLoss());
-    }
-
-    /**
-     * Default implementation to display stock-specific profit/loss.
-     *
-     * @param outputData    the profit/loss calculation results.
-     * @param tickerSymbol  the ticker symbol of the specific stock.
-     */
-    @Override
-    public void presentStockProfitLoss(ProfitLossOutputData outputData, String tickerSymbol) {
-        Double profitLoss = outputData.getStockProfitLosses().get(tickerSymbol);
-        if (profitLoss == null) {
-            System.out.println("No profit/loss data for stock: " + tickerSymbol);
-        } else {
-            System.out.println("Profit/Loss for " + tickerSymbol + ": " + profitLoss);
-        }
-    }
-
-    /**
      * Helper method to update the LoggedInViewModel with profit/loss data.
      *
      * @param outputData the profit/loss calculation results.

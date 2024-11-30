@@ -60,7 +60,6 @@ public class SellStockInteractor implements SellStockInputBoundary {
 
         if (!stockDatabase.isStockExist(ticker)) {
             sellStockPresenter.prepareFailView("This ticker does not exist.");
-            return;
         }
 
 

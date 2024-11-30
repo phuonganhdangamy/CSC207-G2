@@ -137,10 +137,6 @@ public class SellStockInteractorTest {
 
             }
 
-            @Override
-            public void calculateStockProfitLoss(ProfitLossInputData inputData, String tickerSymbol, double currentPrice) {
-
-            }
         });
         sellStockInteractor.execute(sellStockInputData);
     }
