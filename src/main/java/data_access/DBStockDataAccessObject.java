@@ -12,7 +12,30 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 
+/**
+ * The DBStockDataAccessObject class provides access to stock data from an external API, such as AlphaVantage,
+ * by retrieving the daily opening price for a given ticker symbol. It also verifies whether a stock exists
+ * based on the availability of price data.
+
+ * Responsibilities:
+ * - Retrieves the current price of a stock using the AlphaVantage API.
+ * - Checks if the stock exists by validating the price data.
+
+ * Methods:
+ * - getCost(String tickerSymbol): Retrieves the current cost (price) of the stock for the provided ticker symbol.
+ * - isStockExist(String tickerSymbol): Checks if the stock exists by verifying if the price data can be retrieved.
+ */
+
+
 public class DBStockDataAccessObject implements FindStockDataAccessInterface {
+
+    /**
+     * Retrieves the current cost (price) of the stock for the given ticker symbol by querying the
+     * AlphaVantage API.
+     *
+     * @param tickerSymbol The ticker symbol of the stock to get the price for.
+     * @return The current cost of the stock, or 0 if an error occurs or the stock data is unavailable.
+     */
 
     @Override
     public double getCost(String tickerSymbol) {
@@ -75,6 +98,13 @@ public class DBStockDataAccessObject implements FindStockDataAccessInterface {
         }
         return 0; // Return a special value for error or no data
     }
+
+    /**
+     * Checks whether a stock exists by verifying if the price data can be retrieved from the API.
+     *
+     * @param tickerSymbol The ticker symbol of the stock to check.
+     * @return true if the stock exists, false otherwise.
+     */
 
     @Override
     public boolean isStockExist(String tickerSymbol) {

@@ -25,6 +25,14 @@ public class BuyStockInteractorTest {
     InMemoryStockDataAccessObject stockDatabase;
     private InMemoryUserDataAccessObject userDatabase;
 
+    /**
+     * Sets up the test environment before each test method is run.
+     * It initializes a test user, an in-memory user database, and a mock implementation
+     * of the BuyStockUserDataAccessInterface to simulate user data retrieval and saving.
+
+     * This method is annotated with @BeforeEach to ensure it runs before every test case.
+     */
+
     @BeforeEach
     public void setUp() throws Exception {
         // Setting up a user and database
@@ -52,6 +60,17 @@ public class BuyStockInteractorTest {
         database.saveUserInfo(testUser);
     }
 
+    /**
+     * Tests the scenario where the user tries to buy stock for a ticker symbol that does not exist.
+     * The test ensures that the appropriate error message "This ticker does not exist." is presented
+     * when the stock ticker is invalid or unavailable in the database.
+
+     * This test simulates a failed stock purchase where the ticker symbol is incorrect.
+
+     * Assertions:
+     * - Verifies that the error message returned is "This ticker does not exist."
+     */
+
     @Test
     public void tickerDoesNotExist() {
         BuyStockInputData buyStockInputData = new BuyStockInputData("testUser", "Test", 3);
@@ -71,6 +90,19 @@ public class BuyStockInteractorTest {
         BuyStockInteractor buyStockInteractor = new BuyStockInteractor(testPresenter, database, stockDatabase);
         buyStockInteractor.execute(buyStockInputData);
     }
+
+    /**
+     * Tests the scenario where the user does not have enough balance to buy the requested stock.
+     * In this test, a user with an initial balance is checked against a stock price for which
+     * the user cannot afford the requested quantity. The test ensures that the correct error message
+     * "The balance is not sufficient." is returned.
+
+     * This test simulates a failed stock purchase due to insufficient funds in the user's account.
+
+     * Assertions:
+     * - Verifies that the error message returned is "The balance is not sufficient."
+     */
+
 
     @Test
     public void notEnoughBalance() {
@@ -101,6 +133,17 @@ public class BuyStockInteractorTest {
         BuyStockInteractor buyStockInteractor = new BuyStockInteractor(testPresenter, database, stockDatabase);
         buyStockInteractor.execute(buyStockInputData);
     }
+
+    /**
+     * Tests the scenario where a user tries to buy stock, but the provided username does not exist in the database.
+     * The test ensures that the appropriate error message "This user does not exist." is presented
+     * when the user attempts to purchase stock without being registered.
+
+     * This test simulates a failed stock purchase due to a non-existent user.
+
+     * Assertions:
+     * - Verifies that the error message returned is "This user does not exist."
+     */
 
     @Test
      public void notExistingUser() {
