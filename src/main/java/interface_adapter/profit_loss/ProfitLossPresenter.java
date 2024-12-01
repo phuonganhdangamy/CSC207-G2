@@ -1,14 +1,16 @@
 package interface_adapter.profit_loss;
 
+import java.util.Map;
+
+import interface_adapter.LoggedInState;
 import interface_adapter.LoggedInViewModel;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.LoggedInState;
-
 import use_case.profit_loss.ProfitLossOutputBoundary;
 import use_case.profit_loss.ProfitLossOutputData;
 
-import java.util.Map;
-
+/**
+ * The Presenter for the Profit Loss Use Case.
+ */
 public class ProfitLossPresenter implements ProfitLossOutputBoundary {
     private final LoggedInViewModel loggedInViewModel;
     private final ViewManagerModel viewManagerModel;
@@ -52,10 +54,10 @@ public class ProfitLossPresenter implements ProfitLossOutputBoundary {
      * @param outputData the profit/loss calculation results.
      */
     private void updateLoggedInState(ProfitLossOutputData outputData) {
-        double totalProfitLoss = outputData.getTotalProfitLoss();
-        Map<String, Double> stockProfitLosses = outputData.getStockProfitLosses();
+        final double totalProfitLoss = outputData.getTotalProfitLoss();
+        final Map<String, Double> stockProfitLosses = outputData.getStockProfitLosses();
 
-        LoggedInState state = loggedInViewModel.getState();
+        final LoggedInState state = loggedInViewModel.getState();
         state.setTotalProfitLoss(totalProfitLoss);
         state.setStockProfitLoss(stockProfitLosses);
 

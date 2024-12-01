@@ -43,12 +43,12 @@ public class ProfitLossCalculator {
      * @throws IllegalArgumentException if the portfolio has no shares of the given stock
      */
     public double calculateStockProfitLoss(String tickerSymbol, double currentPrice) {
-        int shareCount = portfolio.getShareCount(tickerSymbol);
+        final int shareCount = portfolio.getShareCount(tickerSymbol);
         if (shareCount == 0) {
             throw new IllegalArgumentException("No shares of " + tickerSymbol + " found in the portfolio.");
         }
 
-        double totalCost = calculateEachTotalCost(tickerSymbol);
+        final double totalCost = calculateEachTotalCost(tickerSymbol);
         return currentPrice * shareCount - totalCost;
     }
 

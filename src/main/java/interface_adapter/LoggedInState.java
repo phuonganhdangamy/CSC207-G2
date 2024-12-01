@@ -19,8 +19,10 @@ public class LoggedInState {
     private String error;
 
     // Refactored stock data
-    private Map<String, Integer> stockOwnership; // Ticker -> Number of Shares
-    private Map<String, Double> stockProfitLoss; // Ticker -> Profit/Loss
+    // Ticker -> Number of Shares
+    private Map<String, Integer> stockOwnership;
+    // Ticker -> Profit/Loss
+    private Map<String, Double> stockProfitLoss;
 
     // First index is number of shares; second index is profit/loss
     private Map<String, List<Double>> stockTable;

@@ -11,6 +11,7 @@ public interface SellStockOutputBoundary {
      * @param outputData the output data
      */
     void prepareSuccessView(SellStockOutputData outputData);
+
     /**
      * Prepares the failure view for the Login Use Case.
      * @param errorMessage the explanation of the failure

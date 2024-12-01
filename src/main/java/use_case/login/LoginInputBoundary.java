@@ -16,8 +16,20 @@ public interface LoginInputBoundary {
      */
     void execute(LoginInputData loginInputData);
 
-    public void setViewOwnedStockInteractor(ListStocksInputBoundary viewOwnedStockInteractor);
-    public void setProfitLossInteractor(ProfitLossInputBoundary profitLossInteractor);
+    /**
+     * Sets the interactor responsible for viewing owned stocks after successful login.
+     * @param viewOwnedStockInteractor The interactor that handles the view owned stocks functionality.
+     */
+    void setViewOwnedStockInteractor(ListStocksInputBoundary viewOwnedStockInteractor);
 
+    /**
+     * Sets the interactor responsible for calculating the user's profit/loss after login.
+     * @param profitLossInteractor The interactor that handles the profit/loss calculation functionality.
+     */
+    void setProfitLossInteractor(ProfitLossInputBoundary profitLossInteractor);
+
+    /**
+     * Switches to the sign-up view.
+     */
     void switchToSignUpView();
 }

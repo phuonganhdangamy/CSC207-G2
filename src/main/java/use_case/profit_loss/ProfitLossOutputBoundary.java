@@ -19,14 +19,4 @@ public interface ProfitLossOutputBoundary {
      * @param outputData the profit/loss calculation results.
      */
     void success(ProfitLossOutputData outputData);
-
-    // display the results for debugging when changing code
-    default void presentTotalProfitLoss(ProfitLossOutputData outputData) {
-        throw new UnsupportedOperationException("Use presentCombinedProfitLoss instead.");
-    }
-
-    // display the results for debugging when changing code
-    default void presentStockProfitLoss(ProfitLossOutputData outputData, String tickerSymbol) {
-        throw new UnsupportedOperationException("Use presentCombinedProfitLoss instead.");
-    }
 }

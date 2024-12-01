@@ -14,8 +14,16 @@ public interface SellStockInputBoundary {
      */
     void execute(SellStockInputData inputData);
 
-    public void setProfitLossInteractor(ProfitLossInputBoundary profitLossInteractor);
+    /**
+     * Sets the interactor responsible for calculating the user's profit/loss after selling a stock.
+     * @param profitLossInteractor The interactor that handles profit/loss calculations.
+     */
+    void setProfitLossInteractor(ProfitLossInputBoundary profitLossInteractor);
 
-    public void setViewOwnedStockInteractor(ListStocksInputBoundary viewOwnedStockInteractor);
+    /**
+     * Sets the interactor responsible for viewing owned stocks after the sale.
+     * @param viewOwnedStockInteractor The interactor that handles the viewing of owned stocks.
+     */
+    void setViewOwnedStockInteractor(ListStocksInputBoundary viewOwnedStockInteractor);
 
-    }
+}
