@@ -1,34 +1,36 @@
 package use_case.find_stock;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.Test;
+
 import data_access.InMemoryStockDataAccessObject;
 import entity.Stock;
 import entity.User;
 import entity.UserFactory;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class FindStockInteractorTest {
 
     @Test
     void successTest() {
 
-        FindStockInputData inputData = new FindStockInputData("AAPL");
+        final FindStockInputData inputData = new FindStockInputData("AAPL");
 
-        String username = "Paul";
-        String tickerSymbol = "AAPL";
-        double stockPrice = 150.0;
-        Stock stock = new Stock(tickerSymbol, stockPrice);
+        final String username = "Paul";
+        final String tickerSymbol = "AAPL";
+        final double stockPrice = 150.0;
+        final Stock stock = new Stock(tickerSymbol, stockPrice);
 
-        InMemoryStockDataAccessObject stockRepository = new InMemoryStockDataAccessObject();
+        final InMemoryStockDataAccessObject stockRepository = new InMemoryStockDataAccessObject();
 
-        UserFactory userFactory = new UserFactory();
-        User user = userFactory.create(username, "password");
+        final UserFactory userFactory = new UserFactory();
+        final User user = userFactory.create(username, "password");
         stockRepository.saveUser(user);
         stockRepository.saveStock(stock);
 
         // This creates a successPresenter that tests whether the test case is as we expect.
-        FindStockOutputBoundary successPresenter = new FindStockOutputBoundary() {
+        final FindStockOutputBoundary successPresenter = new FindStockOutputBoundary() {
             @Override
             public void prepareSuccessView(FindStockOutputData outputData) {
                 assertEquals("AAPL", outputData.getTickerSymbol());
@@ -41,18 +43,18 @@ public class FindStockInteractorTest {
             }
         };
 
-        FindStockInputBoundary interactor = new FindStockInteractor(stockRepository, successPresenter);
+        final FindStockInputBoundary interactor = new FindStockInteractor(stockRepository, successPresenter);
         interactor.execute(inputData);
     }
 
     @Test
     void failureStockDoesNotExistTest() {
 
-        FindStockInputData inputData = new FindStockInputData("TSLA");
+        final FindStockInputData inputData = new FindStockInputData("TSLA");
 
-        InMemoryStockDataAccessObject stockRepository = new InMemoryStockDataAccessObject();
+        final InMemoryStockDataAccessObject stockRepository = new InMemoryStockDataAccessObject();
 
-        FindStockOutputBoundary failPresenter = new FindStockOutputBoundary() {
+        final FindStockOutputBoundary failPresenter = new FindStockOutputBoundary() {
             @Override
             public void prepareSuccessView(FindStockOutputData outputData) {
                 fail("Use case success is unexpected.");
@@ -64,18 +66,18 @@ public class FindStockInteractorTest {
             }
         };
 
-        FindStockInputBoundary interactor = new FindStockInteractor(stockRepository, failPresenter);
+        final FindStockInputBoundary interactor = new FindStockInteractor(stockRepository, failPresenter);
         interactor.execute(inputData);
     }
 
     @Test
     void failureEmptyStockTest() {
 
-        FindStockInputData inputData = new FindStockInputData(null);
+        final FindStockInputData inputData = new FindStockInputData(null);
 
-        InMemoryStockDataAccessObject stockRepository = new InMemoryStockDataAccessObject();
+        final InMemoryStockDataAccessObject stockRepository = new InMemoryStockDataAccessObject();
 
-        FindStockOutputBoundary failPresenter = new FindStockOutputBoundary() {
+        final FindStockOutputBoundary failPresenter = new FindStockOutputBoundary() {
             @Override
             public void prepareSuccessView(FindStockOutputData outputData) {
                 fail("Use case success is unexpected.");
@@ -87,7 +89,7 @@ public class FindStockInteractorTest {
             }
         };
 
-        FindStockInputBoundary interactor = new FindStockInteractor(stockRepository, failPresenter);
+        final FindStockInputBoundary interactor = new FindStockInteractor(stockRepository, failPresenter);
         interactor.execute(inputData);
     }
 }
