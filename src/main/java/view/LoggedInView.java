@@ -29,14 +29,7 @@ import interface_adapter.find_stock.FindStockController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.profit_loss.ProfitLossController;
 import interface_adapter.sell_stock.SellStockController;
-import interface_adapter.list_stocks.ViewOwnedStockController;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Map;
+import interface_adapter.list_stocks.ListStocksController;
 
 /**
  * The LoggedInView class represents the main UI for a user who is logged in.
@@ -62,7 +55,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     private JButton searchButton;
     private FindStockController findStockController;
-    private ViewOwnedStockController viewOwnedStockController;
+    private ListStocksController listStocksController;
     private ProfitLossController profitLossController;
 
     private String username = "<username>";
