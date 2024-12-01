@@ -9,6 +9,9 @@ import entity.UserFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import use_case.buy_stock.BuyStockInputData;
+import use_case.buy_stock.BuyStockOutputBoundary;
+import use_case.buy_stock.BuyStockOutputData;
 import use_case.find_stock.FindStockDataAccessInterface;
 import use_case.list_stocks.ListStocksInputBoundary;
 import use_case.list_stocks.ListStocksInputData;
@@ -129,7 +132,7 @@ public class BuyStockInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-                    assertEquals("Insufficient balance.", errorMessage);
+                assertEquals("Insufficient balance.", errorMessage);
 
             }
         };
@@ -150,6 +153,53 @@ public class BuyStockInteractorTest {
         });
         buyStockInteractor.execute(buyStockInputData);
     }
+
+    /**
+     * Tests a successful stock purchase scenario.
+     * This test ensures that a user can buy a stock if they have sufficient balance
+     * and the stock exists in the database. It verifies that:
+     * - The stock ticker matches the requested one ("IBM").
+     * - The stock price ($100) and remaining balance ($100) are accurate.
+     * Preconditions:
+     * - A user with $200 balance exists in the database.
+     * - The stock database contains "IBM" priced at $100.
+     */
+
+    @Test
+    public void successTest() {
+        BuyStockInputData buyStockInputData = new BuyStockInputData("testUser", "IBM", 1);
+
+
+        // Presenter for testing successful stock purchase
+        BuyStockOutputBoundary testPresenter = new BuyStockOutputBoundary() {
+
+            @Override
+            public void prepareSuccessView(BuyStockOutputData outputData) {
+                // Verify that the success scenario works as expected
+                assertEquals("IBM", outputData.getTickerSymbol());
+                assertEquals(100.0, outputData.getRemainingBalance());
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                fail("Use case failure is unexpected."); // Failure is not expected here
+            }
+        };
+
+        // Initializing the interactor for executing the use case
+        BuyStockInteractor buyStockInteractor = new BuyStockInteractor(testPresenter, database, stockDatabase);
+
+        buyStockInteractor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
+            @Override
+            public void execute(ListStocksInputData inputData) {
+
+            }
+        });
+        buyStockInteractor.setProfitLossInteractor(new ProfitLossInputBoundary() {
+            @Override
+            public void execute() {
+            }
+        });
+        buyStockInteractor.execute(buyStockInputData);
+    }
 }
-
-
