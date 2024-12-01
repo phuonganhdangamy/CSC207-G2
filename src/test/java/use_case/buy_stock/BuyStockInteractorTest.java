@@ -186,6 +186,7 @@ public class BuyStockInteractorTest {
             }
         };
 
+
         // Initializing the interactor for executing the use case
         BuyStockInteractor buyStockInteractor = new BuyStockInteractor(testPresenter, database, stockDatabase);
 
