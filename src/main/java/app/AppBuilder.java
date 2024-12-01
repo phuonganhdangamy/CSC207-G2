@@ -31,7 +31,7 @@ import interface_adapter.sell_stock.SellStockViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import interface_adapter.list_stocks.ViewOwnedStockPresenter;
+import interface_adapter.list_stocks.ListStocksPresenter;
 import use_case.buy_stock.BuyStockInteractor;
 import use_case.buy_stock.BuyStockOutputBoundary;
 import use_case.find_stock.FindStockDataAccessInterface;
@@ -277,7 +277,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addViewStocksUseCase() {
-        listStocksOutputBoundary = new ViewOwnedStockPresenter(loggedInViewModel);
+        listStocksOutputBoundary = new ListStocksPresenter(loggedInViewModel);
         listStocksInteractor = new ListStocksInteractor(listStocksOutputBoundary, userDataAccessObject);
 
         return this;

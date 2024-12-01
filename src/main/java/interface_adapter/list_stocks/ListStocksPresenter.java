@@ -9,7 +9,7 @@ import use_case.list_stocks.ListStocksOutputData;
  * Presenter for the View Owned Stock use case.
  * Updates the stockOwnership in the LoggedInState through the LoggedInViewModel.
  */
-public class ViewOwnedStockPresenter implements ListStocksOutputBoundary {
+public class ListStocksPresenter implements ListStocksOutputBoundary {
     private final LoggedInViewModel loggedInViewModel;
 
     /**
@@ -17,7 +17,7 @@ public class ViewOwnedStockPresenter implements ListStocksOutputBoundary {
      *
      * @param loggedInViewModel The view model of the logged-in user.
      */
-    public ViewOwnedStockPresenter(LoggedInViewModel loggedInViewModel) {
+    public ListStocksPresenter(LoggedInViewModel loggedInViewModel) {
         this.loggedInViewModel = loggedInViewModel;
     }
 
