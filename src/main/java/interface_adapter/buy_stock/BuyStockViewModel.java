@@ -9,6 +9,7 @@ public class BuyStockViewModel extends ViewModel<BuyStockState> {
 
     public BuyStockViewModel() {
         super("buy stock");
+
         // Initialize with default values
         this.setState(new BuyStockState("", 0, 0.0));
     }
