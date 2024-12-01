@@ -5,10 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -33,7 +31,18 @@ import interface_adapter.profit_loss.ProfitLossController;
 import interface_adapter.sell_stock.SellStockController;
 import interface_adapter.view_owned_stock.ViewOwnedStockController;
 
+/**
+ * The LoggedInView class represents the main UI for a user who is logged in.
+ * It displays balance, stock information, and transaction options.
+ * The class implements PropertyChangeListener to handle dynamic updates.
+ */
 public class LoggedInView extends JPanel implements PropertyChangeListener {
+
+    private static final int BORDER_PADDING = 10;
+    private static final int TITLE_FONT_SIZE = 16;
+    private static final int LABEL_FONT_SIZE = 14;
+    private static final String DEFAULT_FONT = "Arial";
+    private static final int STOCK_TABLE_COLUMNS = 3;
 
     private final LoggedInViewModel loggedInViewModel;
     private final BuySellStockView buySellStockView;
@@ -46,48 +55,45 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     private JButton searchButton;
     private FindStockController findStockController;
-
     private ViewOwnedStockController viewOwnedStockController;
     private ProfitLossController profitLossController;
 
-
     private String username = "<username>";
-    private double balance = 0.0;
+    private double balance;
     private String viewName = "logged in";
 
     private final JPanel findStockPanel;
     private JPanel buySellStockPanel;
 
-    public LoggedInView(LoggedInViewModel loggedInViewModel,  FindStockView findStockView,
+    public LoggedInView(LoggedInViewModel loggedInViewModel, FindStockView findStockView,
                         BuySellStockView buySellStockView) {
         this.loggedInViewModel = loggedInViewModel;
         this.loggedInViewModel.addPropertyChangeListener(this);
-        this.setLayout(new BorderLayout(10, 10));
-        this.setBorder(new EmptyBorder(10, 10, 10, 10));
+        this.setLayout(new BorderLayout(BORDER_PADDING, BORDER_PADDING));
+        this.setBorder(new EmptyBorder(BORDER_PADDING, BORDER_PADDING, BORDER_PADDING, BORDER_PADDING));
 
         // Balance and Greeting
-        JLabel titleLabel = new JLabel("List of Stocks");
+        final JLabel titleLabel = new JLabel("List of Stocks");
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        titleLabel.setFont(new Font(DEFAULT_FONT, Font.BOLD, TITLE_FONT_SIZE));
 
         balanceLabel = new JLabel();
         balanceLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        balanceLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        balanceLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, LABEL_FONT_SIZE));
         updateBalanceLabel();
 
-        JPanel topPanel = new JPanel(new GridLayout(2, 1));
+        final JPanel topPanel = new JPanel(new GridLayout(2, 1));
         topPanel.add(titleLabel);
         topPanel.add(balanceLabel);
 
         // Stock Table
-        String[] columnNames = {"Ticker", "Shares", "Profit/Loss"};
+        final String[] columnNames = {"Ticker", "Shares", "Profit/Loss"};
 
         stockTable = new JTable(new Object[0][columnNames.length], columnNames);
-        JScrollPane scrollPane = new JScrollPane(stockTable);
-
+        final JScrollPane scrollPane = new JScrollPane(stockTable);
 
         // Transaction Panel on right side
-        JPanel transactionPanel = new JPanel();
+        final JPanel transactionPanel = new JPanel();
         transactionPanel.setLayout(new BoxLayout(transactionPanel, BoxLayout.Y_AXIS));
         transactionPanel.setBorder(BorderFactory.createTitledBorder("Transaction"));
 
@@ -102,28 +108,20 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         findStockPanel.add(findStockView, BorderLayout.CENTER);
         transactionPanel.add(findStockView, BorderLayout.CENTER);
 
-
         // Buy/Sell Stock Panel
         buySellStockPanel = new JPanel(new BorderLayout());
         this.buySellStockView = buySellStockView;
         buySellStockPanel.add(buySellStockView, BorderLayout.CENTER);
         transactionPanel.add(buySellStockPanel, BorderLayout.CENTER);
 
+        transactionPanel.add(Box.createRigidArea(new Dimension(0, BORDER_PADDING)));
 
-        transactionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-
-        // Buttons
-
-
-        Dimension buttonSize = new Dimension(150, 60);
-
-      
         // Summary Panel: Profit/Loss
         profitLossLabel = new JLabel("Total Profit/Loss: +XX.XX");
         profitLossLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        profitLossLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        profitLossLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, LABEL_FONT_SIZE));
 
-        JPanel summaryPanel = new JPanel(new GridLayout(1, 3));
+        final JPanel summaryPanel = new JPanel(new GridLayout(1, 3));
         summaryPanel.setBorder(BorderFactory.createTitledBorder("Summary"));
         summaryPanel.add(profitLossLabel);
 
@@ -134,7 +132,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.add(summaryPanel, BorderLayout.SOUTH);
 
     }
-
 
     /**
      * Updates the balance label dynamically.
@@ -164,7 +161,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         updateBalanceLabel();
     }
 
-
     public String getViewName() {
         return this.viewName;
     }
@@ -175,15 +171,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         final LoggedInState state = (LoggedInState) evt.getNewValue();
         setFields(state);
 
-//        //HANDLES ERROR CASE
-        if (state.getError() != null && !state.getError().isEmpty()){
+        // HANDLES ERROR CASE
+        if (state.getError() != null && !state.getError().isEmpty()) {
             JOptionPane.showMessageDialog(this, state.getError(),
                     "Error", JOptionPane.ERROR_MESSAGE);
 
             state.setError("");
         }
-
-
     }
 
     /**
@@ -206,48 +200,71 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         // Update profit/loss summary
         profitLossLabel.setText(String.format("Total Profit/Loss: %.2f", state.getTotalProfitLoss()));
 
-
         // Update stock table with data from LoggedInState
-        Map<String, Integer> stockOwnership = state.getStockOwnership();
-        Map<String, Double> stockProfitLoss = state.getStockProfitLoss();
+        final Map<String, Integer> stockOwnership = state.getStockOwnership();
+        final Map<String, Double> stockProfitLoss = state.getStockProfitLoss();
 
         if (stockOwnership != null && stockProfitLoss != null) {
             // Convert data to a 2D array for the JTable
-            Object[][] tableData = new Object[stockOwnership.size()][3];
+            final Object[][] tableData = new Object[stockOwnership.size()][STOCK_TABLE_COLUMNS];
             int index = 0;
 
             for (Map.Entry<String, Integer> entry : stockOwnership.entrySet()) {
-                String ticker = entry.getKey();
-                int shares = entry.getValue();
-                double profitLoss = stockProfitLoss.getOrDefault(ticker, 0.0); // Default to 0.0 if not found
+                final String ticker = entry.getKey();
+                final int shares = entry.getValue();
+                // Default to 0.0 if not found
+                final double profitLoss = stockProfitLoss.getOrDefault(ticker, 0.0);
 
                 tableData[index++] = new Object[]{ticker, shares, String.format("%.2f", profitLoss)};
             }
 
             // Update the JTable with the new data
-            String[] columnNames = {"Ticker", "Shares", "Profit/Loss"};
+            final String[] columnNames = {"Ticker", "Shares", "Profit/Loss"};
             stockTable.setModel(new javax.swing.table.DefaultTableModel(tableData, columnNames));
         }
     }
 
-    //Adding the logout use case to make the logout button functional.
+    /**
+     * Sets the controller for handling logout functionality.
+     *
+     * @param logoutController The controller responsible for managing logout operations.
+     */
     public void setLogoutController(LogoutController logoutController) {
-        buySellStockView.setLogoutController (logoutController);
+        buySellStockView.setLogoutController(logoutController);
     }
 
-    //Adding the sell stock use case to make the sell stock button functional.
+    /**
+     * Sets the controller for handling the sell stock functionality.
+     *
+     * @param sellStockController The controller responsible for managing stock selling operations.
+     */
     public void setSellStockController(SellStockController sellStockController) {
-        buySellStockView.setSellStockController (sellStockController);
+        buySellStockView.setSellStockController(sellStockController);
     }
 
+    /**
+     * Sets the controller for handling the buy stock functionality.
+     *
+     * @param buyStockController The controller responsible for managing stock buying operations.
+     */
     public void setBuyStockController(BuyStockController buyStockController) {
         buySellStockView.setBuyStockController(buyStockController);
     }
 
+    /**
+     * Sets the controller for managing profit and loss operations.
+     *
+     * @param profitLossController The controller responsible for profit and loss calculations.
+     */
     public void setProfitLossController(ProfitLossController profitLossController) {
         this.profitLossController = profitLossController;
     }
 
+    /**
+     * Retrieves the panel for displaying stock search functionality.
+     *
+     * @return The JPanel used for finding stocks.
+     */
     public JPanel getFindStockPanel() {
         return findStockPanel;
     }
