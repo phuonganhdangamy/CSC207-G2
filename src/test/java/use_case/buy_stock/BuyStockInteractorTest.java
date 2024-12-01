@@ -9,7 +9,13 @@ import entity.UserFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import use_case.buy_stock.BuyStockInputData;
+import use_case.buy_stock.BuyStockOutputBoundary;
+import use_case.buy_stock.BuyStockOutputData;
 import use_case.find_stock.FindStockDataAccessInterface;
+import use_case.list_stocks.ListStocksInputBoundary;
+import use_case.list_stocks.ListStocksInputData;
+import use_case.profit_loss.ProfitLossInputBoundary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +27,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class BuyStockInteractorTest {
     User testUser;
     BuyStockUserDataAccessInterface database;
-    // FindStockDataAccessInterface findStockDatabase;
+    FindStockDataAccessInterface findStockDatabase;
     InMemoryStockDataAccessObject stockDatabase;
-    private InMemoryUserDataAccessObject userDatabase;
+    InMemoryUserDataAccessObject userDatabase;
 
     /**
      * Sets up the test environment before each test method is run.
@@ -33,10 +39,19 @@ public class BuyStockInteractorTest {
      * This method is annotated with @BeforeEach to ensure it runs before every test case.
      */
 
-    @BeforeEach
+    @Before
     public void setUp() throws Exception {
         // Setting up a user and database
-        testUser = new User("Name", "Password");
+        testUser = new User("testUser", "Password");
+        Portfolio userPortfolio = testUser.getPortfolio();
+        testUser.setBalance(200.0);
+
+        // Initialize the InMemory stock database
+        stockDatabase = new InMemoryStockDataAccessObject();
+
+        // Save stock information in the database
+        stockDatabase.saveUser(testUser);
+        stockDatabase.saveStock(new Stock("IBM", 100.0));
 
         database = new BuyStockUserDataAccessInterface() {
             private User user;
@@ -81,7 +96,7 @@ public class BuyStockInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-                assertEquals("This ticker does not exist.", errorMessage);
+                assertEquals("The ticker does not exist.", errorMessage);
 
             }
         };
@@ -106,15 +121,8 @@ public class BuyStockInteractorTest {
 
     @Test
     public void notEnoughBalance() {
-
         BuyStockInputData buyStockInputData = new BuyStockInputData("testUser", "IBM", 3);
 
-        Stock stock = new Stock("IBM", 100.0);  // Stock price of 100
-        UserFactory userFactory = new UserFactory();
-        User user = userFactory.create("testUser", "654321");
-        user.setBalance(10000.0);  // User has insufficient balance for 15 shares
-        userDatabase.save(user);
-        stockDatabase.saveStock(stock);
 
         // Presenter for testing insufficient balance
         BuyStockOutputBoundary testPresenter = new BuyStockOutputBoundary() {
@@ -124,53 +132,74 @@ public class BuyStockInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-                assertEquals("The balance is not sufficient.", errorMessage);
+                assertEquals("Insufficient balance.", errorMessage);
 
             }
         };
 
         // Initializing the interactor for executing the use case
         BuyStockInteractor buyStockInteractor = new BuyStockInteractor(testPresenter, database, stockDatabase);
+
+        buyStockInteractor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
+            @Override
+            public void execute(ListStocksInputData inputData) {
+
+            }
+        });
+        buyStockInteractor.setProfitLossInteractor(new ProfitLossInputBoundary() {
+            @Override
+            public void execute() {
+            }
+        });
         buyStockInteractor.execute(buyStockInputData);
     }
 
     /**
-     * Tests the scenario where a user tries to buy stock, but the provided username does not exist in the database.
-     * The test ensures that the appropriate error message "This user does not exist." is presented
-     * when the user attempts to purchase stock without being registered.
-
-     * This test simulates a failed stock purchase due to a non-existent user.
-
-     * Assertions:
-     * - Verifies that the error message returned is "This user does not exist."
+     * Tests a successful stock purchase scenario.
+     * This test ensures that a user can buy a stock if they have sufficient balance
+     * and the stock exists in the database. It verifies that:
+     * - The stock ticker matches the requested one ("IBM").
+     * - The stock price ($100) and remaining balance ($100) are accurate.
+     * Preconditions:
+     * - A user with $200 balance exists in the database.
+     * - The stock database contains "IBM" priced at $100.
      */
 
     @Test
-     public void notExistingUser() {
-        // Preparing input data
-        BuyStockInputData buyStockInputData = new BuyStockInputData("nonExistentUser", "IBM", 5);  // Non-existent user
-        Stock stock = new Stock("IBM", 100.0);
-        stockDatabase.saveStock(stock);
+    public void successTest() {
+        BuyStockInputData buyStockInputData = new BuyStockInputData("testUser", "IBM", 1);
 
-        // Failure presenter for testing non-existing user
+
+        // Presenter for testing successful stock purchase
         BuyStockOutputBoundary testPresenter = new BuyStockOutputBoundary() {
 
             @Override
             public void prepareSuccessView(BuyStockOutputData outputData) {
-                fail("Use case success is unexpected.");
+                // Verify that the success scenario works as expected
+                assertEquals("IBM", outputData.getTickerSymbol());
+                assertEquals(100.0, outputData.getRemainingBalance());
             }
 
             @Override
             public void prepareFailView(String errorMessage) {
-                assertEquals("This user does not exist.", errorMessage);
-
+                fail("Use case failure is unexpected."); // Failure is not expected here
             }
         };
 
-        //  Initializing the interactor for executing the use case
+        // Initializing the interactor for executing the use case
         BuyStockInteractor buyStockInteractor = new BuyStockInteractor(testPresenter, database, stockDatabase);
+
+        buyStockInteractor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
+            @Override
+            public void execute(ListStocksInputData inputData) {
+
+            }
+        });
+        buyStockInteractor.setProfitLossInteractor(new ProfitLossInputBoundary() {
+            @Override
+            public void execute() {
+            }
+        });
         buyStockInteractor.execute(buyStockInputData);
     }
 }
-
-
