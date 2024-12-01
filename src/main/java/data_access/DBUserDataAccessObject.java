@@ -163,7 +163,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
                 if (userInfo.isEmpty()){
                     return user;
                 }
-                user.setBalance(userInfo.getDouble(BALANCE));
+                //user.setBalance(userInfo.getDouble(BALANCE));
 
                 //Retrieves portfolio of stocks and creates the portfolio object
                 JSONArray portfolioStocks = userInfo.getJSONArray(PORTFOLIO);
@@ -270,7 +270,9 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
     public boolean logoutUser(String username) {
         // Simulate clearing session data
         if (username != null && !username.isEmpty() && username.equals(this.getCurrentUsername())) {
-            this.setCurrentUsername(null); // Clear the current username to log out
+            this.setCurrentUsername(null);// Clear the current username to log out
+            this.saveUserInfo(currentUser);
+            this.currentUser = null;
             return true;
         }
         return false;
