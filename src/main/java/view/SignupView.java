@@ -1,17 +1,22 @@
 package view;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import interface_adapter.login.LoginState;
-import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupViewModel;
@@ -26,94 +31,87 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     private final JTextField usernameInputField = new JTextField(15);
     private final JPasswordField passwordInputField = new JPasswordField(15);
     private SignupController signupController;
-    private final JLabel errorLabel = new JLabel(); // Error label for dynamic error messages
+    private final JLabel errorLabel = new JLabel();
 
-    private final JButton signUp;
-    private final JButton cancel;
-    private final JButton toLogin;
+    private final JButton signUp = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
+    private final JButton cancel = new JButton(SignupViewModel.CANCEL_BUTTON_LABEL);
+    private final JButton toLogin = new JButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
 
     public SignupView(SignupViewModel signupViewModel) {
         this.signupViewModel = signupViewModel;
         signupViewModel.addPropertyChangeListener(this);
 
+        // Set layout first
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        setupTitle();
+        setupErrorLabel();
+        setupInputFields();
+        setupButtons();
+        setupSwitchToLogin();
+
+        addUsernameListener();
+        addPasswordListener();
+    }
+
+    private void setupTitle() {
         final JLabel title = new JLabel(SignupViewModel.TITLE_LABEL);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.add(title);
+    }
 
-        // Add the error label which initially hidden
+    private void setupErrorLabel() {
         errorLabel.setForeground(Color.RED);
         errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         errorLabel.setVisible(false);
+        this.add(errorLabel);
+    }
 
+    private void setupInputFields() {
         final LabelTextPanel usernameInfo = new LabelTextPanel(
                 new JLabel(SignupViewModel.USERNAME_LABEL), usernameInputField);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
                 new JLabel(SignupViewModel.PASSWORD_LABEL), passwordInputField);
 
-        final JPanel buttons = new JPanel();
-        toLogin = new JButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
-        // remove buttons.add so we can split toLogin to another line
-        signUp = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
-        buttons.add(signUp);
-        cancel = new JButton(SignupViewModel.CANCEL_BUTTON_LABEL);
-        buttons.add(cancel);
-
-        signUp.addActionListener(
-                // This creates an anonymous subclass of ActionListener and instantiates it.
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        if (evt.getSource().equals(signUp)) {
-                            final SignupState currentState = signupViewModel.getState();
-
-                            signupController.execute(
-                                    currentState.getUsername(),
-                                    currentState.getPassword()
-                            );
-                        }
-                    }
-                }
-        );
-
-        toLogin.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        signupController.switchToLoginView();
-                    }
-                }
-        );
-
-        cancel.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        usernameInputField.setText("");
-                        passwordInputField.setText("");
-                        final SignupState currentState = signupViewModel.getState();
-                        currentState.setError("");
-                        errorLabel.setVisible(false);
-                    }
-                }
-        );
-
-        addUsernameListener();
-        addPasswordListener();
-
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-        this.add(title);
-        this.add(errorLabel); // Adding error label, initially hidden
         this.add(usernameInfo);
         this.add(passwordInfo);
-        this.add(buttons);
-        // For switching between login and signup
-        final JLabel switchToLoginLabel = new JLabel("Have user:");
-        JPanel switchToLoginPanel = new JPanel();
-        switchToLoginPanel.add(switchToLoginLabel);
-        switchToLoginPanel.add(toLogin);
-
-        // Button to switch panel at the bottom
-        this.add(switchToLoginPanel);
     }
 
+    private void setupButtons() {
+        final JPanel buttons = new JPanel();
+
+        buttons.add(signUp);
+        buttons.add(cancel);
+
+        this.add(buttons);
+
+        setupButtonActions();
+    }
+
+    private void setupButtonActions() {
+        signUp.addActionListener(evt -> {
+            final SignupState currentState = signupViewModel.getState();
+            signupController.execute(currentState.getUsername(), currentState.getPassword());
+        });
+
+        toLogin.addActionListener(evt -> signupController.switchToLoginView());
+
+        cancel.addActionListener(evt -> {
+            usernameInputField.setText("");
+            passwordInputField.setText("");
+            final SignupState currentState = signupViewModel.getState();
+            currentState.setError("");
+            errorLabel.setVisible(false);
+        });
+    }
+
+    private void setupSwitchToLogin() {
+        final JLabel switchToLoginLabel = new JLabel("Have user:");
+        final JPanel switchToLoginPanel = new JPanel();
+        switchToLoginPanel.add(switchToLoginLabel);
+        switchToLoginPanel.add(toLogin);
+        this.add(switchToLoginPanel);
+    }
 
     private void addUsernameListener() {
         usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
@@ -169,7 +167,6 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         });
     }
 
-
     @Override
     public void actionPerformed(ActionEvent evt) {
         // Implement cancel button functionality like clear fields or navigate to another view
@@ -187,11 +184,11 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         if (state.getError() != null && !state.getError().isEmpty()) {
             errorLabel.setText(state.getError());
             errorLabel.setVisible(true);
-        } else {
+        }
+        else {
             errorLabel.setVisible(false);
         }
     }
-
 
     public String getViewName() {
         return viewName;
@@ -201,10 +198,15 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         this.signupController = controller;
     }
 
-
-    public static void main(String[] args){
-        JPanel signUpView = new SignupView(new SignupViewModel());
-        JFrame frame = new JFrame();
+    /**
+     * Entry point for running the SignupView as a standalone application.
+     * Sets up a JFrame and displays the SignupView panel.
+     *
+     * @param args the command-line arguments (not used in this application)
+     */
+    public static void main(String[] args) {
+        final JPanel signUpView = new SignupView(new SignupViewModel());
+        final JFrame frame = new JFrame();
         frame.add(signUpView);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();

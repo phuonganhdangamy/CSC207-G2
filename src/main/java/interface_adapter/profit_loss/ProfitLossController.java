@@ -1,10 +1,10 @@
 package interface_adapter.profit_loss;
 
 import use_case.profit_loss.ProfitLossInputBoundary;
-import use_case.profit_loss.ProfitLossInputData;
 
-import java.util.Map;
-
+/**
+ * The controller for the Profit Loss Use Case.
+ */
 public class ProfitLossController {
     private final ProfitLossInputBoundary profitLossInteractor;
 

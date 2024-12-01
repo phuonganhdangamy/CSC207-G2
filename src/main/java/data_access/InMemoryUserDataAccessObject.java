@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import entity.User;
-// import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
@@ -37,12 +36,6 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
         return users.get(username);
     }
 
-    //    @Override
-    public void changePassword(User user) {
-        // Replace the old entry with the new password
-        users.put(user.getName(), user);
-    }
-
     @Override
     public void setCurrentUsername(String name) {
         this.currentUsername = name;
@@ -50,7 +43,14 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
 
     @Override
     public boolean logoutUser(String username) {
-        return false;
+        boolean success = false;
+        if (this.currentUsername != null && this.currentUsername.equals(username)) {
+            this.currentUsername = null;
+            this.currentUser = null;
+            // Indicate success
+            success = true;
+        }
+        return success;
     }
 
     @Override

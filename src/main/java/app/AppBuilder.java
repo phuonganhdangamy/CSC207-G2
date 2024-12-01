@@ -10,9 +10,8 @@ import data_access.DBStockDataAccessObject;
 import data_access.DBUserDataAccessObject;
 import entity.StockFactory;
 import entity.UserFactory;
-import interface_adapter.ViewManagerModel;
 import interface_adapter.LoggedInViewModel;
-import interface_adapter.LoggedInState;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.buy_stock.BuyStockController;
 import interface_adapter.buy_stock.BuyStockPresenter;
 import interface_adapter.buy_stock.BuyStockViewModel;
@@ -32,8 +31,7 @@ import interface_adapter.sell_stock.SellStockViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import interface_adapter.view_owned_stock.ViewOwnedStockPresenter;
-import use_case.buy_stock.BuyStockInputBoundary;
+import interface_adapter.list_stocks.ViewOwnedStockPresenter;
 import use_case.buy_stock.BuyStockInteractor;
 import use_case.buy_stock.BuyStockOutputBoundary;
 import use_case.find_stock.FindStockDataAccessInterface;
@@ -46,7 +44,6 @@ import use_case.list_stocks.ListStocksOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
-
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
@@ -79,7 +76,6 @@ public class AppBuilder {
 
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(stockFactory, userFactory);
     private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
-
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -135,7 +131,8 @@ public class AppBuilder {
     public AppBuilder addLoggedInView() {
         loggedInViewModel = new LoggedInViewModel();
 
-        findStockViewModel = new FindStockViewModel(); // Initialize FindStockViewModel
+        // Initialize FindStockViewModel
+        findStockViewModel = new FindStockViewModel();
         findStockView = new FindStockView(findStockViewModel);
         buySellStockView = new BuySellStockView(findStockView);
 
@@ -149,12 +146,13 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addSignupUseCase() {
-        SignupOutputBoundary signUpPresenter = new SignupPresenter(viewManagerModel,
+        final SignupOutputBoundary signUpPresenter = new SignupPresenter(viewManagerModel,
                 signupViewModel, loginViewModel);
 
-        SignupInputBoundary signUpInteractor = new SignupInteractor(userDataAccessObject, signUpPresenter, userFactory);
+        final SignupInputBoundary signUpInteractor = new SignupInteractor(userDataAccessObject, signUpPresenter,
+                userFactory);
 
-        SignupController signupController = new SignupController(signUpInteractor);
+        final SignupController signupController = new SignupController(signUpInteractor);
 
         signupView.setSignupController(signupController);
         return this;
@@ -242,9 +240,9 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addBuyStockUseCase() {
-        final BuyStockOutputBoundary buyStockPresenter = new BuyStockPresenter(loggedInViewModel,viewManagerModel);
+        final BuyStockOutputBoundary buyStockPresenter = new BuyStockPresenter(loggedInViewModel, viewManagerModel);
 
-        //Create new stockDatabase for the sellStockUseCase
+        // Create new stockDatabase for the sellStockUseCase
         final FindStockDataAccessInterface stockDatabase = new DBStockDataAccessObject();
 
         final BuyStockInteractor buyStockInteractor = new BuyStockInteractor(buyStockPresenter,
@@ -273,6 +271,11 @@ public class AppBuilder {
 
         return this;
     }
+
+    /**
+     * Adds the View Stock Case to the application.
+     * @return this builder
+     */
     public AppBuilder addViewStocksUseCase() {
         listStocksOutputBoundary = new ViewOwnedStockPresenter(loggedInViewModel);
         listStocksInteractor = new ListStocksInteractor(listStocksOutputBoundary, userDataAccessObject);

@@ -3,7 +3,8 @@ package interface_adapter.buy_stock;
 import interface_adapter.LoggedInState;
 import interface_adapter.LoggedInViewModel;
 import interface_adapter.ViewManagerModel;
-import use_case.buy_stock.*;
+import use_case.buy_stock.BuyStockOutputBoundary;
+import use_case.buy_stock.BuyStockOutputData;
 
 /**
  * The Presenter for the Buy Stock Use Case.

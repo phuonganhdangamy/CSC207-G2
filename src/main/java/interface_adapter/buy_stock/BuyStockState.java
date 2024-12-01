@@ -3,7 +3,6 @@ package interface_adapter.buy_stock;
 /**
  * Represents the state of the buy stock process.
  */
-
 public class BuyStockState {
     private String selectedStock;
     private int quantity;
@@ -42,10 +41,10 @@ public class BuyStockState {
 
     @Override
     public String toString() {
-        return "BuyStockState{" +
-                "selectedStock='" + selectedStock + '\'' +
-                ", quantity=" + quantity +
-                ", userBalance=" + userBalance +
-                '}';
+        return "BuyStockState{"
+                + "selectedStock='" + selectedStock + '\''
+                + ", quantity=" + quantity
+                + ", userBalance=" + userBalance
+                + '}';
     }
 }

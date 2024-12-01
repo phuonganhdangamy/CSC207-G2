@@ -6,6 +6,9 @@ import entity.StockFactory;
 import entity.UserFactory;
 import entity.User;
 import org.junit.jupiter.api.Test;
+import use_case.list_stocks.ListStocksInputBoundary;
+import use_case.list_stocks.ListStocksInputData;
+import use_case.profit_loss.ProfitLossInputBoundary;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,7 +16,7 @@ class LoginInteractorTest {
 
     @Test
     void successTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
+        LoginInputData inputData = new LoginInputData("anhdang", "anhdang");
         LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(), new UserFactory());
 
         // For the success test, we need to add Paul to the data access repository before we log in.
@@ -25,7 +28,7 @@ class LoginInteractorTest {
         LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
-                assertEquals("Paul", user.getUsername());
+                assertEquals("anhdang", user.getUsername());
             }
 
             @Override
@@ -41,6 +44,19 @@ class LoginInteractorTest {
         };
 
         LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+
+        interactor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
+            @Override
+            public void execute(ListStocksInputData inputData) {
+
+            }
+        });
+        interactor.setProfitLossInteractor(new ProfitLossInputBoundary() {
+            @Override
+            public void execute() {
+            }
+        });
+
         interactor.execute(inputData);
     }
 
@@ -73,12 +89,23 @@ class LoginInteractorTest {
         };
 
         LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        interactor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
+            @Override
+            public void execute(ListStocksInputData inputData) {
+
+            }
+        });
+        interactor.setProfitLossInteractor(new ProfitLossInputBoundary() {
+            @Override
+            public void execute() {
+            }
+        });
         interactor.execute(inputData);
     }
 
     @Test
     void successUserLoggedInTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
+        LoginInputData inputData = new LoginInputData("anhdang", "anhdang");
         LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(), new UserFactory());
 
         // For the success test, we need to add Paul to the data access repository before we log in.
@@ -90,7 +117,7 @@ class LoginInteractorTest {
         LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
-                assertEquals("Paul", userRepository.getCurrentUsername());
+                assertEquals("anhdang", userRepository.getCurrentUsername());
             }
 
             @Override
@@ -105,6 +132,17 @@ class LoginInteractorTest {
         };
 
         LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        interactor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
+            @Override
+            public void execute(ListStocksInputData inputData) {
+
+            }
+        });
+        interactor.setProfitLossInteractor(new ProfitLossInputBoundary() {
+            @Override
+            public void execute() {
+            }
+        });
         assertEquals(null, userRepository.getCurrentUsername());
 
         interactor.execute(inputData);
@@ -139,6 +177,17 @@ class LoginInteractorTest {
         };
 
         LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        interactor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
+            @Override
+            public void execute(ListStocksInputData inputData) {
+
+            }
+        });
+        interactor.setProfitLossInteractor(new ProfitLossInputBoundary() {
+            @Override
+            public void execute() {
+            }
+        });
         assertEquals(null, userRepository.getCurrentUsername());
 
         interactor.execute(inputData);
@@ -146,7 +195,7 @@ class LoginInteractorTest {
 
     @Test
     void failurePasswordMismatchTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "wrong");
+        LoginInputData inputData = new LoginInputData("anhdang", "wrong");
         LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(), new UserFactory());
 
         // For this failure test, we need to add Paul to the data access repository before we log in, and
@@ -165,7 +214,7 @@ class LoginInteractorTest {
 
             @Override
             public void prepareFailView(String error) {
-                assertEquals("Incorrect password for \"Paul\".", error);
+                assertEquals("Incorrect password for \"anhdang\".", error);
             }
 
             @Override
