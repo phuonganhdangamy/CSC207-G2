@@ -1,7 +1,5 @@
 package use_case.login;
 
-import java.util.Map;
-
 /**
  * The output data for the Login Use Case.
  */

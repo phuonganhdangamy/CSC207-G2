@@ -20,7 +20,7 @@ public class SellStockController {
      * @param quantity - the quantity to sell
      */
     public void execute(int quantity, String ticker) {
-        SellStockInputData outputData = new SellStockInputData(quantity, ticker);
+        final SellStockInputData outputData = new SellStockInputData(quantity, ticker);
         sellStockInteractor.execute(outputData);
 
     }

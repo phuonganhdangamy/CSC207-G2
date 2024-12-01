@@ -1,11 +1,8 @@
 package use_case.buy_stock;
 
+import entity.Portfolio;
 import entity.Stock;
 import entity.User;
-import entity.Portfolio;
-import entity.ProfitLossCalculator;
-import entity.UserFactory;
-import entity.StockFactory;
 import use_case.find_stock.FindStockDataAccessInterface;
 import use_case.list_stocks.ListStocksInputBoundary;
 import use_case.list_stocks.ListStocksInputData;
@@ -16,19 +13,16 @@ import use_case.profit_loss.ProfitLossInputBoundary;
  * It processes the user's request to purchase stocks, including verifying stock availability, checking
  * the user's balance, and updating the portfolio. It also interacts with other components to update the UI
  * and calculate profit or loss after the purchase.
-
  * Responsibilities:
  * - Executes the business logic for purchasing stock, including validation and updates.
  * - Checks if the stock exists, whether the user has enough balance, and updates the portfolio.
  * - Interacts with the user data access interface to save the updated user data.
  * - Invokes other use case interactors to update the UI and calculate profit or loss.
-
  * Constructor(s):
  * - BuyStockInteractor(BuyStockOutputBoundary buyStockPresenter,
  *                      BuyStockUserDataAccessInterface database,
  *                      FindStockDataAccessInterface stockDatabase): Initializes the interactor
  *                      with the necessary components for executing the use case.
-
  * Method(s):
  * - execute(BuyStockInputData inputData): Executes the buy stock use case, handling validation, purchase,
  *   and updating the user's portfolio and balance.
@@ -96,13 +90,13 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
 
     @Override
     public void execute(BuyStockInputData inputData) {
-        String ticker = inputData.getTickerSymbol();
-        int quantity = inputData.getQuantity();
-        User user = database.getCurrentUser();
-        Portfolio userPortfolio = user.getPortfolio();
+        final String ticker = inputData.getTickerSymbol();
+        final int quantity = inputData.getQuantity();
+        final User user = database.getCurrentUser();
+        final Portfolio userPortfolio = user.getPortfolio();
 
         // Checking the number of shares already owned by the user
-        int numberOfShares = userPortfolio.getShareCount(ticker);
+        final int numberOfShares = userPortfolio.getShareCount(ticker);
 
         // Check if the stock exists
         if (!stockDatabase.isStockExist(ticker)) {
@@ -111,16 +105,15 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
         }
 
         // Getting price of the stocks according to the number of the stocks and their current price
-        double stockCost = stockDatabase.getCost(ticker);
-        double totalCost = stockCost * quantity;
-        double balance = user.getBalance();
-
+        final double stockCost = stockDatabase.getCost(ticker);
+        final double totalCost = stockCost * quantity;
+        final double balance = user.getBalance();
 
         // Check if the user has sufficient balance to buy the stock
         if (balance < totalCost) {
             buyStockPresenter.prepareFailView("Insufficient balance.");
-
-        } else {
+        }
+        else {
 
             for (int i = 0; i < quantity; i++) {
                 user.getPortfolio().addStock(new Stock(ticker, stockCost));
@@ -132,13 +125,10 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
             // Update UI
             viewOwnedStockInteractor.execute(new ListStocksInputData(user.getName()));
 
-           profitLossInteractor.execute();
-
+            profitLossInteractor.execute();
 
             // Prepare success view with updated data
             buyStockPresenter.prepareSuccessView(new BuyStockOutputData(user.getBalance(), ticker, numberOfShares));
         }
-
     }
 }
-
