@@ -36,6 +36,10 @@ public class InMemoryStockDataAccessObject implements FindStockDataAccessInterfa
         return cost;
     }
 
+    public Map<String, Stock> getStocks() {
+        return stocks;
+    }
+
     /**
      * Checks if a stock exists in the system.
      *
