@@ -43,12 +43,14 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
 
     @Override
     public boolean logoutUser(String username) {
-        if (username != null && !username.isEmpty() && username.equals(this.getCurrentUsername())) {
-            // Clear the current username to log out
-            this.setCurrentUsername(null);
-            return true;
+        boolean success = false;
+        if (this.currentUsername != null && this.currentUsername.equals(username)) {
+            this.currentUsername = null;
+            this.currentUser = null;
+            // Indicate success
+            success = true;
         }
-        return false;
+        return success;
     }
 
     @Override
