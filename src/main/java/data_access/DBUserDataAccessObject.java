@@ -85,8 +85,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             return responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE;
-        }
-        catch (IOException | JSONException ex) {
+        } catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -119,12 +118,10 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
                 // success!
-            }
-            else {
+            } else {
                 throw new RuntimeException(responseBody.getString(MESSAGE));
             }
-        }
-        catch (IOException | JSONException ex) {
+        } catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -181,12 +178,10 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
                     userPortfolio.addStock(stock);
                 }
                 return user;
-            }
-            else {
+            } else {
                 throw new DataAccessException(responseBody.getString(MESSAGE));
             }
-        }
-        catch (IOException | JSONException | DataAccessException ex) {
+        } catch (IOException | JSONException | DataAccessException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -238,12 +233,10 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
                 // success
-            }
-            else {
+            } else {
                 throw new RuntimeException(responseBody.getString(MESSAGE));
             }
-        }
-        catch (IOException | JSONException ex) {
+        } catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -296,15 +289,16 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
      */
     @Override
     public boolean logoutUser(String username) {
-        // Simulate clearing session data
         if (username != null && !username.isEmpty() && username.equals(this.getCurrentUsername())) {
-
-            this.setCurrentUsername(null);// Clear the current username to log out
-            this.saveUserInfo(currentUser);
-            this.currentUser = null;
-
+            if (currentUser != null) {
+                this.saveUserInfo(currentUser); // Save user info before clearing it
+            }
+            this.setCurrentUsername(null); // Clear the current username
+            this.setCurrentUser(null);     // Clear the current user
             return true;
         }
         return false;
     }
+
 }
+
