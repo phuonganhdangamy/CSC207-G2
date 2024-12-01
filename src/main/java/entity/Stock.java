@@ -1,6 +1,5 @@
 package entity;
 
-
 import data_access.DBStockDataAccessObject;
 
 /**
@@ -8,20 +7,16 @@ import data_access.DBStockDataAccessObject;
  * a ticker symbol (e.g., "IBM") and the class retrieves the current stock price (daily opening price).
  * The Stock class holds the information about the stock ticker symbol and its current cost, as well as
  * the ability to retrieve the current price from the stock database using an external data access object.
-
  * Responsibilities:
  * - Stores the ticker symbol and current cost of a stock.
  * - Retrieves the stock's current price from an external data source (AlphaVantage API).
-
  * Constructor(s):
  * - Stock(String tickerSymbol, double cost): Initializes a Stock object with the provided ticker symbol and cost.
  * - Stock(String tickerSymbol): Retrieves the current stock price for the given ticker symbol from the API.
-
  * Methods:
  * - getTickerSymbol(): Returns the ticker symbol of the stock.
  * - getCost(): Returns the current cost (price) of the stock.
  * - setCost(double cost): Sets the cost of the stock.
-
  * The class adheres to the Clean Architecture approach by only using the DBStockDataAccessObject in the
  * interactor layer, keeping the entity layer free from external dependencies.
  */
@@ -50,7 +45,7 @@ public class Stock {
 
     public Stock(String tickerSymbol) {
         this.tickerSymbol = tickerSymbol;
-        DBStockDataAccessObject access = new DBStockDataAccessObject();
+        final DBStockDataAccessObject access = new DBStockDataAccessObject();
         this.cost = access.getCost(tickerSymbol);
     }
 
@@ -82,11 +77,5 @@ public class Stock {
 
     public void setCost(double cost) {
         this.cost = cost;
-    }
-
-    // Mock main to test out the API.
-    public static void main(String[] args) {
-        // Stock stock = new Stock("IBM", "IBM");
-        // System.out.println(stock.currentPrice);
     }
 }

@@ -1,9 +1,9 @@
 package interface_adapter.view_owned_stock;
 
 import interface_adapter.LoggedInState;
+import interface_adapter.LoggedInViewModel;
 import use_case.list_stocks.ListStocksOutputBoundary;
 import use_case.list_stocks.ListStocksOutputData;
-import interface_adapter.LoggedInViewModel;
 
 /**
  * Presenter for the View Owned Stock use case.
@@ -30,7 +30,7 @@ public class ViewOwnedStockPresenter implements ListStocksOutputBoundary {
     public void present(ListStocksOutputData outputData) {
         if (outputData != null && outputData.getStocksOwned() != null) {
             // Retrieve the current state from the ViewModel
-            LoggedInState currentState = loggedInViewModel.getState();
+            final LoggedInState currentState = loggedInViewModel.getState();
 
             // Update the stock ownership in the LoggedInState
             currentState.setStockOwnership(outputData.getStocksOwned());

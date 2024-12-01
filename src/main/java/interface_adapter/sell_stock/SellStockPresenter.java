@@ -3,11 +3,12 @@ package interface_adapter.sell_stock;
 import interface_adapter.LoggedInState;
 import interface_adapter.LoggedInViewModel;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.login.LoginViewModel;
-import interface_adapter.signup.SignupViewModel;
 import use_case.sell_stock.SellStockOutputBoundary;
 import use_case.sell_stock.SellStockOutputData;
 
+/**
+ * The Presenter for the Sell Stock Use Case.
+ */
 public class SellStockPresenter implements SellStockOutputBoundary {
     private final LoggedInViewModel loggedInViewModel;
     private final ViewManagerModel viewManagerModel;
@@ -17,15 +18,12 @@ public class SellStockPresenter implements SellStockOutputBoundary {
         this.viewManagerModel = viewManagerModel;
     }
 
-
     @Override
     public void prepareSuccessView(SellStockOutputData response) {
         final LoggedInState loggedInState = loggedInViewModel.getState();
         loggedInState.setBalance(response.getNewBalance());
         loggedInViewModel.setState(loggedInState);
         loggedInViewModel.firePropertyChanged();
-
-
     }
 
     @Override
@@ -34,7 +32,5 @@ public class SellStockPresenter implements SellStockOutputBoundary {
         loggedInState.setError(errorMessage);
         loggedInViewModel.setState(loggedInState);
         loggedInViewModel.firePropertyChanged();
-
-
     }
 }

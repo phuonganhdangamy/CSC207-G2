@@ -7,7 +7,6 @@ public class SellStockInputData {
     private String ticker;
     private int quantity;
 
-
     public SellStockInputData(int quantity, String ticker) {
         this.quantity = quantity;
         this.ticker = ticker;
@@ -20,5 +19,4 @@ public class SellStockInputData {
     public String getTicker() {
         return ticker;
     }
-
 }
