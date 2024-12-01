@@ -1,4 +1,4 @@
-package interface_adapter.view_owned_stock;
+package interface_adapter.list_stocks;
 
 import interface_adapter.LoggedInState;
 import interface_adapter.LoggedInViewModel;

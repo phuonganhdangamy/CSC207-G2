@@ -4,23 +4,16 @@ import interface_adapter.LoggedInState;
 import interface_adapter.buy_stock.BuyStockController;
 import interface_adapter.LoggedInViewModel;
 import interface_adapter.find_stock.FindStockController;
-import interface_adapter.find_stock.FindStockViewModel;
-import interface_adapter.login.LoginState;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.profit_loss.ProfitLossController;
 import interface_adapter.sell_stock.SellStockController;
-import interface_adapter.view_owned_stock.ViewOwnedStockController;
+import interface_adapter.list_stocks.ViewOwnedStockController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
 import java.util.Map;
 
 public class LoggedInView extends JPanel implements PropertyChangeListener {
