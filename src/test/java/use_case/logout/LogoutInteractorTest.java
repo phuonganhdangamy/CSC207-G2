@@ -1,30 +1,33 @@
 package use_case.logout;
 
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
+
 import data_access.DBUserDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entity.StockFactory;
 import entity.User;
 import entity.UserFactory;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class LogoutInteractorTest {
 
     @Test
     void successTest() {
-        LogoutInputData inputData = new LogoutInputData("Paul");
-        DBUserDataAccessObject userRepository = new DBUserDataAccessObject(new StockFactory(), new UserFactory());
+        final LogoutInputData inputData = new LogoutInputData("Mindyissleepy");
+        final DBUserDataAccessObject userRepository = new DBUserDataAccessObject(new StockFactory(), new UserFactory());
 
         // Paul has been already added to
-        userRepository.setCurrentUsername("Paul");
+        userRepository.setCurrentUsername("Mindyissleepy");
 
         // creates a successPresenter that tests whether the test case is as we expect.
-        LogoutOutputBoundary successPresenter = new LogoutOutputBoundary() {
+        final LogoutOutputBoundary successPresenter = new LogoutOutputBoundary() {
             @Override
             public void prepareSuccessView(LogoutOutputData user) {
                 // check that the output data contains the username of who logged out
-                assertEquals("Paul", user.getUsername());
+                assertEquals("Mindyissleepy", user.getUsername());
             }
 
             @Override
@@ -33,7 +36,7 @@ class LogoutInteractorTest {
             }
         };
 
-        LogoutInputBoundary interactor = new LogoutInteractor(userRepository, successPresenter);
+        final LogoutInputBoundary interactor = new LogoutInteractor(userRepository, successPresenter);
         interactor.execute(inputData);
         // check that the user was logged out
         assertNull(userRepository.getCurrentUsername());
@@ -41,32 +44,37 @@ class LogoutInteractorTest {
 
     @Test
     void successTestInMemory() {
-        LogoutInputData inputData = new LogoutInputData("Paul");
-        InMemoryUserDataAccessObject userRepository = new InMemoryUserDataAccessObject();
+        final LogoutInputData inputData = new LogoutInputData("TestInmemory");
+        final InMemoryUserDataAccessObject userRepository = new InMemoryUserDataAccessObject();
 
-        // add Paul to the data access repository before we log in.
-        UserFactory factory = new UserFactory();
-        User user = factory.create("Paul", "password");
+        // Add user to the repository and set as current user
+        final UserFactory factory = new UserFactory();
+        final User user = factory.create("TestInmemory", "123456");
         userRepository.save(user);
-        userRepository.setCurrentUsername("Paul");
+        userRepository.setCurrentUsername("TestInmemory");
 
-        // creates a successPresenter that tests whether the test case is as we expect.
-        LogoutOutputBoundary successPresenter = new LogoutOutputBoundary() {
+        // Debugging: Check initial state
+        System.out.println("Before logout, current user: " + userRepository.getCurrentUsername());
+
+        final LogoutOutputBoundary successPresenter = new LogoutOutputBoundary() {
             @Override
             public void prepareSuccessView(LogoutOutputData user) {
-                // check that the output data contains the username of who logged out
-                assertEquals("Paul", user.getUsername());
+                System.out.println("SuccessView called with user: " + user.getUsername());
+                assertEquals("TestInmemory", user.getUsername());
             }
 
             @Override
             public void prepareFailView(String error) {
+                System.out.println("FailView called with error: " + error);
                 fail("Use case failure is unexpected.");
             }
         };
 
-        LogoutInputBoundary interactor = new LogoutInteractor(userRepository, successPresenter);
+        final LogoutInputBoundary interactor = new LogoutInteractor(userRepository, successPresenter);
         interactor.execute(inputData);
-        // check that the user was logged out
+
+        // Debugging: Check final state
+        System.out.println("After logout, current user: " + userRepository.getCurrentUsername());
         assertNull(userRepository.getCurrentUsername());
     }
 
