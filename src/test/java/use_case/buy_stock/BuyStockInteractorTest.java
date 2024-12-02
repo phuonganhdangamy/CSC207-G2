@@ -35,7 +35,7 @@ public class BuyStockInteractorTest {
      * Sets up the test environment before each test method is run.
      * It initializes a test user, an in-memory user database, and a mock implementation
      * of the BuyStockUserDataAccessInterface to simulate user data retrieval and saving.
-
+     * <p>
      * This method is annotated with @BeforeEach to ensure it runs before every test case.
      */
 
@@ -71,7 +71,6 @@ public class BuyStockInteractorTest {
                 return user;
             }
         };
-
         database.saveUserInfo(testUser);
     }
 
@@ -79,9 +78,9 @@ public class BuyStockInteractorTest {
      * Tests the scenario where the user tries to buy stock for a ticker symbol that does not exist.
      * The test ensures that the appropriate error message "This ticker does not exist." is presented
      * when the stock ticker is invalid or unavailable in the database.
-
+     * <p>
      * This test simulates a failed stock purchase where the ticker symbol is incorrect.
-
+     * <p>
      * Assertions:
      * - Verifies that the error message returned is "This ticker does not exist."
      */
@@ -92,7 +91,9 @@ public class BuyStockInteractorTest {
 
         BuyStockOutputBoundary testPresenter = new BuyStockOutputBoundary() {
             @Override
-            public void prepareSuccessView(BuyStockOutputData outputData) {fail("Use case success is unexpected.");}
+            public void prepareSuccessView(BuyStockOutputData outputData) {
+                fail("Use case success is unexpected.");
+            }
 
             @Override
             public void prepareFailView(String errorMessage) {
@@ -111,9 +112,9 @@ public class BuyStockInteractorTest {
      * In this test, a user with an initial balance is checked against a stock price for which
      * the user cannot afford the requested quantity. The test ensures that the correct error message
      * "The balance is not sufficient." is returned.
-
+     * <p>
      * This test simulates a failed stock purchase due to insufficient funds in the user's account.
-
+     * <p>
      * Assertions:
      * - Verifies that the error message returned is "The balance is not sufficient."
      */
@@ -128,7 +129,9 @@ public class BuyStockInteractorTest {
         BuyStockOutputBoundary testPresenter = new BuyStockOutputBoundary() {
 
             @Override
-            public void prepareSuccessView(BuyStockOutputData outputData) {fail("Use case success is unexpected.");}
+            public void prepareSuccessView(BuyStockOutputData outputData) {
+                fail("Use case success is unexpected.");
+            }
 
             @Override
             public void prepareFailView(String errorMessage) {
@@ -169,7 +172,6 @@ public class BuyStockInteractorTest {
     public void successTest() {
         BuyStockInputData buyStockInputData = new BuyStockInputData("testUser", "IBM", 1);
 
-
         // Presenter for testing successful stock purchase
         BuyStockOutputBoundary testPresenter = new BuyStockOutputBoundary() {
 
@@ -178,6 +180,7 @@ public class BuyStockInteractorTest {
                 // Verify that the success scenario works as expected
                 assertEquals("IBM", outputData.getTickerSymbol());
                 assertEquals(100.0, outputData.getRemainingBalance());
+                assertEquals(1, outputData.getNumberOfShares());
             }
 
             @Override
@@ -198,8 +201,18 @@ public class BuyStockInteractorTest {
         buyStockInteractor.setProfitLossInteractor(new ProfitLossInputBoundary() {
             @Override
             public void execute() {
+
             }
         });
         buyStockInteractor.execute(buyStockInputData);
     }
+
+    @Test public void testBuyStockInputData () {
+        BuyStockInputData inputData = new BuyStockInputData ("testUser", "AAPL", 3);
+        assertEquals("testUser", inputData.getUsername());
+        assertEquals("AAPL", inputData.getTickerSymbol());
+        assertEquals(3, inputData.getQuantity());
+    }
+
+
 }

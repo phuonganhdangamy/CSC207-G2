@@ -96,7 +96,6 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
         final Portfolio userPortfolio = user.getPortfolio();
 
         // Checking the number of shares already owned by the user
-        final int numberOfShares = userPortfolio.getShareCount(ticker);
 
         // Check if the stock exists
         if (!stockDatabase.isStockExist(ticker)) {
@@ -119,6 +118,8 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
                 user.getPortfolio().addStock(new Stock(ticker, stockCost));
             }
 
+            final int numberOfShares = userPortfolio.getShareCount(ticker);
+
             // Save the updated user info
             database.saveUserInfo(user);
 
@@ -128,7 +129,11 @@ public class BuyStockInteractor implements BuyStockInputBoundary {
             profitLossInteractor.execute();
 
             // Prepare success view with updated data
+            System.out.println(numberOfShares);
             buyStockPresenter.prepareSuccessView(new BuyStockOutputData(user.getBalance(), ticker, numberOfShares));
         }
     }
+
+
+
 }
