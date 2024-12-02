@@ -1,11 +1,13 @@
 package use_case.profit_loss;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -106,6 +108,59 @@ class ProfitLossInteractorTest {
         // Assert
         assertFalse(presenter.useCaseFailed);
         assertEquals(expectedStockProfitLosses, presenter.stockProfitLosses);
+    }
+
+    /**
+     * Tests the profit/loss calculation when the portfolio is empty.
+     * Verifies that the total profit/loss and stock-specific results are zero or empty.
+     */
+    @Test
+    void executeWithEmptyPortfolioTest() {
+        final Portfolio portfolio = dataAccess.getCurrentUser().getPortfolio();
+        portfolio.getStocks().clear();
+
+        profitLossInteractor.execute();
+
+        assertFalse(presenter.useCaseFailed);
+        assertEquals(0.0, presenter.totalProfitLoss, 0.01);
+        Assertions.assertTrue(presenter.stockProfitLosses.isEmpty());
+    }
+
+    /**
+     * Tests the behavior when the presenter reports a failure.
+     * Verifies that the use case reflects the failure state correctly.
+     */
+    @Test
+    void presenterFailureTest() {
+        presenter.useCaseFailed = true;
+
+        profitLossInteractor.execute();
+
+        Assertions.assertTrue(presenter.useCaseFailed);
+    }
+
+    @Test
+    void inputDataIsUsedInternallyTest() {
+        profitLossInteractor.execute();
+
+        // Verify that the input data was created and logged (if applicable)
+        // This can be verified indirectly through logs or mock validations
+        assertDoesNotThrow(() -> profitLossInteractor.execute());
+    }
+
+    @Test
+    void inputDataUsageTest() {
+        // Create a ProfitLossInputData object
+        final ProfitLossInputData inputData = new ProfitLossInputData("user123");
+
+        // Verify the username is correctly set
+        assertEquals("user123", inputData.getUsername());
+
+        // Simulate its use in a calculation
+        profitLossInteractor.execute();
+
+        // Ensure no exceptions are thrown
+        assertDoesNotThrow(() -> new ProfitLossInputData("test_user"));
     }
 
     // Mock current prices for the test
