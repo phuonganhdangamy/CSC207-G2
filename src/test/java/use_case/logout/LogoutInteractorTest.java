@@ -2,6 +2,7 @@ package use_case.logout;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -76,6 +77,52 @@ class LogoutInteractorTest {
         // Debugging: Check final state
         System.out.println("After logout, current user: " + userRepository.getCurrentUsername());
         assertNull(userRepository.getCurrentUsername());
+    }
+
+    @Test
+    void failTest() {
+        final LogoutInputData inputData = new LogoutInputData("InvalidUser");
+        final InMemoryUserDataAccessObject userRepository = new InMemoryUserDataAccessObject();
+
+        // Mock presenter to handle failure
+        final LogoutOutputBoundary failPresenter = new LogoutOutputBoundary() {
+            @Override
+            public void prepareSuccessView(LogoutOutputData user) {
+                Assertions.fail("Logout should have failed but was successful.");
+            }
+
+            @Override
+            public void prepareFailView(String error) {
+                assertEquals("Logout failed, please try again", error);
+            }
+        };
+
+        // Create interactor with a repository that does not have the user
+        final LogoutInputBoundary interactor = new LogoutInteractor(userRepository, failPresenter);
+
+        // Execute the logout operation
+        interactor.execute(inputData);
+
+        // Assert that the user is still null (no current user)
+        assertNull(userRepository.getCurrentUsername());
+    }
+
+    @Test
+    void logoutInputDataTest() {
+        final LogoutInputData inputData = new LogoutInputData("TestUser");
+
+        // Validate that the username is set correctly
+        assertEquals("TestUser", inputData.getUsername());
+    }
+
+    @Test
+    void logoutOutputDataTest() {
+        final LogoutOutputData outputData = new LogoutOutputData(true, "Logout successful", "TestUser");
+
+        // Validate the fields
+        assertTrue(outputData.isSuccess());
+        assertEquals("Logout successful", outputData.getMessage());
+        assertEquals("TestUser", outputData.getUsername());
     }
 
 }
