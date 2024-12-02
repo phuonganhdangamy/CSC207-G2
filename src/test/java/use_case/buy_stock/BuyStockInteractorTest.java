@@ -207,6 +207,12 @@ public class BuyStockInteractorTest {
         buyStockInteractor.execute(buyStockInputData);
     }
 
+    /**
+     * This test verifies that the BuyStockInputData class correctly stores and retrieves the
+     * username, ticker symbol, and quantity for a stock purchase. It checks if the getter
+     * methods return the expected values provided during object initialization.
+     */
+
     @Test public void testBuyStockInputData () {
         BuyStockInputData inputData = new BuyStockInputData ("testUser", "AAPL", 3);
         assertEquals("testUser", inputData.getUsername());
