@@ -59,10 +59,6 @@ public class ProfitLossInteractor implements ProfitLossInputBoundary {
             currentPrices.put(tickerSymbol, stockDataAccess.getCost(tickerSymbol));
         }
 
-        // For debug
-        System.out.println("Current prices: " + currentPrices);
-        System.out.println("Current tickers: " + uniqueTickerSymbols);
-
         // Use the ProfitLossCalculator to calculate results
         final ProfitLossCalculator calculator = new ProfitLossCalculator(portfolio);
 
@@ -78,10 +74,6 @@ public class ProfitLossInteractor implements ProfitLossInputBoundary {
 
         // Combine results into a single output data object
         final ProfitLossOutputData outputData = new ProfitLossOutputData(totalProfitLoss, stockProfitLosses);
-
-        // For debug
-        System.out.println("each stock P&L: " + stockProfitLosses);
-        System.out.println("total P&L: " + totalProfitLoss);
 
         // Send the unified result to the presenter
         outputBoundary.success(outputData);
