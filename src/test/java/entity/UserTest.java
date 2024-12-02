@@ -1,9 +1,13 @@
 package entity;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the User class.
@@ -22,8 +26,10 @@ public class UserTest {
         // Test creating a user
         assertEquals("testUser", user.getName());
         assertEquals("testPassword", user.getPassword());
-        assertEquals(10000, user.getBalance(), 0.01); // Default balance
-        assertNotNull(user.getPortfolio()); // Portfolio should be initialized
+        // Default balance
+        assertEquals(10000, user.getBalance(), 0.01);
+        // Portfolio should be initialized
+        assertNotNull(user.getPortfolio());
     }
 
     @Test
@@ -49,18 +55,19 @@ public class UserTest {
     @Test
     void testUniqueAccount() {
         // Create a unique user
-        User uniqueUser = User.isUniqueAccount("uniqueUser", "uniquePassword");
+        final User uniqueUser = User.isUniqueAccount("uniqueUser", "uniquePassword");
         assertNotNull(uniqueUser);
         assertEquals("uniqueUser", uniqueUser.getName());
 
         // Try to create another user with the same username
-        User duplicateUser = User.isUniqueAccount("uniqueUser", "anotherPassword");
+        final User duplicateUser = User.isUniqueAccount("uniqueUser", "anotherPassword");
         assertNull(duplicateUser);
     }
 
     @Test
     void testLogout() {
         // Test logging out
-        user.logout(); // No return value, so just ensure no exceptions occur
+        // No return value, so just ensure no exceptions occur
+        user.logout();
     }
 }

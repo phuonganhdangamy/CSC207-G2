@@ -3,22 +3,21 @@ package data_access;
 import java.io.IOException;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import entity.Portfolio;
 import entity.Stock;
 import entity.StockFactory;
 import entity.User;
 import entity.UserFactory;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import use_case.DataAccessException;
-import use_case.UserDataAccessInterface;
 import use_case.buy_stock.BuyStockUserDataAccessInterface;
 import use_case.list_stocks.ListStocksUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
@@ -160,7 +159,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
                 if (userInfo.isEmpty()) {
                     return user;
                 }
-                //user.setBalance(userInfo.getDouble(BALANCE));
+                // user.setBalance(userInfo.getDouble(BALANCE));
 
                 // Retrieves portfolio of stocks and creates the portfolio object
                 final JSONArray portfolioStocks = userInfo.getJSONArray(PORTFOLIO);
@@ -296,15 +295,19 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
      */
     @Override
     public boolean logoutUser(String username) {
-        // Simulate clearing session data
         if (username != null && !username.isEmpty() && username.equals(this.getCurrentUsername())) {
-
-            this.setCurrentUsername(null);// Clear the current username to log out
-            this.saveUserInfo(currentUser);
-            this.currentUser = null;
-
+            if (currentUser != null) {
+                // Save user info before clearing it
+                this.saveUserInfo(currentUser);
+            }
+            // Clear the current username
+            this.setCurrentUsername(null);
+            this.setCurrentUser(null);
+            // Clear the current user
             return true;
         }
         return false;
     }
+
 }
+

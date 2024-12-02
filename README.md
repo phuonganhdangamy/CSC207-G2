@@ -89,11 +89,12 @@ The project is aimed at both beginners and enthusiasts interested in stock tradi
 
 2. **Log In or Create an Account**:
   - Follow prompts to log in or create a new account.
-
+![Login Page](images\LoginView.png)
+![Signup Page](images\SignupView.png)
 3. **Trade Stocks**:
   - Use the menu to search for stock prices, buy or sell stocks.
   - Monitor your balance and portfolio after transactions.
-
+![Logged In View to make transactions and track stocks](images\LoggedInView.png)
 4. **Analyze Performance**:
   - Navigate to your portfolio to view profit and loss statistics.
 
@@ -133,7 +134,7 @@ Interested in contributing? Follow these steps:
 
 ---
 
-## **User Stories**
+## 👥 **User Stories**
 1. Log in and log out of an account (common).
 
    Allows users to securely access their accounts and save data when they log out. Enables secure user access with persistent data storage.

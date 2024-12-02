@@ -1,16 +1,19 @@
 package use_case.list_stocks;
 
-import data_access.InMemoryUserDataAccessObject;
-import entity.Portfolio;
-import entity.Stock;
-import entity.User;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import entity.Portfolio;
+import entity.Stock;
+import entity.User;
 
 /**
  * Test class for ListStocksInteractor.
@@ -24,7 +27,7 @@ public class ListStocksInteractorTest {
     void setUp() {
         // Setting up a user and their portfolio
         testUser = new User("Maya", "securePassword");
-        Portfolio portfolio = testUser.getPortfolio();
+        final Portfolio portfolio = testUser.getPortfolio();
 
         // Adding stocks to the portfolio
         portfolio.addStock(new Stock("AAPL", 150.0));
@@ -44,13 +47,13 @@ public class ListStocksInteractorTest {
 
     @Test
     void successTest() {
-        ListStocksInputData inputData = new ListStocksInputData("Maya");
+        final ListStocksInputData inputData = new ListStocksInputData("Maya");
 
         // Define a presenter to capture the output
         outputBoundary = new ListStocksOutputBoundary() {
             @Override
             public void present(ListStocksOutputData outputData) {
-                Map<String, Integer> stocksOwned = outputData.getStocksOwned();
+                final Map<String, Integer> stocksOwned = outputData.getStocksOwned();
                 assertNotNull(stocksOwned, "Output data should not be null.");
                 assertEquals(2, stocksOwned.get("AAPL"), "User should own 2 shares of AAPL.");
                 assertEquals(1, stocksOwned.get("GOOG"), "User should own 1 share of GOOG.");
@@ -58,7 +61,7 @@ public class ListStocksInteractorTest {
         };
 
         // Initialize and execute the interactor
-        ListStocksInteractor interactor = new ListStocksInteractor(outputBoundary, userDataAccess);
+        final ListStocksInteractor interactor = new ListStocksInteractor(outputBoundary, userDataAccess);
         interactor.execute(inputData);
     }
 
@@ -72,7 +75,7 @@ public class ListStocksInteractorTest {
             }
         };
 
-        ListStocksInputData inputData = new ListStocksInputData("NonExistentUser");
+        final ListStocksInputData inputData = new ListStocksInputData("NonExistentUser");
 
         // Define a presenter to capture the failure scenario
         outputBoundary = new ListStocksOutputBoundary() {
@@ -83,7 +86,7 @@ public class ListStocksInteractorTest {
         };
 
         // Initialize and execute the interactor
-        ListStocksInteractor interactor = new ListStocksInteractor(outputBoundary, userDataAccess);
+        final ListStocksInteractor interactor = new ListStocksInteractor(outputBoundary, userDataAccess);
         assertThrows(IllegalArgumentException.class, () -> interactor.execute(inputData),
                 "Expected an IllegalArgumentException for a non-existent user.");
     }
@@ -91,7 +94,7 @@ public class ListStocksInteractorTest {
     @Test
     void emptyPortfolioTest() {
         // Simulate an empty portfolio by not adding any stocks
-        testUser = new User("Maya", "securePassword"); // New user with an empty portfolio
+        testUser = new User("Maya", "securePassword");
 
         // Simulate user data access for the new user
         userDataAccess = new ListStocksUserDataAccessInterface() {
@@ -103,20 +106,47 @@ public class ListStocksInteractorTest {
             }
         };
 
-        ListStocksInputData inputData = new ListStocksInputData("Maya");
+        final ListStocksInputData inputData = new ListStocksInputData("Maya");
 
         // Define a presenter to validate the output for an empty portfolio
         outputBoundary = new ListStocksOutputBoundary() {
             @Override
             public void present(ListStocksOutputData outputData) {
-                Map<String, Integer> stocksOwned = outputData.getStocksOwned();
+                final Map<String, Integer> stocksOwned = outputData.getStocksOwned();
                 assertNotNull(stocksOwned, "Output data should not be null.");
                 assertTrue(stocksOwned.isEmpty(), "Portfolio should be empty.");
             }
         };
 
         // Initialize and execute the interactor
-        ListStocksInteractor interactor = new ListStocksInteractor(outputBoundary, userDataAccess);
+        final ListStocksInteractor interactor = new ListStocksInteractor(outputBoundary, userDataAccess);
         interactor.execute(inputData);
+    }
+
+    @Test
+    void nullUsernameInputDataTest() {
+        assertThrows(IllegalArgumentException.class, () -> new ListStocksInputData(null),
+                "Expected an IllegalArgumentException for null username.");
+    }
+
+    @Test
+    void getUsernameTest() {
+        ListStocksInputData inputData = new ListStocksInputData("Maya");
+        assertEquals("Maya", inputData.getUsername(), "Expected username to match input.");
+    }
+
+    @Test
+    void nullStocksOwnedOutputDataTest() {
+        assertThrows(IllegalArgumentException.class, () -> new ListStocksOutputData(null),
+                "Expected an IllegalArgumentException for null stocksOwned.");
+    }
+
+    @Test
+    void getStocksOwnedTest() {
+        Map<String, Integer> stockMap = Map.of("AAPL", 2, "GOOG", 1);
+        ListStocksOutputData outputData = new ListStocksOutputData(stockMap);
+
+        assertEquals(stockMap, outputData.getStocksOwned(),
+                "Expected the same stock map to be returned by getStocksOwned.");
     }
 }

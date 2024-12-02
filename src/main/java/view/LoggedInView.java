@@ -26,10 +26,10 @@ import interface_adapter.LoggedInState;
 import interface_adapter.LoggedInViewModel;
 import interface_adapter.buy_stock.BuyStockController;
 import interface_adapter.find_stock.FindStockController;
+import interface_adapter.list_stocks.ListStocksController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.profit_loss.ProfitLossController;
 import interface_adapter.sell_stock.SellStockController;
-import interface_adapter.list_stocks.ListStocksController;
 
 /**
  * The LoggedInView class represents the main UI for a user who is logged in.

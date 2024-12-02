@@ -1,9 +1,10 @@
 package entity;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the Stock class.
@@ -34,8 +35,8 @@ public class StockTest {
 
     @Test
     void testStockCreationWithFactory() {
-        StockFactory factory = new StockFactory();
-        Stock newStock = factory.create("MSFT", 300.0);
+        final StockFactory factory = new StockFactory();
+        final Stock newStock = factory.create("MSFT", 300.0);
 
         assertNotNull(newStock, "The factory should create a non-null stock object.");
         assertEquals("MSFT", newStock.getTickerSymbol(),
