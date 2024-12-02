@@ -71,9 +71,32 @@ public class FindStockInteractorTest {
     }
 
     @Test
-    void failureEmptyStockTest() {
+    void failureNullStockTest() {
 
         final FindStockInputData inputData = new FindStockInputData(null);
+
+        final InMemoryStockDataAccessObject stockRepository = new InMemoryStockDataAccessObject();
+
+        final FindStockOutputBoundary failPresenter = new FindStockOutputBoundary() {
+            @Override
+            public void prepareSuccessView(FindStockOutputData outputData) {
+                fail("Use case success is unexpected.");
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                assertEquals("Input cannot be empty.", errorMessage);
+            }
+        };
+
+        final FindStockInputBoundary interactor = new FindStockInteractor(stockRepository, failPresenter);
+        interactor.execute(inputData);
+    }
+
+    @Test
+    void failureEmptyStockTest() {
+
+        final FindStockInputData inputData = new FindStockInputData("");
 
         final InMemoryStockDataAccessObject stockRepository = new InMemoryStockDataAccessObject();
 
