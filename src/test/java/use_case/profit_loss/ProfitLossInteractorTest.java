@@ -146,7 +146,7 @@ class ProfitLossInteractorTest {
     }
 
     // Mock output boundary class for testing
-    private final class TestProfitLossOutputBoundary implements ProfitLossOutputBoundary {
+    private static final class TestProfitLossOutputBoundary implements ProfitLossOutputBoundary {
         private boolean useCaseFailed;
         private double totalProfitLoss;
         private Map<String, Double> stockProfitLosses = new HashMap<>();

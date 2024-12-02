@@ -1,9 +1,9 @@
 package use_case.logout;
 
-import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import data_access.DBUserDataAccessObject;
@@ -32,7 +32,7 @@ class LogoutInteractorTest {
 
             @Override
             public void prepareFailView(String error) {
-                fail("Use case failure is unexpected.");
+                Assertions.fail("Use case failure is unexpected.");
             }
         };
 
@@ -66,7 +66,7 @@ class LogoutInteractorTest {
             @Override
             public void prepareFailView(String error) {
                 System.out.println("FailView called with error: " + error);
-                fail("Use case failure is unexpected.");
+                Assertions.fail("Use case failure is unexpected.");
             }
         };
 

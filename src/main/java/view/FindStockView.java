@@ -109,11 +109,6 @@ public class FindStockView extends JPanel implements PropertyChangeListener {
         this.add(buttons);
     }
 
-    private void findStock(String stockName) {
-        // Call controller to handle business logic
-        System.out.println("Finding stock: " + stockName);
-    }
-
     private void handleSearchTickerAction(ActionEvent evt) {
         String errorMessage = null;
         final String tickerSymbol = tickerInputField.getText();
