@@ -1,31 +1,29 @@
 package use_case.login;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.Test;
+
 import data_access.DBUserDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entity.StockFactory;
-import entity.UserFactory;
 import entity.User;
-import org.junit.jupiter.api.Test;
+import entity.UserFactory;
 import use_case.list_stocks.ListStocksInputBoundary;
 import use_case.list_stocks.ListStocksInputData;
 import use_case.profit_loss.ProfitLossInputBoundary;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class LoginInteractorTest {
 
     @Test
     void successTest() {
-        LoginInputData inputData = new LoginInputData("anhdang", "anhdang");
-        LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(), new UserFactory());
-
-        // For the success test, we need to add Paul to the data access repository before we log in.
-//        UserFactory factory = new UserFactory();
-//        User user = factory.create("Paul", "password");
-//        userRepository.save(user);
+        final LoginInputData inputData = new LoginInputData("anhdang", "anhdang");
+        final LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(),
+                new UserFactory());
 
         // This creates a successPresenter that tests whether the test case is as we expect.
-        LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
+        final LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
                 assertEquals("anhdang", user.getUsername());
@@ -43,7 +41,7 @@ class LoginInteractorTest {
 
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        final LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
 
         interactor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
             @Override
@@ -62,16 +60,16 @@ class LoginInteractorTest {
 
     @Test
     void successTestWithInMemory() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final LoginInputData inputData = new LoginInputData("Paul", "password");
+        final LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
         // For the success test, we need to add Paul to the data access repository before we log in.
-        UserFactory factory = new UserFactory();
-        User user = factory.create("Paul", "password");
+        final UserFactory factory = new UserFactory();
+        final User user = factory.create("Paul", "password");
         userRepository.save(user);
 
         // This creates a successPresenter that tests whether the test case is as we expect.
-        LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
+        final LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
                 assertEquals("Paul", user.getUsername());
@@ -88,7 +86,7 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        final LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
         interactor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
             @Override
             public void execute(ListStocksInputData inputData) {
@@ -105,16 +103,12 @@ class LoginInteractorTest {
 
     @Test
     void successUserLoggedInTest() {
-        LoginInputData inputData = new LoginInputData("anhdang", "anhdang");
-        LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(), new UserFactory());
-
-        // For the success test, we need to add Paul to the data access repository before we log in.
-//        UserFactory factory = new UserFactory();
-//        User user = factory.create("Paul", "password");
-//        userRepository.save(user);
+        final LoginInputData inputData = new LoginInputData("anhdang", "anhdang");
+        final LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(),
+                new UserFactory());
 
         // This creates a successPresenter that tests whether the test case is as we expect.
-        LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
+        final LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
                 assertEquals("anhdang", userRepository.getCurrentUsername());
@@ -131,7 +125,7 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        final LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
         interactor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
             @Override
             public void execute(ListStocksInputData inputData) {
@@ -150,16 +144,16 @@ class LoginInteractorTest {
 
     @Test
     void successUserLoggedInTestInMemory() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final LoginInputData inputData = new LoginInputData("Paul", "password");
+        final LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
         // For the success test, we need to add Paul to the data access repository before we log in.
-        UserFactory factory = new UserFactory();
-        User user = factory.create("Paul", "password");
+        final UserFactory factory = new UserFactory();
+        final User user = factory.create("Paul", "password");
         userRepository.save(user);
 
         // This creates a successPresenter that tests whether the test case is as we expect.
-        LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
+        final LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
                 assertEquals("Paul", userRepository.getCurrentUsername());
@@ -176,7 +170,7 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        final LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
         interactor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
             @Override
             public void execute(ListStocksInputData inputData) {
@@ -195,17 +189,12 @@ class LoginInteractorTest {
 
     @Test
     void failurePasswordMismatchTest() {
-        LoginInputData inputData = new LoginInputData("anhdang", "wrong");
-        LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(), new UserFactory());
-
-        // For this failure test, we need to add Paul to the data access repository before we log in, and
-        // the passwords should not match.
-//        UserFactory factory = new UserFactory();
-//        User user = factory.create("Paul", "password");
-//        userRepository.save(user);
+        final LoginInputData inputData = new LoginInputData("anhdang", "wrong");
+        final LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(),
+                new UserFactory());
 
         // This creates a presenter that tests whether the test case is as we expect.
-        LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
+        final LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
                 // this should never be reached since the test case should fail
@@ -219,27 +208,26 @@ class LoginInteractorTest {
 
             @Override
             public void switchToSignUpView() {
-
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
+        final LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
         interactor.execute(inputData);
     }
 
     @Test
     void failurePasswordMismatchTestInMemory() {
-        LoginInputData inputData = new LoginInputData("Paul", "wrong");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final LoginInputData inputData = new LoginInputData("Paul", "wrong");
+        final LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
         // For this failure test, we need to add Paul to the data access repository before we log in, and
         // the passwords should not match.
-        UserFactory factory = new UserFactory();
-        User user = factory.create("Paul", "password");
+        final UserFactory factory = new UserFactory();
+        final User user = factory.create("Paul", "password");
         userRepository.save(user);
 
         // This creates a presenter that tests whether the test case is as we expect.
-        LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
+        final LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
                 // this should never be reached since the test case should fail
@@ -256,20 +244,21 @@ class LoginInteractorTest {
 
             }
         };
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
+        final LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
         interactor.execute(inputData);
     }
 
     @Test
     void failureUserDoesNotExistTest() {
-        LoginInputData inputData = new LoginInputData("Amy", "password");
-        LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(), new UserFactory());
+        final LoginInputData inputData = new LoginInputData("Amy", "password");
+        final LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new StockFactory(),
+                new UserFactory());
 
         // Since Paul was added to the database in the previous tests, try another login data
         // Add Amy to the repo so that when we check later they already exist
 
         // This creates a presenter that tests whether the test case is as we expect.
-        LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
+        final LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
                 // this should never be reached since the test case should fail
@@ -287,7 +276,7 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
+        final LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
         interactor.execute(inputData);
     }
 }

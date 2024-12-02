@@ -3,22 +3,21 @@ package data_access;
 import java.io.IOException;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import entity.Portfolio;
 import entity.Stock;
 import entity.StockFactory;
 import entity.User;
 import entity.UserFactory;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import use_case.DataAccessException;
-import use_case.UserDataAccessInterface;
 import use_case.buy_stock.BuyStockUserDataAccessInterface;
 import use_case.list_stocks.ListStocksUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
@@ -85,7 +84,8 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             return responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE;
-        } catch (IOException | JSONException ex) {
+        }
+        catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -118,10 +118,12 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
                 // success!
-            } else {
+            }
+            else {
                 throw new RuntimeException(responseBody.getString(MESSAGE));
             }
-        } catch (IOException | JSONException ex) {
+        }
+        catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -157,7 +159,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
                 if (userInfo.isEmpty()) {
                     return user;
                 }
-                //user.setBalance(userInfo.getDouble(BALANCE));
+                // user.setBalance(userInfo.getDouble(BALANCE));
 
                 // Retrieves portfolio of stocks and creates the portfolio object
                 final JSONArray portfolioStocks = userInfo.getJSONArray(PORTFOLIO);
@@ -178,10 +180,12 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
                     userPortfolio.addStock(stock);
                 }
                 return user;
-            } else {
+            }
+            else {
                 throw new DataAccessException(responseBody.getString(MESSAGE));
             }
-        } catch (IOException | JSONException | DataAccessException ex) {
+        }
+        catch (IOException | JSONException | DataAccessException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -233,10 +237,12 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
                 // success
-            } else {
+            }
+            else {
                 throw new RuntimeException(responseBody.getString(MESSAGE));
             }
-        } catch (IOException | JSONException ex) {
+        }
+        catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -291,10 +297,13 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
     public boolean logoutUser(String username) {
         if (username != null && !username.isEmpty() && username.equals(this.getCurrentUsername())) {
             if (currentUser != null) {
-                this.saveUserInfo(currentUser); // Save user info before clearing it
+                // Save user info before clearing it
+                this.saveUserInfo(currentUser);
             }
-            this.setCurrentUsername(null); // Clear the current username
-            this.setCurrentUser(null);     // Clear the current user
+            // Clear the current username
+            this.setCurrentUsername(null);
+            this.setCurrentUser(null);
+            // Clear the current user
             return true;
         }
         return false;
