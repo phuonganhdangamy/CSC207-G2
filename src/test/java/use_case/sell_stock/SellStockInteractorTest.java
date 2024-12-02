@@ -13,7 +13,6 @@ import data_access.InMemoryStockDataAccessObject;
 import entity.Portfolio;
 import entity.Stock;
 import entity.User;
-import use_case.find_stock.FindStockDataAccessInterface;
 import use_case.list_stocks.ListStocksInputBoundary;
 import use_case.list_stocks.ListStocksInputData;
 import use_case.profit_loss.ProfitLossInputBoundary;
@@ -21,11 +20,10 @@ import use_case.profit_loss.ProfitLossInputBoundary;
 public class SellStockInteractorTest {
     private User testUser;
     private SellStockUserDataAccessInterface database;
-    private FindStockDataAccessInterface findStockDatabase;
     private InMemoryStockDataAccessObject stockDatabase;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         // Setting up a user and database
         final List<String> stockTickers = new ArrayList<>(List.of("MSFT", "AAPL", "GOOG", "WMT", "MSFT", "AAPL", "GOOG",
                 "WMT"));
@@ -130,13 +128,13 @@ public class SellStockInteractorTest {
         sellStockInteractor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
             @Override
             public void execute(ListStocksInputData inputData) {
-
+                // Intentionally left blank as this is not needed for the test.
             }
         });
         sellStockInteractor.setProfitLossInteractor(new ProfitLossInputBoundary() {
             @Override
             public void execute() {
-
+                // Intentionally left blank as this is not needed for the test.
             }
 
         });

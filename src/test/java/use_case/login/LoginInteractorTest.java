@@ -1,6 +1,7 @@
 package use_case.login;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ class LoginInteractorTest {
 
             @Override
             public void switchToSignUpView() {
-
+                // Intentionally left blank as this is not needed for the test.
             }
 
         };
@@ -46,12 +47,13 @@ class LoginInteractorTest {
         interactor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
             @Override
             public void execute(ListStocksInputData inputData) {
-
+                // Intentionally left blank as this is not needed for the test.
             }
         });
         interactor.setProfitLossInteractor(new ProfitLossInputBoundary() {
             @Override
             public void execute() {
+                // Intentionally left blank as this is not needed for the test.
             }
         });
 
@@ -82,6 +84,7 @@ class LoginInteractorTest {
 
             @Override
             public void switchToSignUpView() {
+                // Intentionally left blank as this is not needed for the test.
 
             }
         };
@@ -90,12 +93,13 @@ class LoginInteractorTest {
         interactor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
             @Override
             public void execute(ListStocksInputData inputData) {
-
+                // Intentionally left blank as this is not needed for the test.
             }
         });
         interactor.setProfitLossInteractor(new ProfitLossInputBoundary() {
             @Override
             public void execute() {
+                // Intentionally left blank as this is not needed for the test.
             }
         });
         interactor.execute(inputData);
@@ -121,6 +125,7 @@ class LoginInteractorTest {
 
             @Override
             public void switchToSignUpView() {
+                // Intentionally left blank as this is not needed for the test.
 
             }
         };
@@ -129,15 +134,16 @@ class LoginInteractorTest {
         interactor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
             @Override
             public void execute(ListStocksInputData inputData) {
-
+                // Intentionally left blank as this is not needed for the test.
             }
         });
         interactor.setProfitLossInteractor(new ProfitLossInputBoundary() {
             @Override
             public void execute() {
+                // Intentionally left blank as this is not needed for the test.
             }
         });
-        assertEquals(null, userRepository.getCurrentUsername());
+        assertNull(userRepository.getCurrentUsername());
 
         interactor.execute(inputData);
     }
@@ -166,7 +172,7 @@ class LoginInteractorTest {
 
             @Override
             public void switchToSignUpView() {
-
+                // Intentionally left blank as this is not needed for the test.
             }
         };
 
@@ -174,15 +180,16 @@ class LoginInteractorTest {
         interactor.setViewOwnedStockInteractor(new ListStocksInputBoundary() {
             @Override
             public void execute(ListStocksInputData inputData) {
-
+                // Intentionally left blank as this is not needed for the test.
             }
         });
         interactor.setProfitLossInteractor(new ProfitLossInputBoundary() {
             @Override
             public void execute() {
+                // Intentionally left blank as this is not needed for the test.
             }
         });
-        assertEquals(null, userRepository.getCurrentUsername());
+        assertNull(userRepository.getCurrentUsername());
 
         interactor.execute(inputData);
     }
@@ -208,6 +215,7 @@ class LoginInteractorTest {
 
             @Override
             public void switchToSignUpView() {
+                // Intentionally left blank as this is not needed for the test.
             }
         };
 
@@ -241,7 +249,7 @@ class LoginInteractorTest {
 
             @Override
             public void switchToSignUpView() {
-
+                // Intentionally left blank as this is not needed for the test.
             }
         };
         final LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
@@ -272,7 +280,7 @@ class LoginInteractorTest {
 
             @Override
             public void switchToSignUpView() {
-
+                // Intentionally left blank as this is not needed for the test.
             }
         };
 
