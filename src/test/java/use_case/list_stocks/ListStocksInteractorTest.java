@@ -122,4 +122,31 @@ public class ListStocksInteractorTest {
         final ListStocksInteractor interactor = new ListStocksInteractor(outputBoundary, userDataAccess);
         interactor.execute(inputData);
     }
+
+    @Test
+    void nullUsernameInputDataTest() {
+        assertThrows(IllegalArgumentException.class, () -> new ListStocksInputData(null),
+                "Expected an IllegalArgumentException for null username.");
+    }
+
+    @Test
+    void getUsernameTest() {
+        ListStocksInputData inputData = new ListStocksInputData("Maya");
+        assertEquals("Maya", inputData.getUsername(), "Expected username to match input.");
+    }
+
+    @Test
+    void nullStocksOwnedOutputDataTest() {
+        assertThrows(IllegalArgumentException.class, () -> new ListStocksOutputData(null),
+                "Expected an IllegalArgumentException for null stocksOwned.");
+    }
+
+    @Test
+    void getStocksOwnedTest() {
+        Map<String, Integer> stockMap = Map.of("AAPL", 2, "GOOG", 1);
+        ListStocksOutputData outputData = new ListStocksOutputData(stockMap);
+
+        assertEquals(stockMap, outputData.getStocksOwned(),
+                "Expected the same stock map to be returned by getStocksOwned.");
+    }
 }
