@@ -59,7 +59,6 @@ public class BuyStockInteractorTest {
                 return user;
             }
         };
-
         database.saveUserInfo(testUser);
     }
 
@@ -67,7 +66,10 @@ public class BuyStockInteractorTest {
      * Tests the scenario where the user tries to buy stock for a ticker symbol that does not exist.
      * The test ensures that the appropriate error message "This ticker does not exist." is presented
      * when the stock ticker is invalid or unavailable in the database.
+     * <p>
      * This test simulates a failed stock purchase where the ticker symbol is incorrect.
+     * This test simulates a failed stock purchase where the ticker symbol is incorrect.
+
      * Assertions:
      * - Verifies that the error message returned is "This ticker does not exist."
      */
@@ -99,6 +101,7 @@ public class BuyStockInteractorTest {
      * In this test, a user with an initial balance is checked against a stock price for which
      * the user cannot afford the requested quantity. The test ensures that the correct error message
      * "The balance is not sufficient." is returned.
+     * This test simulates a failed stock purchase due to insufficient funds in the user's account.
      * This test simulates a failed stock purchase due to insufficient funds in the user's account.
      * Assertions:
      * - Verifies that the error message returned is "The balance is not sufficient."
@@ -161,6 +164,7 @@ public class BuyStockInteractorTest {
                 // Verify that the success scenario works as expected
                 assertEquals("IBM", outputData.getTickerSymbol());
                 assertEquals(100.0, outputData.getRemainingBalance());
+                assertEquals(1, outputData.getNumberOfShares());
             }
 
             @Override
@@ -181,8 +185,25 @@ public class BuyStockInteractorTest {
         buyStockInteractor.setProfitLossInteractor(new ProfitLossInputBoundary() {
             @Override
             public void execute() {
+
             }
         });
         buyStockInteractor.execute(buyStockInputData);
     }
+
+    /**
+     * This test verifies that the BuyStockInputData class correctly stores and retrieves the
+     * username, ticker symbol, and quantity for a stock purchase. It checks if the getter
+     * methods return the expected values provided during object initialization.
+     */
+
+    @Test public void testBuyStockInputData () {
+        BuyStockInputData inputData = new BuyStockInputData ("testUser", "AAPL", 3);
+        assertEquals("testUser", inputData.getUsername());
+        assertEquals("AAPL", inputData.getTickerSymbol());
+        assertEquals(3, inputData.getQuantity());
+    }
+
+
 }
+
